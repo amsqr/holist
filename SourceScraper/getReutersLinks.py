@@ -1,4 +1,7 @@
 import requests
+"""
+Fetches ALL links to RSS feeds listed on Reuters. We filter these later to remove blogs and aggregators, which tend to have duplicate content and/or inconsistent structure in their XML.
+"""
 feedsURL = "http://www.reuters.com/tools/rss"
 urls = []
 outfile = open("sources.txt","w")

@@ -1,6 +1,9 @@
 import Article
 import requests
 class RSSFeed:
+    """
+Represents an RSS feed for fetching content and pulling (basic) article objects from their feeds.
+    """
     def __init__(self, url):
         self.url = url
         self.xml = None

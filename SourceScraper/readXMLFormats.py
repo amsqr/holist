@@ -1,4 +1,7 @@
 #!/usr/bin/python
+"""
+This isn't part of the main program, just a script used to find out about the structure of the downloaded XMLs.
+"""
 from xml.dom.minidom import *
 import os
 files = [f for f in os.listdir("tempFiles/")]

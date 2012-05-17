@@ -8,7 +8,7 @@ import time
 import codecs
 from xml.dom.minidom import *
 
-sourcesRaw = open("sources.txt", "r")
+sourcesRaw = open("urls.txt", "r")
 urls = sourcesRaw.readlines()
 sourcesRaw.close()
 updateIntervall = 100.0

@@ -1,4 +1,7 @@
 from xml.dom.minidom import *
+"""
+Deprecated (?). We're probably going to replace/extend this by a RuleManager class, which returns an adequate rule given sample XML.
+"""
 class Rule():
     def __init__(self, function):
         self.function = function
