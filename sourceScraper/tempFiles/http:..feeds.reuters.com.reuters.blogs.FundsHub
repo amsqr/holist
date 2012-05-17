@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss2full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://feeds.reuters.com/~d/styles/itemcontent.css"?><rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
+
+<channel>
+	<title>Funds Hub</title>
+	
+	<link>http://blogs.reuters.com/fundshub</link>
+	<description>Money managers under the microscope</description>
+	<lastBuildDate>Mon, 12 Mar 2012 15:43:51 +0000</lastBuildDate>
+	<language>en</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.1.1</generator>
+		<atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="http://feeds.reuters.com/reuters/blogs/FundsHub" /><feedburner:info xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" uri="reuters/blogs/fundshub" /><atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" /><feedburner:emailServiceId xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0">reuters/blogs/FundsHub</feedburner:emailServiceId><feedburner:feedburnerHostname xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0">http://feedburner.google.com</feedburner:feedburnerHostname><item>
+		<title>10 years of fund industry evolution: Lipper</title>
+		<link>http://blogs.reuters.com/fundshub/2012/03/12/10-years-of-fund-industry-evolution-lipper/</link>
+		<comments>http://blogs.reuters.com/fundshub/2012/03/12/10-years-of-fund-industry-evolution-lipper/#comments</comments>
+		<pubDate>Mon, 12 Mar 2012 15:41:20 +0000</pubDate>
+		<dc:creator>Ed Moisson</dc:creator>
+				<category><![CDATA[Hedge Hub]]></category>
+		<category><![CDATA[allocations]]></category>
+		<category><![CDATA[Funds]]></category>
+		<category><![CDATA[investment]]></category>
+		<category><![CDATA[Lipper]]></category>
+		<category><![CDATA[risk]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/fundshub/?p=5023</guid>
+		
+			<content:encoded><![CDATA[Ed Moisson, Lipper's Head of UK and Cross-Border Research, looks back over a tumultuous decade.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/fundshub/2012/03/12/10-years-of-fund-industry-evolution-lipper/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>How much do UK investors care about costs?</title>
+		<link>http://blogs.reuters.com/fundshub/2012/02/13/how-much-do-uk-investors-care-about-costs/</link>
+		<comments>http://blogs.reuters.com/fundshub/2012/02/13/how-much-do-uk-investors-care-about-costs/#comments</comments>
+		<pubDate>Mon, 13 Feb 2012 13:57:05 +0000</pubDate>
+		<dc:creator>Ed Moisson</dc:creator>
+				<category><![CDATA[Hedge Hub]]></category>
+		<category><![CDATA[fees]]></category>
+		<category><![CDATA[Funds]]></category>
+		<category><![CDATA[investment]]></category>
+		<category><![CDATA[Lipper]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/fundshub/?p=5016</guid>
+		
+			<content:encoded><![CDATA[Lipper's Ed Moisson looks at the evidence that investors are worrying about fund costs.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/fundshub/2012/02/13/how-much-do-uk-investors-care-about-costs/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Emerging markets facing current account pain</title>
+		<link>http://blogs.reuters.com/globalinvesting/2012/01/26/emerging-markets-facing-current-account-pain/</link>
+		<comments>http://blogs.reuters.com/globalinvesting/2012/01/26/emerging-markets-facing-current-account-pain/#comments</comments>
+		<pubDate>Thu, 26 Jan 2012 15:51:42 +0000</pubDate>
+		<dc:creator>Sujata Rao</dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+		<category><![CDATA[Africa]]></category>
+		<category><![CDATA[asia]]></category>
+		<category><![CDATA[Central Europe]]></category>
+		<category><![CDATA[credit agricole]]></category>
+		<category><![CDATA[ECB]]></category>
+		<category><![CDATA[Egypt]]></category>
+		<category><![CDATA[emerging markets]]></category>
+		<category><![CDATA[federal reserve]]></category>
+		<category><![CDATA[india]]></category>
+		<category><![CDATA[interest rates]]></category>
+		<category><![CDATA[Latin America]]></category>
+		<category><![CDATA[Poland]]></category>
+		<category><![CDATA[Romania]]></category>
+		<category><![CDATA[Turkey]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/globalinvesting/?p=4983</guid>
+		
+			<content:encoded><![CDATA[A full-fledged emerging markets crisis may yet be some way off. But a clear worsening in current account balances is hinting at hard times to come.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/globalinvesting/2012/01/26/emerging-markets-facing-current-account-pain/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>EM growth is passport out of West’s mess but has a price, says “Mr BRIC”</title>
+		<link>http://blogs.reuters.com/globalinvesting/2012/01/23/em-growth-is-passport-out-of-wests-mess-but-has-a-price-says-mr-bric/</link>
+		<comments>http://blogs.reuters.com/globalinvesting/2012/01/23/em-growth-is-passport-out-of-wests-mess-but-has-a-price-says-mr-bric/#comments</comments>
+		<pubDate>Mon, 23 Jan 2012 10:22:06 +0000</pubDate>
+		<dc:creator>Sujata Rao</dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+		<category><![CDATA[Brazil]]></category>
+		<category><![CDATA[BRICS]]></category>
+		<category><![CDATA[china]]></category>
+		<category><![CDATA[emerging markets]]></category>
+		<category><![CDATA[euro zone]]></category>
+		<category><![CDATA[g20]]></category>
+		<category><![CDATA[Germany]]></category>
+		<category><![CDATA[goldman sachs]]></category>
+		<category><![CDATA[Greece]]></category>
+		<category><![CDATA[IMF]]></category>
+		<category><![CDATA[india]]></category>
+		<category><![CDATA[italy]]></category>
+		<category><![CDATA[russia]]></category>
+		<category><![CDATA[World Bank]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/globalinvesting/?p=4953</guid>
+		
+			<content:encoded><![CDATA[Those worried about the impact of Greece and Italy's debt mess on the world economy should look at the data coming out of the emerging world, says Jim O'Neill, the man dubbed Mr BRIC. China creates...]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/globalinvesting/2012/01/23/em-growth-is-passport-out-of-wests-mess-but-has-a-price-says-mr-bric/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>LIPPER: Equine vs equity investing</title>
+		<link>http://blogs.reuters.com/fundshub/2011/12/28/lipper-equine-vs-equity-investing/</link>
+		<comments>http://blogs.reuters.com/fundshub/2011/12/28/lipper-equine-vs-equity-investing/#comments</comments>
+		<pubDate>Wed, 28 Dec 2011 11:56:56 +0000</pubDate>
+		<dc:creator>Ed Moisson</dc:creator>
+				<category><![CDATA[Hedge Hub]]></category>
+		<category><![CDATA[fund]]></category>
+		<category><![CDATA[gambling]]></category>
+		<category><![CDATA[horse racing]]></category>
+		<category><![CDATA[Lipper]]></category>
+		<category><![CDATA[risk]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/fundshub/?p=5002</guid>
+		
+			<content:encoded><![CDATA[Paul Moulton left the fund management industry to become a professional gambler. Lipper's Ed Moisson asks whether there are some useful parallels between the two disciplines.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/fundshub/2011/12/28/lipper-equine-vs-equity-investing/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>LIPPER: Are ETFs in trouble?</title>
+		<link>http://blogs.reuters.com/fundshub/2011/12/15/lipper-are-etfs-in-trouble/</link>
+		<comments>http://blogs.reuters.com/fundshub/2011/12/15/lipper-are-etfs-in-trouble/#comments</comments>
+		<pubDate>Thu, 15 Dec 2011 12:37:28 +0000</pubDate>
+		<dc:creator>Joel Dimmock</dc:creator>
+				<category><![CDATA[Hedge Hub]]></category>
+		<category><![CDATA[etf]]></category>
+		<category><![CDATA[ETFs]]></category>
+		<category><![CDATA[exchange traded funds]]></category>
+		<category><![CDATA[Funds]]></category>
+		<category><![CDATA[Lipper]]></category>
+		<category><![CDATA[regulation]]></category>
+		<category><![CDATA[transparency]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/fundshub/?p=4995</guid>
+		
+			<content:encoded><![CDATA[Lipper's Detlef Glow wonders whether the regulatory discussion around ETFs might end up being a boon for the sector.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/fundshub/2011/12/15/lipper-are-etfs-in-trouble/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>What if the euro collapses?</title>
+		<link>http://blogs.reuters.com/globalinvesting/2011/12/13/what-if-the-euro-collapses/</link>
+		<comments>http://blogs.reuters.com/globalinvesting/2011/12/13/what-if-the-euro-collapses/#comments</comments>
+		<pubDate>Tue, 13 Dec 2011 15:37:11 +0000</pubDate>
+		<dc:creator>Natsuko Waki</dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/globalinvesting/?p=4838</guid>
+		
+			<content:encoded><![CDATA[Even after the EU summit last weekend, asset managers seem not to have completely dismissed the idea of a possible euro zone breakup.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/globalinvesting/2011/12/13/what-if-the-euro-collapses/feed/</wfw:commentRss>
+		<slash:comments>2</slash:comments>
+		</item>
+		<item>
+		<title>GLG: Italy and Greece deserve a central bank</title>
+		<link>http://blogs.reuters.com/fundshub/2011/12/07/glg-italy-and-greece-deserve-a-central-bank/</link>
+		<comments>http://blogs.reuters.com/fundshub/2011/12/07/glg-italy-and-greece-deserve-a-central-bank/#comments</comments>
+		<pubDate>Wed, 07 Dec 2011 12:47:14 +0000</pubDate>
+		<dc:creator>Laurence Fletcher</dc:creator>
+				<category><![CDATA[Hedge Hub]]></category>
+		<category><![CDATA[ECB]]></category>
+		<category><![CDATA[emerging markets]]></category>
+		<category><![CDATA[Eurozone]]></category>
+		<category><![CDATA[Germany]]></category>
+		<category><![CDATA[glg]]></category>
+		<category><![CDATA[Hedge]]></category>
+		<category><![CDATA[Man]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/fundshub/?p=4984</guid>
+		
+			<content:encoded><![CDATA[GLG Emerging Market fund managers Bart Turtelboom and Karim Abdel-Motaal question the narratives being written during the euro zone crisis.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/fundshub/2011/12/07/glg-italy-and-greece-deserve-a-central-bank/feed/</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>GCC fund firms face structural flaws: Lipper</title>
+		<link>http://blogs.reuters.com/fundshub/2011/11/08/gcc-fund-firms-face-structural-flaws-lipper/</link>
+		<comments>http://blogs.reuters.com/fundshub/2011/11/08/gcc-fund-firms-face-structural-flaws-lipper/#comments</comments>
+		<pubDate>Tue, 08 Nov 2011 16:35:40 +0000</pubDate>
+		<dc:creator>Joel Dimmock</dc:creator>
+				<category><![CDATA[Hedge Hub]]></category>
+		<category><![CDATA[Funds]]></category>
+		<category><![CDATA[GCC]]></category>
+		<category><![CDATA[gulf]]></category>
+		<category><![CDATA[Lipper]]></category>
+		<category><![CDATA[mena]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/fundshub/?p=4973</guid>
+		
+			<content:encoded><![CDATA[Gulf-based fund companies have a tough time to get past obstacles to the industry in the region, writes Dunny P. Moonesawmy.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/fundshub/2011/11/08/gcc-fund-firms-face-structural-flaws-lipper/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Absolutely Fabulous?</title>
+		<link>http://blogs.reuters.com/fundshub/2011/10/05/absolutely-fabulous/</link>
+		<comments>http://blogs.reuters.com/fundshub/2011/10/05/absolutely-fabulous/#comments</comments>
+		<pubDate>Wed, 05 Oct 2011 15:20:37 +0000</pubDate>
+		<dc:creator>Ed Moisson</dc:creator>
+				<category><![CDATA[Hedge Hub]]></category>
+		<category><![CDATA[absolute return]]></category>
+		<category><![CDATA[Funds]]></category>
+		<category><![CDATA[Lipper]]></category>
+		<category><![CDATA[performance]]></category>
+
+		<guid isPermaLink="false">http://blogs.reuters.com/fundshub/?p=4966</guid>
+		
+			<content:encoded><![CDATA[Lipper's Ed Moisson and Kevin Pollard ask whether Absolute Return funds have delivered.]]></content:encoded>
+			<wfw:commentRss>http://blogs.reuters.com/fundshub/2011/10/05/absolutely-fabulous/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+	</channel>
+</rss><!-- Dynamic page generated in 0.341 seconds. --><!-- Cached page generated by WP-Super-Cache on 2012-05-11 02:57:37 --><!-- Compression = gzip -->
