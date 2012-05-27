@@ -1,0 +1,6 @@
+class Similarity
+{
+private:
+	
+public:
+}
