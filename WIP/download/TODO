@@ -1,6 +1,8 @@
 - move to curl
 - react on http error codes like HTTP 302 (redirection)
 - implement https support (after moving to curl as curl can handle ssl connections by itself)
-- think about multithreaded architecture using std::thread (c++11)
 - think about how to implement the parsers for the different web sites or if a general one is possible
 - implement the parsers by using libxml2
+
+DONE:
+- think about multithreaded architecture using std::thread (c++11)
