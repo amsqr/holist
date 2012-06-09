@@ -1,3 +1,5 @@
+#include <Similarity.h>
+
 template<typename Sim>
 class SimilarityStrategy
 {

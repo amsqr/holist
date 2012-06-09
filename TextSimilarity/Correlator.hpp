@@ -1,3 +1,6 @@
+#include <SimilarityStrategy.h>
+#include <DatabaseInterface.h>
+
 template<typename Sim>
 class Correlator
 {
