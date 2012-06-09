@@ -1,8 +1,9 @@
-//This will be the abstract class to be inherited from by all similarity strategies. 
-
+template<typename Sim>
 class SimilarityStrategy
 {
+private:
+	Sim* typeVar;	//for specialization type verification
+	DatabaseInterface databaseInterface;
 public:
-	virtual Similarity computeSimilarity(Document *doc1, Document *doc2);
-
-};
+	vector< Similarity<Sim*> *> computeSimilarity(Sim* similable);
+}
