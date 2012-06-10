@@ -9,12 +9,12 @@ private:
 	DatabaseInterface databaseInterface;	//Singleton Interface to interact with MongoDB (and perhaps vocabulary index)
 	vector<SimilarityStrategy<Sim*> *> knownStrategies;	
 	SimilarityStrategy<Sim*>* preferredStrategy;
-
-	int receiveTask();
-	int perform();
+	
+	~Correlator();
+	virtual int receiveTask() = 0;
+	virtual int perform() = 0;
 public:
-	Correlator();
-	vector<SimilarityStrategy<Sim*> *> getKnownStrategies();
-	SimilarityStrategy<Sim*>* getPreferredStrategy();
+	virtual vector<SimilarityStrategy<Sim*> *> getKnownStrategies() = 0;
+	virtual SimilarityStrategy<Sim*>* getPreferredStrategy() = 0;
 
 }
