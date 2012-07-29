@@ -39,6 +39,7 @@ def update():
             setAvailable(source)
             source.update(r.text)
         else:
+            #print r.url
             alertFailed(source)
 
 def main():
