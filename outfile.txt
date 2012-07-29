@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss2full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://feeds.reuters.com/~d/styles/itemcontent.css"?><rss xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" version="2.0">
+<channel>
+<title>Reuters: Money</title>
+<link>http://www.reuters.com</link>
+<description>Reuters.com is your source for breaking news, business, financial and investing news, including personal finance and stocks.  Reuters is the leading global provider of news, financial information and technology solutions to the world's media, financial institutions, businesses and individuals.</description>
+<image>
+	<title>Reuters News</title>
+	<width>120</width>
+	<height>35</height>
+	<link>http://www.reuters.com</link>
+	<url>http://www.reuters.com/resources_v2/images/reuters125.png</url>
+</image>
+<language>en-us</language>
+<lastBuildDate>Wed, 11 Apr 2012 17:01:06 -0400</lastBuildDate>
+<copyright>All rights reserved. Users may download and print extracts of content from this website for their own personal and non-commercial use only. Republication or redistribution of Reuters content, including by framing or similar means, is expressly prohibited without the prior written consent of Reuters. Reuters and the Reuters sphere logo are registered trademarks or trademarks of the Reuters group of companies around the world. © Reuters 2012</copyright>
+<atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="http://feeds.reuters.com/reuters/USpersonalfinanceNews" /><feedburner:info uri="reuters/uspersonalfinancenews" /><atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" /><feedburner:feedFlare href="http://add.my.yahoo.com/rss?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://us.i1.yimg.com/us.yimg.com/i/us/my/addtomyyahoo4.gif">Subscribe with My Yahoo!</feedburner:feedFlare><feedburner:feedFlare href="http://www.newsgator.com/ngs/subscriber/subext.aspx?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.newsgator.com/images/ngsub1.gif">Subscribe with NewsGator</feedburner:feedFlare><feedburner:feedFlare href="http://feeds.my.aol.com/add.jsp?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://o.aolcdn.com/favorites.my.aol.com/webmaster/ffclient/webroot/locale/en-US/images/myAOLButtonSmall.gif">Subscribe with My AOL</feedburner:feedFlare><feedburner:feedFlare href="http://www.bloglines.com/sub/http://feeds.reuters.com/reuters/USpersonalfinanceNews" src="http://www.bloglines.com/images/sub_modern11.gif">Subscribe with Bloglines</feedburner:feedFlare><feedburner:feedFlare href="http://www.netvibes.com/subscribe.php?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.netvibes.com/img/add2netvibes.gif">Subscribe with Netvibes</feedburner:feedFlare><feedburner:feedFlare href="http://fusion.google.com/add?feedurl=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://buttons.googlesyndication.com/fusion/add.gif">Subscribe with Google</feedburner:feedFlare><feedburner:feedFlare href="http://www.pageflakes.com/subscribe.aspx?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.pageflakes.com/ImageFile.ashx?instanceId=Static_4&amp;fileName=ATP_blu_91x17.gif">Subscribe with Pageflakes</feedburner:feedFlare><feedburner:feedFlare href="http://www.plusmo.com/add?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://plusmo.com/res/graphics/fbplusmo.gif">Subscribe with Plusmo</feedburner:feedFlare><feedburner:feedFlare href="http://www.thefreedictionary.com/_/hp/AddRSS.aspx?http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://img.tfd.com/hp/addToTheFreeDictionary.gif">Subscribe with The Free Dictionary</feedburner:feedFlare><feedburner:feedFlare href="http://www.bitty.com/manual/?contenttype=rssfeed&amp;contentvalue=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.bitty.com/img/bittychicklet_91x17.gif">Subscribe with Bitty Browser</feedburner:feedFlare><feedburner:feedFlare href="http://www.live.com/?add=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://tkfiles.storage.msn.com/x1piYkpqHC_35nIp1gLE68-wvzLZO8iXl_JMledmJQXP-XTBOLfmQv4zhj4MhcWEJh_GtoBIiAl1Mjh-ndp9k47If7hTaFno0mxW9_i3p_5qQw">Subscribe with Live.com</feedburner:feedFlare><feedburner:feedFlare href="http://mix.excite.eu/add?feedurl=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://image.excite.co.uk/mix/addtomix.gif">Subscribe with Excite MIX</feedburner:feedFlare><feedburner:feedFlare href="http://www.webwag.com/wwgthis.php?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.webwag.com/images/wwgthis.gif">Subscribe with Webwag</feedburner:feedFlare><feedburner:feedFlare href="http://www.podcastready.com/oneclick_bookmark.php?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.podcastready.com/images/podcastready_button.gif">Subscribe with Podcast Ready</feedburner:feedFlare><feedburner:feedFlare href="http://www.wikio.com/subscribe?url=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.wikio.com/shared/img/add2wikio.gif">Subscribe with Wikio</feedburner:feedFlare><feedburner:feedFlare href="http://www.dailyrotation.com/index.php?feed=http%3A%2F%2Ffeeds.reuters.com%2Freuters%2FUSpersonalfinanceNews" src="http://www.dailyrotation.com/rss-dr2.gif">Subscribe with Daily Rotation</feedburner:feedFlare><item>
+		<title>Stern Advice: Apple is bigger than my brain</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/qog1O8e46uI/us-column-stern-apple-idUSBRE83A18L20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-column-stern-apple-idUSBRE83A18L20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 15:26:41 -0400</pubDate>
+		<description>WASHINGTON (Reuters) - By various accounts, Apple Inc. is now bigger than Spain, Portugal and Greece (combined), or the entire retail sector of the U.S. economy, or 13 Warren Buffetts. What are we to...&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=qog1O8e46uI:3HAzPI36esA:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/qog1O8e46uI" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-column-stern-apple-idUSBRE83A18L20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>Spring is high season for travel scams</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/caXDE2bTSH8/us-column-travel-scams-idUSBRE83A1BJ20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-column-travel-scams-idUSBRE83A1BJ20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 16:28:16 -0400</pubDate>
+		<description>(Reuters) - When it comes to large migrations of people during the U.S. spring break and summer vacations, the travel scams can come from most any angle. College students and families are targeted....&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=caXDE2bTSH8:gQg6oXxpJbg:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/caXDE2bTSH8" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-column-travel-scams-idUSBRE83A1BJ20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>IRS tax auditing lags for ultra-wealthy: report</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/bkaneZMtJlU/us-usa-tax-wealthyaudits-idUSBRE8391G420120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-usa-tax-wealthyaudits-idUSBRE8391G420120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 10:50:44 -0400</pubDate>
+		<description>WASHINGTON (Reuters) - A new Internal Revenue Service team looking at the business activities of the ultra-wealthy has missed its own goals, reviewing only one privately held company and 10...&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=bkaneZMtJlU:jqL-f_Thk4Q:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/bkaneZMtJlU" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-usa-tax-wealthyaudits-idUSBRE8391G420120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>Hedge fund Viking to rely more on junior managers</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/kwqJMDEMoJU/us-hedgefunds-viking-idUSBRE83A1AZ20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-hedgefunds-viking-idUSBRE83A1AZ20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 16:17:31 -0400</pubDate>
+		<description>BOSTON (Reuters) - Hedge fund superstar Andreas Halvorsen is putting more trust in his junior portfolio managers.&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=kwqJMDEMoJU:74O-k96c2ww:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/kwqJMDEMoJU" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-hedgefunds-viking-idUSBRE83A1AZ20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>U.S. money market assets fall for six weeks: iMoneyNet</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/teTZij8Zs5k/us-funds-imoneynet-idUSBRE83A1BA20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-funds-imoneynet-idUSBRE83A1BA20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 16:32:31 -0400</pubDate>
+		<description>NEW YORK (Reuters) - U.S. money market fund assets fell for a sixth consecutive week by $2.15 billion to $2.564 trillion in the week ended April 10, the Money Fund Report said on Wednesday.&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=teTZij8Zs5k:Mqoa7Jpd86Q:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/teTZij8Zs5k" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-funds-imoneynet-idUSBRE83A1BA20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>Getting the most from your financial-aid package</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/jyR7xnjiUBY/us-column-yourmoney-education-idUSBRE83A13B20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-column-yourmoney-education-idUSBRE83A13B20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 14:12:02 -0400</pubDate>
+		<description>BOSTON (Reuters) - In recent weeks, Eva Chung's family watched with pride as acceptance letters arrived from all seven of the colleges to which she applied.&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=jyR7xnjiUBY:FbaKvdOZX1A:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/jyR7xnjiUBY" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-column-yourmoney-education-idUSBRE83A13B20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>Secondary stock offerings rise amid slow IPO market</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/ngfOKzdYLes/us-secondary-ipos-idUSBRE83A0TH20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-secondary-ipos-idUSBRE83A0TH20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 14:55:16 -0400</pubDate>
+		<description>(Reuters) - Secondary stock offerings by U.S. companies grabbed most of the equity capital markets activity in the first quarter, spurred by a sluggish market for IPOs and private equity investors...&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=ngfOKzdYLes:cuJAkRaMt8w:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/ngfOKzdYLes" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-secondary-ipos-idUSBRE83A0TH20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>Fed's George-must build appropriate bank safety net</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/Ec_ixPBRosE/us-usa-fed-george-idUSBRE83A0YW20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-usa-fed-george-idUSBRE83A0YW20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 12:16:23 -0400</pubDate>
+		<description>NEW YORK (Reuters) - One of the first steps that must be taken to build a stronger financial system in the wake of the crisis is to correct the incentives and "improper expansion" of federal safety...&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=Ec_ixPBRosE:ujO4kFg17sA:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/Ec_ixPBRosE" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-usa-fed-george-idUSBRE83A0YW20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>Another grim link between death and taxes: fatal car crashes</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/LeWh8TdqVEk/us-usa-taxes-crashes-idUSBRE83A12R20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-usa-taxes-crashes-idUSBRE83A12R20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 14:05:45 -0400</pubDate>
+		<description>WASHINGTON (Reuters) - More than 200 years after Benjamin Franklin declared the only things certain in life are death and taxes, Canadian researchers have discovered a grimmer connection: U.S. auto...&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=LeWh8TdqVEk:ITA7o5mOEDg:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/LeWh8TdqVEk" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-usa-taxes-crashes-idUSBRE83A12R20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+<item>
+		<title>TD Ameritrade to move listing to NYSE from Nasdaq</title>
+
+
+		
+		<link>http://feeds.reuters.com/~r/reuters/USpersonalfinanceNews/~3/2Zek3GFU59Y/us-tdameritrade-nyse-idUSBRE83A13K20120411</link>
+        <guid isPermaLink="false">http://www.reuters.com/article/2012/04/11/us-tdameritrade-nyse-idUSBRE83A13K20120411?feedType=RSS&amp;feedName=PersonalFinance</guid>
+        <category>PersonalFinance</category>
+		<pubDate>Wed, 11 Apr 2012 14:07:33 -0400</pubDate>
+		<description>NEW YORK (Reuters) - TD Ameritrade Holding Corp said on Wednesday it will transfer the listing of its common stock to NYSE Euronext's New York Stock Exchange from Nasdaq OMX's exchange.&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~ff/reuters/USpersonalfinanceNews?a=2Zek3GFU59Y:vn1-U6KnhVA:yIl2AUoC8zA"&gt;&lt;img src="http://feeds.feedburner.com/~ff/reuters/USpersonalfinanceNews?d=yIl2AUoC8zA" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.feedburner.com/~r/reuters/USpersonalfinanceNews/~4/2Zek3GFU59Y" height="1" width="1"/&gt;</description><feedburner:origLink>http://www.reuters.com/article/2012/04/11/us-tdameritrade-nyse-idUSBRE83A13K20120411?feedType=RSS&amp;feedName=PersonalFinance</feedburner:origLink></item>
+</channel>
+</rss>

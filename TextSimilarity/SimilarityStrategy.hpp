@@ -7,5 +7,5 @@ private:
 	Sim* typeVar;	//for specialization type verification
 	DatabaseInterface databaseInterface;
 public:
-	vector< Similarity<Sim*> *> computeSimilarity(Sim* similable);
+	vector< Similarity<Sim*> *> computeSimilarity(Sim* similable); 	
 }

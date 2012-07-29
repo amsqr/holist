@@ -1,5 +1,5 @@
 CXX		=	g++
-CXXFLAGS	= 	-Wall -Werror -std=c++11
+CXXFLAGS	= 	-Wall -Werror -std=c++0x
 INCLUDE		=	-I/usr/local/include
 LDFLAGS		=	-L/usr/local/lib -lcurl
 
