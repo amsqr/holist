@@ -4,7 +4,7 @@ import grequests
 from RSSFeed import *
 import time
 import codecs
-from xml.dom.minidom import *
+
 
 updateIntervall = 100.0
 failureThreshold = 10
