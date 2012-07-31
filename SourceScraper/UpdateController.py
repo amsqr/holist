@@ -2,11 +2,12 @@
 import sys
 import grequests
 from RSSFeed import *
+import DownloadDatabaseController
 import time
 import codecs
 
 
-updateIntervall = 100.0
+updateIntervall = 120.0
 failureThreshold = 10
 updating = True
 urls = None
@@ -37,11 +38,10 @@ def update():
     	source = sources[r.url]
         if r.status_code == 200:
             setAvailable(source)
-            source.update(r.text)
+            source.handleUpdate(r.text)
         else:
             #print r.url
             alertFailed(source)
-
 def main():
     global sources, urls, downSources
     sourcesRaw = open("urls.txt", "r")
@@ -56,8 +56,9 @@ def main():
     while updating:
     	startTime = time.time()
         update()
-        waitTime = updateIntervall - time.time() - startTime
+        waitTime = updateIntervall - (time.time() - startTime)
         if waitTime>0:
+            print "at ",time.time(),": waiting for ",waitTime
             time.sleep(waitTime)
     	print len(downSources), " sources down."
 

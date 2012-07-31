@@ -1,4 +1,5 @@
 from xml.dom.minidom import *
+from Article import *
 
 def getDom(xml):
     xmlString = xml.encode('ascii','ignore')
@@ -8,6 +9,13 @@ def getDom(xml):
         print "error parsing local file "+url+": "+xmlString+"\n",e
         return None
     return dom
+
+def getText(nodelist):
+    rc = []
+    for node in nodelist:
+        if node.nodeType == node.TEXT_NODE:
+            rc.append(node.data)
+    return ''.join(rc)
 
 def rule(function):
     def nrule(url,xml):
@@ -35,7 +43,7 @@ def getRule(url, xml):
 def ReutersDefault(dom):
     for item in dom.getElementsByTagName("item"):
         title = getText(item.getElementsByTagName("title")[0].childNodes)
-        link = getText(item.getElementsByTagName("guid")[0].childNodes)
+        link = getText(item.getElementsByTagName("link")[0].childNodes)
         description = getText(item.getElementsByTagName("description")[0].childNodes)
         yield Article(title,link,description)
 @rule
