@@ -49,23 +49,29 @@ def updateFeeds():
         else:
             #print r.url
             alertFailed(source)
-        
+
+def runOnce():
+    updateFeeds()
+
+def init():
+    global sources, urls, downSources
+    sourcesRaw = [url["link"] for url in DatabaseController.urls.find()]
+    urls = [url.strip().encode("ascii", "ignore") for url in sourcesRaw]
+    sources = {url: RSSFeed(url) for url in urls}
+    downSources = set(urls)
+
 def main():
     global sources, urls, downSources
-    sourcesRaw = [url["link"] for url in DatabaseController.getURLs()]
-    urls = [url.strip() for url in sourcesRaw]
-    sources = {url: RSSFeed(url) for url in urls}
-
-    downSources = urls[:]
-
+    
     while updating:
     	startTime = time.time()
-        updateFeeds()
-        
+
+        runOnce()
+                
         waitTime = updateIntervall - (time.time() - startTime)
         if waitTime>0:
             print "at ",time.time(),": waiting for ",waitTime
-            #time.sleep(waitTime)
+            time.sleep(waitTime)
     	print len(downSources), " sources down."
 
 if __name__ == "__main__":

@@ -4,10 +4,11 @@ from datetime import datetime
 def getDOM(url, xml):
     """utility function for getting the DOM from an article"""
     xmlString = xml.encode('ascii','ignore')
+    # xmlString = xml
     try:
         dom = parseString(xmlString)
     except Exception as e:
-        print "error parsing "+url+": "+xmlString+"\n",e
+        print "error parsing "+url+": \n",e
         return None
     return dom
 
@@ -45,6 +46,8 @@ def getRule(url, xml):
     automatically selects a rule for extracting articles from an XML document.
     selection based on tags that appear in the document
     """
+    if url == "21578":
+        return ReutersTestCorpus
     dom = getDOM(url, xml)
     if dom == None:
         return None
@@ -57,6 +60,20 @@ def getRule(url, xml):
         return ReutersDefault
     else:
         return None
+@rule
+def ReutersTestCorpus(dom):
+    for r in dom.getElementsByTagName("REUTERS"):
+        try:
+            time =  getText(r.getElementsByTagName("DATE")[0].childNodes)
+        
+            for item in r.getElementsByTagName("TEXT"):
+
+                title = getText(item.getElementsByTagName("TITLE")[0].childNodes)
+                text = getText(item.getElementsByTagName("BODY")[0].childNodes)
+            
+                yield (title, time, text)
+        except:
+            pass
 @rule
 def ReutersDefault(dom):
     """

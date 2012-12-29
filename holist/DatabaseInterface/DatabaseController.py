@@ -9,12 +9,12 @@ rawDataDB = None
 monitoringDB = None
 articles = None
 newArticles = None
-words = None
+tokens = None
 RSSFeeds = None
 urls = None
 
 def main():
-    global connection, rawDataDB, monitoringDB, articles, newArticles, words, RSSFeeds, urls 
+    global connection, rawDataDB, monitoringDB, articles, newArticles, tokens, RSSFeeds, urls 
     print "Intializing database connection..."
     connection = Connection("localhost",27017)
     #databases
@@ -25,20 +25,15 @@ def main():
     #collections
     newArticles = rawDataDB.new_articles
     articles = rawDataDB.articles
-    words = analysisDB.words
+    tokens = analysisDB.tokens
     RSSFeeds = monitoringDB.RSSFeeds
     urls = connection.raw_data.urls
-    if None not in [connection, rawDataDB, monitoringDB, articles, newArticles, words, RSSFeeds]:
+    if None not in [connection, rawDataDB, monitoringDB, articles, newArticles, tokens, RSSFeeds]:
         print "Established connection."
     else:
         print "Couldn't connect to database, exiting."
         sys.exit(2)
 
-def getURLs():
-    return urls.find()
-
-def getWords():
-    return words.find()
 
 def adder(function): 
     """
@@ -74,6 +69,7 @@ def adder(function):
             else:
                 obj._id = collection.insert(obj.toDict())
                 # print "added."
+        return obj._id
     return addObject
 
 @adder
@@ -82,14 +78,28 @@ def addRawArticle(article):
     return newArticles
 
 @adder
+def addProcessedArticle(article):
+    return articles
+
+@adder
 def addRSSFeed(feed):
     print "adding/updating feed "+feed.url
     return RSSFeeds
 
 @adder
-def addWord(word):
-	return words
+def addToken(token):
+	return tokens
 
 @adder
-def handleProcessArticle(processedArticle):
-    originalArticle = newArticles.find(processedArticle.original)
+def handleProcessedArticle(processedArticle):
+    key = processedArticle["_id"]
+    found = newArticles.find({"_id": key})
+    if found.count() < 1: 
+        raise Exception("Article ID not found: "+str(key))
+    elif found.count() > 1:
+        raise Exception("Multiple  articles with ID "+str(key))
+    else:
+        originalArticle = found[0]
+        newArticles.remove({"_id":key})
+        addProcessedArticle(processedArticle)
+    
