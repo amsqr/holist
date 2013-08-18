@@ -1,6 +1,6 @@
-from ..DatabaseInterface import DatabaseObject
+from holist.DatabaseInterface import DatabaseObject
 
-class Token(DatabaseObject.DatabaseObject):
+class WordType(DatabaseObject.DatabaseObject):
     def __init__(self, _id, token, frequency):
         self._id = _id
         self.sid = token

@@ -1,78 +1,54 @@
 #!/usr/bin/python
 import sys
+from util import util
+ln = util.getModuleLogger(__name__)
+from config import config
 import grequests
 from RSSFeed import *
 from ..DatabaseInterface import DatabaseController
 import time
 import codecs
 
+#TODO: this should run only on the central server and dispatch URLs to be downloaded from to different nodes.
 
-updateIntervall = 120.0
-failureThreshold = 10
-updating = True
-urls = None
-sources = None
-downSources = []
-
-
-def setAvailable(source):
-    if not source.isUp:
-        source.failures = 0
-    	source.isUp = True
-    	downSources.remove(source.url)
-
-def alertFailed(source):
-    if source.isUp:
-        source.failures += 1
-        if source.failures > failureThreshold:
-            source.isUp = False
-            downSources.append(source.url)
-
-def downloadFeedXMLs(urls):
-    """
-    asynchronously update the feeds (raw XML only)
-    """
-    requests = (grequests.get(url) for url in urls)
-    return grequests.map(requests)
-
-def updateFeeds():
-    print "updating all feeds."
-    results = downloadFeedXMLs(urls)
-    for r in results:
-    	source = sources[r.url]
-        if r.status_code == 200:
-            setAvailable(source)
-            res = source.handleUpdate(r.text)
-            if res:
-                DatabaseController.addRSSFeed(source)
-            
-        else:
-            #print r.url
-            alertFailed(source)
-
-def runOnce():
-    updateFeeds()
-
-def init():
-    global sources, urls, downSources
-    sourcesRaw = [url["link"] for url in DatabaseController.urls.find()]
-    urls = [url.strip().encode("ascii", "ignore") for url in sourcesRaw]
-    sources = {url: RSSFeed(url) for url in urls}
-    downSources = set(urls)
-
-def main():
-    global sources, urls, downSources
+class UpdateController(object):
+    __metaclass__ = Singleton.Singleton
     
-    while updating:
-    	startTime = time.time()
-
-        runOnce()
-                
-        waitTime = updateIntervall - (time.time() - startTime)
-        if waitTime>0:
-            print "at ",time.time(),": waiting for ",waitTime
-            time.sleep(waitTime)
-    	print len(downSources), " sources down."
-
-if __name__ == "__main__":
-	main()
+    def __init__(self):
+        #sources is a dict mapping a url to its RSSFeed object. URLs are in the database.
+        self.sources = dict([(lambda (x,y): (x, RSSFeed(y)))([url["link"].strip().encode("ascii", "ignore")] * 2) 
+            for url in DatabaseController.urls.find()])
+        self.downSources = set(urls)
+    
+    def setAvailable(self, source):
+        if not source.isUp:
+            source.failures = 0
+        	source.isUp = True
+        	self.downSources.remove(source.url)
+    
+    def alertFailed(self, source):
+        if source.isUp:
+            source.failures += 1
+            if source.failures > util.sourceFailureThreshold:
+                source.isUp = False
+                self.downSources.append(source.url)
+    
+    def downloadFeedXMLs(self, urls):
+        """
+        asynchronously update the feeds (raw XML only)
+        """
+        requests = (grequests.get(url) for url in urls)
+        return grequests.map(requests)
+    
+    def updateFeeds():
+        ln.debug("updating all feeds.")
+        results = self.downloadFeedXMLs(self.urls)
+        for r in results:
+        	source = self.sources[r.url]
+            if r.status_code == 200:
+                self.setAvailable(source)
+                res = source.handleUpdate(r.text)
+                if res:
+                    DatabaseController.addRSSFeed(source)
+            else:
+                self.alertFailed(source)

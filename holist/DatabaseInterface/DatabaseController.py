@@ -3,6 +3,9 @@ To interface with MongoDB. Setup for mongod process: "mongod -f /etc/mongodb.con
 """
 import pymongo
 from pymongo import Connection
+from config import config
+from util import util
+ln = util.getModuleLogger(__name__)
 
 connection = None
 rawDataDB = None
@@ -15,8 +18,8 @@ urls = None
 
 def main():
     global connection, rawDataDB, monitoringDB, articles, newArticles, tokens, RSSFeeds, urls 
-    print "Intializing database connection..."
-    connection = Connection("localhost",27017)
+    ln.debug("Intializing database connection...")
+    connection = Connection(config.databaseIP, config.databasePort)
     #databases
     rawDataDB = connection.raw_data #used for raw article storage, as well as words + word co-occurrence
     monitoringDB = connection.monitoring
@@ -29,9 +32,9 @@ def main():
     RSSFeeds = monitoringDB.RSSFeeds
     urls = connection.raw_data.urls
     if None not in [connection, rawDataDB, monitoringDB, articles, newArticles, tokens, RSSFeeds]:
-        print "Established connection."
+        ln.debug("Established connection.")
     else:
-        print "Couldn't connect to database, exiting."
+        ln.warn("Couldn't connect to database, exiting.")
         sys.exit(2)
 
 
@@ -52,23 +55,20 @@ def adder(function):
             else:
                 collectionEntry = collection.find_one({"sid":obj.sid})
                 if collectionEntry:
-                    obj._id = collectionEntry["_id"]
+                    obj_id = collectionEntry["_id"]
                     collection.update(collectionEntry,{"$set":obj.toDict()})
-                    print "updated, url/id collision?"
+                    ln.warn("updated, url/id collision?")
                 else:
                     obj._id = collection.insert(obj.toDict())
-                    print "added even though object had previously been in database"
+                    ln.debug("added even though object had previously been in database")
 
         else:
             collectionEntry = collection.find_one({"sid":obj.sid})
             if collectionEntry:
                 obj._id = collectionEntry["_id"]
                 collection.update(collectionEntry,{"$set":obj.toDict()})
-                # print "updated without id, found matching sid \n"+obj.sid+" on object \n"+collectionEntry["sid"]+". id has been fixed."
-
             else:
                 obj._id = collection.insert(obj.toDict())
-                # print "added."
         return obj._id
     return addObject
 
@@ -83,7 +83,7 @@ def addProcessedArticle(article):
 
 @adder
 def addRSSFeed(feed):
-    print "adding/updating feed "+feed.url
+    ln.debug("adding/updating feed "+feed.url)
     return RSSFeeds
 
 @adder
@@ -95,11 +95,10 @@ def handleProcessedArticle(processedArticle):
     key = processedArticle["_id"]
     found = newArticles.find({"_id": key})
     if found.count() < 1: 
-        raise Exception("Article ID not found: "+str(key))
+        ln.warn("Article ID not found: "+str(key))
     elif found.count() > 1:
-        raise Exception("Multiple  articles with ID "+str(key))
+        ln.warn("Multiple  articles with ID "+str(key))
     else:
         originalArticle = found[0]
-        newArticles.remove({"_id":key})
         addProcessedArticle(processedArticle)
-    
+        newArticles.remove({"_id":key})

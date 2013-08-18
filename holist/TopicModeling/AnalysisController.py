@@ -1,96 +1,67 @@
-import logging
-logging.basicConfig(format='%(asctime)s :    %(message)s', level=logging.INFO)
+from util import util
+ln = util.getModuleLogger(__name__)
+from util import Singleton
 
-from DatabaseDictionary import DatabaseDictionary
 from DatabaseCorpus import DatabaseCorpus
-from gensim import models, similarities
-from ..DatabaseInterface import DatabaseController as DB
-import DocumentMinimizer
-import time
+from gensim import models, similarities, corpora
+from DatabaseInterface import DatabaseController as DB
+from DocumentMinimizer import DocumentMinimizer
+import smhasher
 
-#update intervall in seconds
-updateEvery = 120
 
-dictionary = None
-corpus = None
-LSIdecay = 0.95
+def hashToken(token):
+    return smhasher.murmur3_x86_128(token) % id_range 
 
-TFIDF = None
-LSI = None
+class AnalysisController(object):
+    __metaclass__ = Singleton.Singleton
 
-newArticles = None
-
-def init():
-    global dictionary, corpus
-    DocumentMinimizer.init()
+    def __init__(self):
+        self.corpus = DatabaseCorpus()
+        self.dictionary = DatabaseDictionary(createFromDatabase=True)
     
-    dictionary = DatabaseDictionary()
-    corpus = DatabaseCorpus(dictionary)
-    initializeTFIDF()
-    initializeLSI()
-
-def initializeLSI():
-    global LSI, corpus, dictionary, LSIdecay
-    LSI = models.lsimodel.LsiModel(corpus=corpus, id2word=dictionary, chunksize=1000, 
-        decay=LSIdecay, distributed=False, onepass=True)
-
-def initializeTFIDF():
-    global TFIDF, corpus
-    TFIDF = models.tfidfmodel.TfidfModel(corpus)
-
-def updateTFIDF():
-    global newArticles, TFIDF
-    logging.info("updating TFIDF model")
-    newVectors = (a["vector"] for a in newArticles)
-    TFIDF.add_documents(newVectors)
-
-def updateLSI():
-    global newArticles, TFIDF, LSI
-    logging.info("updating LSI model")
-    newVectors = (a["vector"] for a in newArticles)
-    LSI.add_documents(newVectors)
-
-def preprocessArticles():
-    global newArticles
-    logging.info("minimizing %d articles", len(newArticles))
-    for i, article in enumerate(newArticles):
-        if(i%1000==0):
-            print i
-        article["vector"] = DocumentMinimizer.minimize(article["text"])
-
-def getNewArticles():
-    global newArticles
-    logging.info("getting new articles from the database")
-    newArticles = list(DB.newArticles.find())
-
-def clearNewArticles():
-    global newArticles
-    "tell the database to move processed articles out of the processing cue"
-    logging.info("clearing new_articles collection")
-    for article in newArticles:
-        DB.handleProcessedArticle(article)
-
-def updateModel():
-    getNewArticles()
-    preprocessArticles()
-    updateTFIDF()
-    updateLSI()
-    clearNewArticles()
-
-def runOnce():
-    updateModel()
+        DocumentMinimizer(self.dictionary)
+        
+        self.initializeTFIDF()
+        self.initializeLSI()
+    
+    def initializeLSI(self):
+        # LSI = models.ldamodel.LdaModel(corpus=corpus, id2word=dictionary)
+        self.LSI = models.lsimodel.LsiModel(num_topics=util.LSItopics, corpus=self.corpus, chunksize=1000, id2word=self.dictionary,
+            decay=util.LSIdecay, distributed=False, onepass=util.LSIuseOnePass)
+    
+    def initializeTFIDF(self):
+        #TODO: just load a prepared TFIDF from wikipedia
+        self.TFIDF = models.tfidfmodel.TfidfModel(self.corpus)
+    
+    def updateModel(self):
+        self.getNewArticles()
+        self.preprocessArticles()
+        self.updateLSI()
+        self.clearNewArticles()
+    
+    def getNewArticles(self):
+        ln.debug("getting new articles from the database")
+        self.newArticles = (article for article in DB.newArticles.find())
+    
+    def preprocessArticles(self):
+        ln.debug("minimizing %d articles", len(self.newArticles))
+        for article in self.newArticles:
+            article["vector"] = DocumentMinimizer().minimize(article["text"])
+    
+    def updateLSI(self):
+        ln.info("updating LSI model")
+        newVectors = (a["vector"] for a in self.newArticles) 
+        self.LSI.add_documents(newVectors)
+    
+    def clearNewArticles(self):
+        "tell the database to move processed articles out of the processing cue"
+        ln.info("clearing new_articles collection")
+        for article in self.newArticles:
+            DB.handleProcessedArticle(article)
 
 def main():
-    global updateEvery
     updating = True
     while updating:
-        iterStart = time.time()
-
         runOnce()
-
-        sleepTime = updateEvery - (time.time() - iterStart)
-        if sleepTime > 0:
-            time.sleep(sleepTime)
-
 if __name__ == "__main__":
     main()

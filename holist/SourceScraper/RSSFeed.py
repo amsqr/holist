@@ -1,12 +1,14 @@
+from util import util
+ln = util.getModuleLogger(__name__)
+
 from Article import Article
-from ..DatabaseInterface import DatabaseObject
-from ..DatabaseInterface import DatabaseController
+from holist.DatabaseInterface import DatabaseObject
+from holist.DatabaseInterface import DatabaseController
 import time
 import RuleManager
 
 import grequests
 import BoilerpipeInterface
-
 
 
 class RSSFeed(DatabaseObject.DatabaseObject):
@@ -18,13 +20,16 @@ Represents an RSS feed for fetching content and pulling (basic) article objects 
         self.xml = None
         self.isUp = False
         self.failures = 0
-        self.content = set() #holds a list of Article objects
         self.lastChecked = None	#last time when new links were checked for
         self.lastUpdated = None #last time a new Article has been added
+        self.lastSeenUrls = None
         self.monitorID = None
 
         self._id = None
         self.sid = url
+
+        self.averageContentVector = None
+        self.documentsPosted = 0
 
 
     def handleUpdate(self, resultXML):
@@ -34,46 +39,51 @@ Represents an RSS feed for fetching content and pulling (basic) article objects 
         self.xml = resultXML
         self.rule = RuleManager.getRule(self.url,self.xml)
         if self.rule == None:
-            print "couldn't find rule for articles in ",self.url
+            ln.warn("couldn't find rule for articles in ",self.url )
             return None
         self.lastChecked = time.time()
+        
+        #rule returns a list of the article objects extracted from the RSS feeds XML.
         articles = list(self.rule(self.url, self.xml))
+        
+        currentlySeenUrls = set((article.url for article in articles))
+        for article in articles:
+            if article.url in self.lastSeenUrls:
+                articles.remove(article)
+        self.lastSeenUrls = currentlySeenUrls
 
         #try getting the full article texts
-
-        print self.url,": getting full article texts... "
-        urls = [article.url for article in articles]
-        requests = (grequests.get(url) for url in urls)
+        ln.debug(self.url,": getting full article texts... ")
+        requests = (grequests.get(article.url) for article in articles)
         fullTexts = grequests.map(requests)
-        # print "got "+str(len(fullTexts))+" full article texts. Now rematching to articles."
+
         #re-match the results with their respective articles
         for result in fullTexts:
             if result.status_code != 200:
-                print "invalid result: ", result.url
+                ln.warn("invalid result: ", result.url)
                 continue
             for article in articles:
                 if article.url in [r.url for r in result.history]: #handle redirects
                     article.text = result.text
                     # print "rematched article text for "+article.title
                     break
-        
-        
-        # print "Running Boilerpipe and adding articles to database"
+
         for article in articles:
-            if not article in self.content:
-                #print "added "+article.title+" to "+self.url#+" with hash ",article.__hash__()
-                # print "getting plain text for "+article.title+"..."
                 try:
                     article.text = BoilerpipeInterface.getPlainText(article.text)
-                    # print "returned from Boilerpipe"    
-                    self.content.add(article)
-                    # print "sending to database..."
                     DatabaseController.addRawArticle(article)
                     self.lastUpdated = time.time()
                 except Exception as e:
                     print e
         return True
 
+    def updateAverage(topicVector):
+        #m = m + (tV - m) / (docsPosted + 1)
+        self.documentsPosted += 1
+        self.averageContentVector += (topicVector - self.averageContentVector) / (self.documentsPosted)
+        
+
     def toDict(self):
-        return {"url":self.url, "isUp":self.isUp, "lastChecked":self.lastChecked, "lastUpdated":self.lastUpdated, "sid":self.sid}
+        return {"url":self.url, "isUp":self.isUp, "lastChecked":self.lastChecked, "lastUpdated":self.lastUpdated, 
+        "sid":self.sid, "average":self.averageContentVector, "documentsPosted":self.documentsPosted}
 
