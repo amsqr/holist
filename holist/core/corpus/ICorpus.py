@@ -1,6 +1,9 @@
 class ICorpus(object):
 	"""Interface for Corpus classes"""
 
+	def __init__(self, strategyNames):
+		raise Exception("Not implemented!")
+
 	def addDataSource(self, dataSource):
 		raise Exception("Not implemented!")
 
