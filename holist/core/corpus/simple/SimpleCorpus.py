@@ -33,13 +33,14 @@ class SimpleCorpus(ICorpus):
             document.vectors[name] = []
         self.documents[document.id] = document
 
+    #doesn't matter if update is called mutiple times before new docs are retrieved
     def update(self):
         if __static:
             return
 
         for source in self.sources:
             if not source.isStatic():
-                self.newDocuments = source.updateAndGetDocuments()
+                self.newDocuments += source.updateAndGetDocuments()
                 self.addDocuments(self.newDocuments)
 
     def isStatic(self):
@@ -53,8 +54,10 @@ class SimpleCorpus(ICorpus):
             yield document
 
     def iterSinceLastUpdate(self):
-        for document in self.newDocuments:
-            yield document
+        #for document in self.newDocuments:
+        #    yield document
+        while self.newDocuments:
+            yield self.newDocuments.pop()
 
     def __getitem__(self, id):
         return self.documents[id]

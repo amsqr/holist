@@ -1,5 +1,5 @@
 class ISemanticsStrategy(object):
-    def __init__(self, dictionary, index):
+    def __init__(self, dictionary, index, textIndex):
         raise Exception("Not implemented!")
 
     def getName(self):
@@ -14,7 +14,7 @@ class ISemanticsStrategy(object):
     def queryText(self, query, num_best=None):
         raise Exception("Not implemented!")
 
-    def queryById(self, docid, num_best=None):
+    def queryId(self, docid, num_best=None):
         raise Exception("Not implemented!")
 
     def compare(self, doc1, doc2):
