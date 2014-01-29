@@ -1,6 +1,10 @@
+from holist.util.util import *
+ln = getModuleLogger(__name__)
+
 from holist.core.semantics.ISemanticsStrategy import ISemanticsStrategy
 from gensim import models
 import numpy
+import datetime
 
 # SETTINGS
 NUM_TOPICS = 100
@@ -20,9 +24,11 @@ class LSAStrategy(ISemanticsStrategy):
         self.index = index
         self.textIndex = textIndex
         self.corpus = corpus
-
-        self.model = models.lsimodel.LsiModel(corpus=[doc.preprocessed for doc in corpus],num_topics=NUM_TOPICS, chunksize=CHUNKSIZE, id2word=self.dictionary,
+        ln.info("initializing LSA model..")
+        #[doc.preprocessed for doc in corpus]
+        self.model = models.lsimodel.LsiModel(corpus=None,num_topics=NUM_TOPICS, chunksize=CHUNKSIZE, id2word=self.dictionary,
             decay=DECAY, distributed=DISTRIBUTED, onepass=ONEPASS)
+        ln.info("LSA Initialized")
 
     @staticmethod
     def getNumFeatures():
@@ -42,19 +48,35 @@ class LSAStrategy(ISemanticsStrategy):
         #    self.model.projection = gensim.models.lsimodel.Projection(NUM_TOPICS)
         self.model.add_documents(minimalized)
 
-        #update the documents
+        #add the document vector space representations
         for document in documents:
-            document.vectors[self.NAME] = self.model[document.preprocessed]
-        print "LSA: preprocessed documents, now updating index."
+            document.vectors[self.NAME] = numpy.array([val for (k,val) in self.model[document.preprocessed]])
+
+        ln.debug("LSA: processed documents, now updating index. Processing a total of %s documents." % len(documents))
+        if self.corpus.isStatic():
+            documents = sorted(documents,key=lambda doc: doc.id)
+
         for idx, document in enumerate(documents):
-            if idx % 50 == 0:
-                print "", idx, "..."
+            if idx % 100 == 0:
+                ln.debug("indexed %s documents..." % idx)
+
             # iterate through all documents for indexing
-            for otherDoc in self.corpus:
+            relevantDocs = self.textIndex.queryText(document.preprocessed)
+            if self.corpus.isStatic(): #optimization step if we can create a global ordering
+                relevantDocs = sorted(relevantDocs)
+
+            for otherDocId in relevantDocs:
+                if self.corpus.isStatic() and otherDocId <= document.id:
+                    continue
+                otherDoc = self.corpus[otherDocId]
                 #add to index
-                comp = self.compare([val for (k,val) in document.vectors[self.NAME]], 
-                                    [val for (k,val) in otherDoc.vectors[self.NAME]]
-                self.index.addEntry(document.id, otherDoc.id, comp))
+                comp = self.compare(document.vectors[self.NAME], otherDoc.vectors[self.NAME])
+
+                self.index.addEntry(document.id, otherDoc.id, comp)
+                if self.corpus.isStatic():
+                    self.index.addEntry(otherDoc.id, document.id, comp)
+        ln.debug("saving index.")
+        self.index.save("index.txt")
 
 
     def __getitem__(self, item):
@@ -66,7 +88,7 @@ class LSAStrategy(ISemanticsStrategy):
         textLSAVect = [val for (k,val) in self[textMinimalized]]
 
         for docId in  plainTextSearchResults:
-            docLSAVect = [val for (k,val) in self.corpus[docId].vectors[self.NAME]]
+            docLSAVect = self.corpus[docId].vectors[self.NAME]
             result.append((docId,self.compare(textLSAVect,docLSAVect))) #actual ranking determined by vecotr space similarity
 
         return sorted(result, key=lambda k: k[1], reverse=True)[:num_best]
@@ -76,10 +98,6 @@ class LSAStrategy(ISemanticsStrategy):
         return self.index.query(docid)
 
     def compare(self, vec1, vec2, query=False):
-        
-    	#TODO consider adding this to the abstract base class
-        
-        #print "comparing: ", type(vec1), numpy.linalg.norm(vec2)
         dot = numpy.dot(vec1, vec2)
         return dot / (abs(numpy.linalg.norm(vec1)) * abs(numpy.linalg.norm(vec2)))
 

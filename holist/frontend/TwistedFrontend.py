@@ -1,3 +1,6 @@
+from holist.util.util import *
+ln = getModuleLogger(__name__)
+
 from twisted.web.resource import Resource
 from twisted.web.server import Site
 from twisted.internet import reactor
@@ -18,7 +21,7 @@ class HolistFrontend(object):
         mainPage = MainPage()
         
         root.putChild("query_text", queryTextPage)
-        root.putChild("query_id", queryTextPage)
+        root.putChild("query_id", queryIdPage)
         root.putChild("render_article", displayArticlePage)
         root.putChild("", mainPage)
         factory = Site(root)
@@ -26,13 +29,22 @@ class HolistFrontend(object):
 		
 
 class MainPage(Resource):
-    def render_GET(self, request):
+    def render_GET(self, request):#<input type="submit" value="Submit">
+    #vertical-align:middle;width:350px;margin:0 auto;
         return """
         <html>
-        	<form name="input" action="query_text" method="post">
-				Enter query text: <input type="text" name="query">
-				<input type="submit" value="Submit">
-			</form>
+        	<body bgcolor="#DBDBDB">
+    			<div style="
+						height:150px;
+						position:absolute;
+						left:50%;
+						top:60%;
+						margin:-75px 0 0 -135px;">
+        			<form name="input" action="query_text" method="post"> 
+						<input type="border:0;text" name="query" style="height:30px;width:300px;margin:0 auto;">
+					</form>
+    			</div>
+			</body>
 		</html>
         """
 
@@ -48,12 +60,14 @@ class QueryText(Resource):
         for strat in self.controller.strategies:
             resultAsTable = """<br/>%s<br/><table border="1">""" % strat.NAME
             for res in queryResults[strat.NAME]:
-            	resultAsTable += """<tr><td><a href="/render_article?id=%s">%s</a></td><td>%s</td></tr>""" % (res[0],res[0], res[1],)
+            	resultAsTable += """<tr><td><a href="/query_id?id=%s">%s</a>
+            								<a href="/render_article?id=%s"> (Text)</a>
+            								</td><td>%s</td></tr>""" % (res[0],res[0],res[0], res[1],)
             resultAsTable += """</table>"""
             resultTables += resultAsTable
        	html = """
        	<html>
-       		<head>%s</head><br/>
+       		<head>Query: "%s"</head><br/>
        		<body>
 			%s
        		</body>
@@ -66,13 +80,27 @@ class QueryId(Resource):
         self.controller = controller
 
     def render_GET(self, request):
-        res = int(self.controller.queryId(request.args["id"][0]))
-        return """"<html>
-       		<head>%s</head><br/>
+    	queryId = int(request.args["id"][0])
+        queryResults = self.controller.queryId(queryId)
+        resultTables = ""
+
+        for strat in self.controller.strategies:
+            resultAsTable = """<br/>%s<br/><table border="1">""" % strat.NAME
+            for res in queryResults[strat.NAME]:
+            	resultAsTable += """<tr><td><a href="/query_id?id=%s">%s</a>
+            								<a href="/render_article?id=%s"> (Text)</a>
+            								</td><td>%s</td></tr>""" % (res[0],res[0],res[0], res[1],)
+            resultAsTable += """</table>"""
+            resultTables += resultAsTable
+       	html = """
+       	<html>
+       		<head>Document: %s</head><br/>
        		<body>
 			%s
        		</body>
-		</html>""" & (request.args["id"][0], res,)
+		</html>
+       	""" % (queryId,resultTables)
+        return html
 
 class DisplayArticle(Resource):
     def __init__(self, controller):
@@ -86,4 +114,4 @@ class DisplayArticle(Resource):
        		<body>
 			%s
        		</body>
-		</html>""" % (str(doc.id), doc.text,)
+		</html>""" % (str(doc.id), str(doc.text),)

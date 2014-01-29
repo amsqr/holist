@@ -1,15 +1,20 @@
+from holist.util.util import *
+ln = getModuleLogger(__name__)
+
 from holist.core.preprocess.IPreprocessor import IPreprocessor
 from stemming.porter2 import stem
 import string
+import stopwords
 
 # SETTINGS
-STOPWORDS = set()
+STOPWORDS = set(stopwords.stopwords)
 
 
 class TokenizingPorter2Stemmer(IPreprocessor):
     def __init__(self, dictionary, stopWords=STOPWORDS):
         self.dict = dictionary
         self.stopWords = set(map(stem,stopWords))
+        #self.stopWords = set(self.stemWords(self.stopWords))
 
     def preprocess(self, doc):
         if isinstance(doc, str):
@@ -32,7 +37,7 @@ class TokenizingPorter2Stemmer(IPreprocessor):
         return text.translate(string.maketrans("",""), string.punctuation)
     
     def removeStopWords(self,textSet):
-        return textSet - STOPWORDS
+        return textSet - self.stopWords
     
     def stemWords(self, text):
         return map(stem, text)

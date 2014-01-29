@@ -1,4 +1,7 @@
 # coding=latin-1
+from holist.util.util import *
+ln = getModuleLogger(__name__)
+
 from holist.core.Document import Document
 import string
 import random
@@ -19,6 +22,6 @@ test = test.split(" ")
 
 class DummyDataSource(object):
     def getDocuments(self): #generates random documents
-        return (Document(" ".join([random.choice(test) for w in range(100)])) for x in range(1000))
+        return (Document(" ".join([random.choice(test) for w in range(100)])) for x in range(100))
     def isStatic(self):
         return True

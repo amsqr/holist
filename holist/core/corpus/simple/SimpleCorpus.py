@@ -1,18 +1,24 @@
+from holist.util.util import *
+ln = getModuleLogger(__name__)
+
 from holist.core.corpus.ICorpus import ICorpus
 
 class SimpleCorpus(ICorpus):
-    def __init__(self, strategies, datasources=None, static=False):
+    def __init__(self, strategies, datasources=None):
+        ln.info("initializing corpus.")
         self.documents = dict()
         self.sources = []
-        self.__static = static
+        self.__static = True
         self.strategyNames = strategies
 
         if datasources:
             for source in datasources:
-                if not source.isStatic() and self.__static:
-                    raise Exception("Attempted to create static corpus from non-static source!")
+                if not source.isStatic():
+                    self.__static = False
+                    
             for source in datasources:
                 self.addDataSource(source)
+        ln.info("corpus has been initialized")
 
     def addDataSource(self, datasource):
         if self.__static and self.sources != []:
@@ -24,6 +30,7 @@ class SimpleCorpus(ICorpus):
         self.addDocuments(datasource.getDocuments())
 
     def addDocuments(self, documents):
+        ln.debug("corpus is adding documents")
         for document in documents:
             self.addDocument(document)
 

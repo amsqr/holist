@@ -1,0 +1,25 @@
+TODO:
+
+- figure out a load/save mechanism
+- add logging
+- add database dictionary and corpus
+- get more data sources -> non-static!
+- multithreading for indexing
+- add LDA and mSDA
+- assemble output json for frontend
+
+##- LSA and so on are dense, dont store dimension index in vector
+##	- use numpy arrays as the vectors
+##	- maybe optimize indexing  
+
+##- build memory-friendly index
+
+##- optimize plain token index (dont return duplicates, etc.)
+
+
+##- make index persistent
+
+
+Possibly someone else
+- write proper frontend (design, etc)
+- write mobile client (Android, iOS)

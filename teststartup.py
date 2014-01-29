@@ -1,4 +1,16 @@
-from holist.control.config import TestConfiguration
+from holist.util import util
+from holist.util import config
+import logging
+logging.basicConfig(format=config.logFormat,level=logging.DEBUG if config.showDebugLogs else logging.INFO)
+ln = util.getModuleLogger(__name__)
+from holist.control.config import ConfigReader 
 from holist.control.CoreController import CoreController
 
-control = CoreController(TestConfiguration.TestConfiguration())
+
+#util.startLogging()
+try:
+	cfg = ConfigReader.readConfig("testconfig.cfg")
+	control = CoreController(cfg)
+except Exception, e:
+	ln.error(e)
+	raise e

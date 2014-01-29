@@ -1,3 +1,6 @@
+from holist.util.util import *
+ln = getModuleLogger(__name__)
+
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 
@@ -11,14 +14,34 @@ class CoreController(object):
 		for Source in configuration.SOURCES:
 			self.sources.append(Source())
 
-		self.corpus = configuration.CORPUS([strat.NAME for strat in configuration.STRATEGIES],datasources=self.sources, static=configuration.CORPUSSTATIC)
+		self.corpus = configuration.CORPUS([strat.NAME for strat in configuration.STRATEGIES],datasources=self.sources)
 		self.dictionary = configuration.DICTIONARY()
-		self.preprocessor = configuration.PREPROCESSOR(self.dictionary)
+		self.preprocessor = configuration.PREPROCESSOR(self.dictionary) #updates dictionary
 
+		#print "total of %s terms. calculating most frequent..."
+		#freqs = [self.dictionary[k], k for k in self.dictionary.keys()]
+		#print sorted(freqs, reverse=True)[:100]
+
+
+		ln.info("preprocessing documents")
 		for document in self.corpus:
 			self.preprocessor.preprocess(document)
-
+		
 		self.textIndex = configuration.TEXTINDEX()
+		self.textIndex.addDocuments(self.corpus)
+
+
+		#docfreqs = {}
+		#for key in self.dictionary.keys():
+		#	freq = len(self.textIndex.queryText([(key,1)]))
+		#	try:
+		#		docfreqs[key] += freq
+		#	except:
+		#		docfreqs[key] = freq
+		#top100 = [(self.dictionary[termId], docfreqs[termId]) for termId in sorted(docfreqs, key=lambda x: docfreqs[x], reverse=True)[:100]]
+		#print top100
+
+
 		self.strategies = []
 		for Strategy in configuration.STRATEGIES:
 			#index = configuration.INDEX(Strategy.NAME, self.corpus, Strategy.getNumFeatures())
@@ -26,22 +49,25 @@ class CoreController(object):
 			self.strategies.append(Strategy(self.corpus, self.dictionary, index, self.textIndex))
 			self.indices.append(index)
 
+
+
 		self.frontend = configuration.FRONTEND(self)
-		print "starting Analysis"
+		ln.info("starting Analysis")
 		self.startAnalysis()
 
 		#self.analysisUpdater = LoopingCall(self.__update)
 		#self.analysisUpdater.start()
 
-		print "running reactor."
+		ln.info("running reactor.")
 		reactor.run()
 
 	
 	def startAnalysis(self):
 		# The preprocessor updates the dictionary automatically, so we don't need to worry about updating it
+		
 		for strategy in self.strategies:
 			strategy.handleDocuments(self.corpus)
-		self.textIndex.addDocuments(self.corpus)
+		
 
 	def queryText(self,searchString, minimize=True):
 		if minimize:
