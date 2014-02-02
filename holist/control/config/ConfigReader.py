@@ -3,6 +3,7 @@ ln = getModuleLogger(__name__)
 
 from holist.control.config.IConfiguration import IConfiguration
 
+MANDATORY = ["SOURCES","STRATEGIES","CORPUS","PREPROCESSOR","INDEX","TEXTINDEX","DICTIONARY","FRONTEND", "LOAD_STRATEGIES"]
 
 def readConfig(filename):
 	f = open(filename, "r")
@@ -14,7 +15,7 @@ def readConfig(filename):
 
 		fieldName = line[:line.find(":")] 
 		fieldValue = line[line.find(":")+1:].strip()
-		ln.info("%s, %s" % (fieldName, fieldValue))
+		ln.info("%s: %s" % (fieldName, fieldValue))
 
 		if fieldName == "SOURCES":
 			sources = fieldValue[1:-1].split(",")
@@ -27,6 +28,7 @@ def readConfig(filename):
 					config.SOURCES.append(Reuters21578DataSource)
 				else:
 					raise Exception("Unkown data source in config: %s" % (source,))
+				MANDATORY.remove("SOURCES")
 
 
 		elif fieldName == "STRATEGIES":
@@ -37,6 +39,7 @@ def readConfig(filename):
 					config.STRATEGIES.append(LSAStrategy)
 				else:
 					raise Exception("Unkown strategy in config: %s" % (strat,))
+				MANDATORY.remove("STRATEGIES")
 
 
 		elif fieldName == "CORPUS":
@@ -46,6 +49,7 @@ def readConfig(filename):
 				config.CORPUS = SimpleCorpus
 			else:
 				raise Exception("Unkown corpus in config: %s" % (corpus,))
+			MANDATORY.remove("CORPUS")
 
 
 		elif fieldName == "PREPROCESSOR":
@@ -55,6 +59,7 @@ def readConfig(filename):
 				config.PREPROCESSOR = TokenizingPorter2Stemmer
 			else:
 				raise Exception("Unkown preprocessor in config: %s" % (preprocessor,))
+			MANDATORY.remove("PREPROCESSOR")
 
 
 		elif fieldName == "INDEX":
@@ -64,7 +69,17 @@ def readConfig(filename):
 				config.INDEX = LowMemoryIndex
 			else:
 				raise Exception("Unkown index in config: %s", (index,))
+			MANDATORY.remove("INDEX")
 
+		elif fieldName == "LOAD_STRATEGIES":
+			load = fieldValue
+			if load == "True":
+				config.LOAD_STRATEGIES = True
+			elif load == "False":
+				config.LOAD_STRATEGIES = False
+			else:
+				raise Exception("Unkown LOAD_STRATEGIES value in config: %s", (load,))
+			MANDATORY.remove("LOAD_STRATEGIES")
 
 		elif fieldName == "TEXTINDEX":
 			index = fieldValue
@@ -73,6 +88,7 @@ def readConfig(filename):
 				config.TEXTINDEX = SimpleTextIndex
 			else:
 				raise Exception("Unkown text index in config: %s", (index,))
+			MANDATORY.remove("TEXTINDEX")
 
 
 		elif fieldName == "DICTIONARY":
@@ -82,18 +98,22 @@ def readConfig(filename):
 				config.DICTIONARY = SimpleDictionary
 			else:
 				raise Exception("Unkown dictionary in config: %s", (dictionary,))
+			MANDATORY.remove("DICTIONARY")
 
 
 		elif fieldName == "FRONTEND":
 			frontend = fieldValue
 			if frontend == "HolistFrontend":
 				from holist.frontend.TwistedFrontend import HolistFrontend
-
+				config.FRONTEND = HolistFrontend
 			else:
 				raise Exception("Unkown frontend in config: %s", (frontend,))
+			MANDATORY.remove("FRONTEND")
 		else:
 			raise Exception("Invalid category in %s: %s" % (filename, fieldName))
 
+	if MANDATORY:
+		raise Exception("Missing categories: %s", MANDATORY)
 	return config
 
 

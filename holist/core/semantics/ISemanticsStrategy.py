@@ -20,3 +20,8 @@ class ISemanticsStrategy(object):
     def compare(self, doc1, doc2):
     	raise Exception("Not implemented!")
 
+    def load(self):
+        raise Exception("Not implemented!")
+
+    def save(self):
+        raise Exception("Not implemented!")

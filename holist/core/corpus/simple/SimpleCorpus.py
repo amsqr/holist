@@ -20,6 +20,9 @@ class SimpleCorpus(ICorpus):
                 self.addDataSource(source)
         ln.info("corpus has been initialized")
 
+    def getDataSources(self):
+        return self.sources
+
     def addDataSource(self, datasource):
         if self.__static and self.sources != []:
             raise Exception("Corpus was declared static!")

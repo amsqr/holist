@@ -52,8 +52,14 @@ class CoreController(object):
 
 
 		self.frontend = configuration.FRONTEND(self)
-		ln.info("starting Analysis")
-		self.startAnalysis()
+		if configuration.LOAD_STRATEGIES:
+			ln.info("attempting to load all strategies")
+			for strategy in self.strategies:
+				strategy.load()
+				strategy.computeVectorRepresentations(self.corpus)
+		else:
+			ln.info("starting Analysis")
+			self.startAnalysis()
 
 		#self.analysisUpdater = LoopingCall(self.__update)
 		#self.analysisUpdater.start()
@@ -67,6 +73,8 @@ class CoreController(object):
 		
 		for strategy in self.strategies:
 			strategy.handleDocuments(self.corpus)
+			strategy.save()
+
 		
 
 	def queryText(self,searchString, minimize=True):

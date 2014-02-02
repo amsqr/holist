@@ -16,7 +16,7 @@ ONEPASS = True
 # MODEL CODE
 class LSAStrategy(ISemanticsStrategy):
     NAME = "LSA"
-    def __init__(self,corpus, dictionary, index, textIndex):
+    def __init__(self,corpus, dictionary, index, textIndex, load=False):
         """
         Initialize the model. This doesn't add any documents yet.
         """
@@ -25,6 +25,7 @@ class LSAStrategy(ISemanticsStrategy):
         self.textIndex = textIndex
         self.corpus = corpus
         ln.info("initializing LSA model..")
+        self.savename = self.NAME+"_"+"_".join([source.__class__.__name__ for source in  self.corpus.getDataSources()]) 
         #[doc.preprocessed for doc in corpus]
         self.model = models.lsimodel.LsiModel(corpus=None,num_topics=NUM_TOPICS, chunksize=CHUNKSIZE, id2word=self.dictionary,
             decay=DECAY, distributed=DISTRIBUTED, onepass=ONEPASS)
@@ -33,6 +34,10 @@ class LSAStrategy(ISemanticsStrategy):
     @staticmethod
     def getNumFeatures():
         return NUM_TOPICS
+
+    def computeVectorRepresentations(self, documents):
+        for document in documents:
+            document.vectors[self.NAME] = numpy.array([val for (k,val) in self.model[document.preprocessed]])
 
     def handleDocuments(self, documents):
         """
@@ -49,13 +54,15 @@ class LSAStrategy(ISemanticsStrategy):
         self.model.add_documents(minimalized)
 
         #add the document vector space representations
-        for document in documents:
-            document.vectors[self.NAME] = numpy.array([val for (k,val) in self.model[document.preprocessed]])
+        self.computeVectorRepresentations(documents)
+        self.indexDocuments(documents)
 
+    def indexDocuments(self, documents):
         ln.debug("LSA: processed documents, now updating index. Processing a total of %s documents." % len(documents))
         if self.corpus.isStatic():
             documents = sorted(documents,key=lambda doc: doc.id)
 
+        
         for idx, document in enumerate(documents):
             if idx % 100 == 0:
                 ln.debug("indexed %s documents..." % idx)
@@ -75,8 +82,6 @@ class LSAStrategy(ISemanticsStrategy):
                 self.index.addEntry(document.id, otherDoc.id, comp)
                 if self.corpus.isStatic():
                     self.index.addEntry(otherDoc.id, document.id, comp)
-        ln.debug("saving index.")
-        self.index.save("index.txt")
 
 
     def __getitem__(self, item):
@@ -101,4 +106,18 @@ class LSAStrategy(ISemanticsStrategy):
         dot = numpy.dot(vec1, vec2)
         return dot / (abs(numpy.linalg.norm(vec1)) * abs(numpy.linalg.norm(vec2)))
 
+    def getOverview(self):
+        return self.model.print_topics()
+
+    def save(self):
+        ln.debug("saving model")
+        self.model.save("model_" + self.savename + ".lsa")
+        ln.debug("saving index.")
+        self.index.save("index_" + self.savename + ".idx")
+
+    def load(self):
+        ln.debug("loading model.")
+        self.model = models.lsimodel.LsiModel.load("model_" + self.savename + ".lsa")
+        ln.debug("loading index.")
+        self.index.load("index_" + self.savename + ".idx")
 

@@ -13,3 +13,5 @@ class IConfiguration(object):
 	PREPROCESSOR  = None
 	INDEX = None
 	DICTIONARY = None
+	FRONTEND = None
+	LOAD_STRATEGIES = None

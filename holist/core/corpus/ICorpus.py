@@ -7,6 +7,9 @@ class ICorpus(object):
 	def addDataSource(self, dataSource):
 		raise Exception("Not implemented!")
 
+	def getDataSourceNames(self):
+		raise Exception("Not implemented!")
+
 	def addDocuments(self, documents):
 		raise Exception("Not implemented!")
 
