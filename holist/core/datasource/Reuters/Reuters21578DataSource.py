@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 class Reuters21578DataSource(IDataSource):
     def __init__(self):
-        self.reutersFiles = ["reuters21578/reut2-00%s.sgm" % str(num) for num in range(1)]# + ["reuters21578/reut2-0%s.sgm" % str(num) for num in range(10,22)]
+        self.reutersFiles = ["reuters21578/reut2-00%s.sgm" % str(num) for num in range(10)] + ["reuters21578/reut2-0%s.sgm" % str(num) for num in range(10,22)]
 
     def getDocuments(self):
         ln.debug("importing reuters21578 collection")
