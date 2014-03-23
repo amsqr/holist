@@ -8,9 +8,5 @@ from holist.control.CoreController import CoreController
 
 
 #util.startLogging()
-try:
-	cfg = ConfigReader.readConfig("testconfig.cfg")
-	control = CoreController(cfg)
-except Exception, e:
-	ln.error(e)
-	raise e
+cfg = ConfigReader.readConfig("testconfig.cfg")
+control = CoreController(cfg)

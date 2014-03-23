@@ -21,6 +21,9 @@ class SimpleDictionary(IDictionary):
 
     def __len__(self):
         return self.size
+        
+    def length(self):
+        return len(self.token2id)
 
     def doc2bow(self, text, allow_update=False, return_missing=False):
         result = {} #in the form tokenid: frequency

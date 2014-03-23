@@ -4,6 +4,8 @@ from Queue import Queue
 import datetime
 import config
 
+from pymongo import MongoClient
+
 loggers = []
 ## Central queue for log statements. Needed for sync under windows.
 logQueue = Queue()
@@ -11,6 +13,10 @@ logQueue = Queue()
 
 keepLogging = False
 logFrame = None
+
+def getDatabaseConnection():
+    client = MongoClient(config.dblocation, config.dbport)
+    return client
 
 ## Used as decorator to log a functions return value, using the appropriate logger. 
 def logReturnValue(function):

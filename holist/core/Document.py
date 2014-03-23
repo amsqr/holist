@@ -7,6 +7,5 @@ class Document(object):
 	def __iter__(self):
 		for id, token in self.preprocessed:
 			yield token
-
 	def __len__(self):
 		return len(self.preprocessed)

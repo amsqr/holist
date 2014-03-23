@@ -1,16 +1,10 @@
 class ICorpus(object):
 	"""Interface for Corpus classes"""
 
-	def __init__(self, strategyNames):
+	def __init__(self,datasupply):
 		raise Exception("Not implemented!")
 
-	def addDataSource(self, dataSource):
-		raise Exception("Not implemented!")
-
-	def getDataSourceNames(self):
-		raise Exception("Not implemented!")
-
-	def addDocuments(self, documents):
+	def getDescription(self):
 		raise Exception("Not implemented!")
 
 	def isStatic(self):
@@ -30,4 +24,6 @@ class ICorpus(object):
 
 	def __len__(self):
 		raise Exception("Not implemented!")
-		
+	
+	def commitChanges(self):
+		raise Exception("Not implemented")

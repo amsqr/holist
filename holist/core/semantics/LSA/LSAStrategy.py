@@ -25,8 +25,9 @@ class LSAStrategy(ISemanticsStrategy):
         self.textIndex = textIndex
         self.corpus = corpus
         ln.info("initializing LSA model..")
-        self.savename = self.NAME+"_"+"_".join([source.__class__.__name__ for source in  self.corpus.getDataSources()]) 
+        self.savename = self.NAME+"_"+"_".join([source.__class__.__name__ for source in  self.corpus.getDescription()]) 
         #[doc.preprocessed for doc in corpus]
+        ln.debug("DICT size is %s, corpus size is %s", len(self.dictionary), len(self.corpus))
         self.model = models.lsimodel.LsiModel(corpus=None,num_topics=NUM_TOPICS, chunksize=CHUNKSIZE, id2word=self.dictionary,
             decay=DECAY, distributed=DISTRIBUTED, onepass=ONEPASS)
         ln.info("LSA Initialized")
@@ -58,9 +59,8 @@ class LSAStrategy(ISemanticsStrategy):
         self.indexDocuments(documents)
 
     def indexDocuments(self, documents):
-        ln.debug("LSA: processed documents, now updating index. Processing a total of %s documents." % len(documents))
-        if self.corpus.isStatic():
-            documents = sorted(documents,key=lambda doc: doc.id)
+        ln.debug("LSA: processed documents, now updating index.")
+        documents = sorted(documents,key=lambda doc: doc.id)
 
         
         for idx, document in enumerate(documents):
@@ -69,19 +69,17 @@ class LSAStrategy(ISemanticsStrategy):
 
             # iterate through all documents for indexing
             relevantDocs = self.textIndex.queryText(document.preprocessed)
-            if self.corpus.isStatic(): #optimization step if we can create a global ordering
-                relevantDocs = sorted(relevantDocs)
+            relevantDocs = sorted(relevantDocs)
 
             for otherDocId in relevantDocs:
-                if self.corpus.isStatic() and otherDocId <= document.id:
+                if otherDocId <= document.id:
                     continue
                 otherDoc = self.corpus[otherDocId]
                 #add to index
                 comp = self.compare(document.vectors[self.NAME], otherDoc.vectors[self.NAME])
 
                 self.index.addEntry(document.id, otherDoc.id, comp)
-                if self.corpus.isStatic():
-                    self.index.addEntry(otherDoc.id, document.id, comp)
+                self.index.addEntry(otherDoc.id, document.id, comp)
 
 
     def __getitem__(self, item):

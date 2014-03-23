@@ -3,7 +3,7 @@ ln = getModuleLogger(__name__)
 
 from holist.control.config.IConfiguration import IConfiguration
 
-MANDATORY = ["SOURCES","STRATEGIES","CORPUS","PREPROCESSOR","INDEX","TEXTINDEX","DICTIONARY","FRONTEND", "LOAD_STRATEGIES"]
+MANDATORY = ["SOURCES","DATASUPPLY","STRATEGIES","CORPUS","PREPROCESSOR","INDEX","TEXTINDEX","DICTIONARY","FRONTEND", "LOAD_STRATEGIES"]
 
 def readConfig(filename):
 	f = open(filename, "r")
@@ -21,15 +21,23 @@ def readConfig(filename):
 			sources = fieldValue[1:-1].split(",")
 			for source in sources:
 				if source == "DummyDataSource":
-					from holist.core.datasource.DummyDataSource import DummyDataSource
+					from holist.datasupply.datasource.DummyDataSource import DummyDataSource
 					config.SOURCES.append(DummyDataSource)
 				elif source == "Reuters21578DataSource":
-					from holist.core.datasource.Reuters.Reuters21578DataSource import Reuters21578DataSource
+					from holist.datasupply.datasource.Reuters.Reuters21578DataSource import Reuters21578DataSource
 					config.SOURCES.append(Reuters21578DataSource)
 				else:
 					raise Exception("Unkown data source in config: %s" % (source,))
 				MANDATORY.remove("SOURCES")
 
+		elif fieldName == "DATASUPPLY":
+			datasupply = fieldValue
+			if datasupply == "MongoDataSupply":
+				from holist.datasupply.DataSupply import MongoDataSupply
+				config.DATASUPPLY = MongoDataSupply
+			else:
+				raise Exception("Unkown data supply in config: %s" % (datasupply,))
+			MANDATORY.remove("DATASUPPLY")
 
 		elif fieldName == "STRATEGIES":
 			strategies = fieldValue[1:-1].split(",")
@@ -47,6 +55,9 @@ def readConfig(filename):
 			if corpus == "SimpleCorpus":
 				from holist.core.corpus.simple.SimpleCorpus import SimpleCorpus
 				config.CORPUS = SimpleCorpus
+			elif corpus == "MongoDBCorpus":
+				from holist.core.corpus.mongodb.MongoDBCorpus import MongoDBCorpus
+				config.CORPUS = MongoDBCorpus
 			else:
 				raise Exception("Unkown corpus in config: %s" % (corpus,))
 			MANDATORY.remove("CORPUS")
@@ -96,6 +107,9 @@ def readConfig(filename):
 			if dictionary == "SimpleDictionary":
 				from holist.core.dictionary.simple.SimpleDictionary import SimpleDictionary
 				config.DICTIONARY = SimpleDictionary
+			elif dictionary == "HashDictionary":
+				from holist.core.dictionary.hash.HashDictionary import HashDictionary
+				config.DICTIONARY = HashDictionary
 			else:
 				raise Exception("Unkown dictionary in config: %s", (dictionary,))
 			MANDATORY.remove("DICTIONARY")
@@ -106,6 +120,9 @@ def readConfig(filename):
 			if frontend == "HolistFrontend":
 				from holist.frontend.TwistedFrontend import HolistFrontend
 				config.FRONTEND = HolistFrontend
+			elif frontend == "RESTfulFrontend":
+				from holist.frontend.RESTfulFrontend import RESTfulFrontend
+				config.FRONTEND = RESTfulFrontend
 			else:
 				raise Exception("Unkown frontend in config: %s", (frontend,))
 			MANDATORY.remove("FRONTEND")
