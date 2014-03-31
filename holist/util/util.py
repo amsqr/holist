@@ -4,6 +4,9 @@ from Queue import Queue
 import datetime
 import config
 
+from holist.core.Document import Document
+import numpy
+
 from pymongo import MongoClient
 
 loggers = []
@@ -17,6 +20,13 @@ logFrame = None
 def getDatabaseConnection():
     client = MongoClient(config.dblocation, config.dbport)
     return client
+
+def convertToDocument(bson):
+    document = Document("")
+    document.__dict__ = bson
+    for strategyName in document.vectors:
+        document.vectors[strategyName] = numpy.array(document.vectors[strategyName])
+    return document
 
 ## Used as decorator to log a functions return value, using the appropriate logger. 
 def logReturnValue(function):

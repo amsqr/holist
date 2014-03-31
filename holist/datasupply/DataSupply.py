@@ -1,50 +1,50 @@
 from holist.util.util import *
 ln = getModuleLogger(__name__)
 import holist.util.config
-
-def convertToDocument(bson):
-    document = Document("")
-    document.__dict__ = bson
-    return document
+import requests
+import json
 
 class MongoDataSupply(object): #This handles ONLY the new_documents collection
-	def __init__(self, controller, sources):
-		self.sources = sources
-		self.controller = controller
+	"""
+	not a full data supply.
+	this is used to fetch documents from the database when they're collected by the seperate datacollector nodeself.
+	"""
+	def __init__(self):
 		self.client = getDatabaseConnection()
 		self.database = self.client[config.dbname]
 		#self.database.authenticate(UNAME, PASSWD)
-		self.newDocuments = self.database.new_documents
+		self.newDocumentsCollection = self.database.new_documents
+
+	@classmethod
+	def isRemote(self):
+		return True
+	
+	def connect(self):
+
+		try:
+			ln.info("attempting to connect to collector node at %s:%s",config.collectNodeIP, config.collectNodePort)
+			data = {"ip":config.holistcoreurl, "port":config.holistcoreport}
+			res = requests.post("http://"+config.collectNodeIP+":"+str(config.collectNodePort)+"/register_listener", data=data)
+			success = json.loads(res.text)["result"] == "success"
+			ln.info("successfully connected.")
+			return success
+		except Exception, e:
+			ln.warn("couldn't connect: %s", str(e))
+			return False
 
 	def getNewDocuments(self):
-		return self.newDocuments.find()
-
-	def isDataReady(self):
-		return bool(self.newDocuments.find().count())
-
-	def update(self):
-		new = False
-		for source in self.sources:
-			try:
-				self.newDocuments.insert([doc.__dict__ for doc in source.updateAndGetDocuments()])
-				new = True
-			except:
-				pass
-
-		if new:
-			self.notifyController()
-
-	def setHandled(self, doc):
-		self.newDocuments.remove(doc._id) # drop from new documents collection
-
-	def notifyController(self):
-		self.controller.notifyNewDocuments()
+		newDocuments = [convertToDocument(bson) for bson in self.newDocumentsCollection.find()]
+		ids = [doc._id for doc in newDocuments]
+		self.newDocumentsCollection.remove({"_id":{"$in":ids}})
+		return newDocuments
 
 class SimpleDataSupply(object):
+	"""
+	can be used to have a data supply completely INTERNAL to the core.
+	"""
 	def __init__(self, controller, sources):
 		self.sources = sources
 		self.controller = controller
-		#self.database.authenticate(UNAME, PASSWD)
 		self.newDocuments = dict()
 		
 		for source in self.sources:
@@ -52,10 +52,13 @@ class SimpleDataSupply(object):
 				self.newDocuments[doc.id] = doc
 
 	def getNewDocuments(self):
-		return self.newDocuments
-
-	def isDataReady(self):
-		return bool(self.newDocuments)
+		ret = self.newDocuments.values()[:]
+		self.newDocuments = dict()
+		return ret
+	
+	@classmethod
+	def isRemote(self):
+		return False
 
 	def update(self):
 		new = False
@@ -65,10 +68,10 @@ class SimpleDataSupply(object):
 				self.newDocuments[doc.id] = doc
 
 		if new:
-			notifyController()
+			self.notifyController()
 
 	def setHandled(self, doc):
-		self.newDocuments.remove(doc._id) # drop from new documents collection
+		del self.newDocuments[doc.id] # drop from new document
 
 	def notifyController(self):
 		self.controller.notifyNewDocuments()

@@ -4,6 +4,7 @@ ln = getModuleLogger(__name__)
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 from twisted.internet.threads import deferToThread
+from twisted.internet import defer
 from holist.core.server.Listener import Listener
 
 
@@ -11,46 +12,32 @@ class CoreController(object):
 	"""docstring for CoreController"""
 	def __init__(self, configuration):
 		# inititalize data source + corpus
-		self.listeners = []
+		self.listeners = dict()
 		self.sources = []
 		for Source in configuration.SOURCES:
 			self.sources.append(Source())
 
-		self.datasupply = configuration.DATASUPPLY(self,self.sources)
-		self.corpus = configuration.CORPUS([strat.NAME for strat in configuration.STRATEGIES], datasupply=self.datasupply)
+		
+		self.corpus = configuration.CORPUS()
 		self.dictionary = configuration.DICTIONARY()
 		self.preprocessor = configuration.PREPROCESSOR(self.dictionary) #updates dictionary
 
-		#print "total of %s terms. calculating most frequent..."
-		#freqs = [self.dictionary[k], k for k in self.dictionary.keys()]
-		#print sorted(freqs, reverse=True)[:100]
-
-
-		#ln.info("preprocessing documents")
-		#if corpus
-		#for document in self.corpus:
-	#		self.preprocessor.preprocess(document)
-		
-		self.textIndex = configuration.TEXTINDEX()
-		self.textIndex.addDocuments(self.corpus)
-
-
-		#docfreqs = {}
-		#for key in self.dictionary.keys():
-		#	freq = len(self.textIndex.queryText([(key,1)]))
-		#	try:
-		#		docfreqs[key] += freq
-		#	except:
-		#		docfreqs[key] = freq
-		#top100 = [(self.dictionary[termId], docfreqs[termId]) for termId in sorted(docfreqs, key=lambda x: docfreqs[x], reverse=True)[:100]]
-		#print top100
+		if configuration.DATASUPPLY.isRemote():
+			self.datasupply = configuration.DATASUPPLY()
+			def connectUntilDoneIteration():
+				ok = self.datasupply.connect()
+				if ok:
+					self.connectLoop.stop()
+			self.connectLoop = LoopingCall(connectUntilDoneIteration)
+			self.connectLoop.start(5)
+		else:
+			self.datasupply = configuration.DATASUPPLY(self,self.sources)
 
 
 		self.strategies = []
 		for Strategy in configuration.STRATEGIES:
 			#index = configuration.INDEX(Strategy.NAME, self.corpus, Strategy.getNumFeatures())
-			index = configuration.INDEX()
-			self.strategies.append(Strategy(self.corpus, self.dictionary, index, self.textIndex))
+			self.strategies.append(Strategy(self.corpus, self.dictionary))
 
 
 
@@ -68,52 +55,54 @@ class CoreController(object):
 		else:
 			computeStrategies += self.strategies
 		
-		#ln.info("starting Analysis")
-		#self.startAnalysis(computeStrategies)
-		self.updating = False
-		dataUpdateLoop = LoopingCall(self.updateDataSupply)
-		dataUpdateLoop.start(10)
 		
+		if not self.datasupply.isRemote():
+			# we only need to start an update loop if the data supply is internal
+			# otherwise, updating is triggered through the REST API by the data collector node 
+			
+			bg = lambda : deferToThread(self.__updateSupplyAndAnalyze)
+			dataUpdateLoop = LoopingCall(bg)
+			dataUpdateLoop.start(10)
+		self.updating = False
 		ln.info("running reactor.")
 		reactor.run()
 
-	def updateDataSupply(self):
-		deferToThread(self.datasupply.update)
-
-	#NOT STARTED AT THE MOMENT
-	#def startAnalysis(self, computeStrategies):
-#		# The preprocessor updates the dictionary automatically, so we don't need to worry about updating it
-#		ln.debug("dictionary size is %s, or %s", len(self.dictionary), self.dictionary.length())#
-#		for strategy in computeStrategies:
-#			strategy.handleDocuments(self.corpus)
-#			strategy.save()
-
+	def __updateSupplyAndAnalyze(self):
+		self.datasupply.update()
+		self.update()
 
 	def update(self): #called on notify through data collector
-		ln.debug("update called in core controller")
+		#ln.debug("update called in core controller")
+		if self.updating:
+			return
 		self.updating = True
+		ln.debug("running update iteration.")
 
-		while self.datasupply.isDataReady():
-			ln.debug("in update loop, there still seems to be new data available")
-			empty = True
-			#have corpus fetch new documents
-			self.corpus.update()
+		#data supply: fetch new documents
+		self.newDocuments = self.datasupply.getNewDocuments()
+		if not self.newDocuments:
+			self.updating = False
+			return
 
-			#preprocess these documents
-			for document in self.corpus.iterSinceLastUpdate():
-				empty = False
-				self.preprocessor.preprocess(document)
-				# The preprocessor updates the dictionary automatically, so we don't need to worry about updating it now
+		#preprocess these documents
+		for document in self.newDocuments:
+			self.preprocessor.preprocess(document)
 
-			self.textIndex.addDocuments(self.corpus.iterSinceLastUpdate())
-			#throw the new documents against our models.
-			for strategy in self.strategies:
-				strategy.handleDocuments(self.corpus.iterSinceLastUpdate())
-	
-			self.corpus.commitChanges()
-	
-			if not empty:
-				notifyListeners()
+		#throw the new documents against our models.
+
+		deferreds = []
+		for strategy in self.strategies:
+			deferred = deferToThread(strategy.handleDocuments, self.newDocuments)
+			deferreds.append(deferred)
+		deferreds = defer.DeferredList(deferreds)
+		deferreds.addCallback(self.__onStrategiesFinished)
+
+	def __onStrategiesFinished(self, results):
+		self.corpus.addDocuments(self.newDocuments)
+		ln.info("finished updating. notifying listeners.")
+		if len(self.newDocuments):
+			self.notifyListeners([doc._id for doc in self.newDocuments])
+		self.newDocuments = []
 		self.updating = False
 
 	def queryText(self,searchString, minimize=True):
@@ -126,12 +115,12 @@ class CoreController(object):
 			results[strategy.NAME] = strategy.queryText(search, 10)
 		return results
 
-	def notifyListeners(self):
-		for listener in self.listeners:
+	def notifyListeners(self, ids):
+		for listener in self.listeners.values():
 			try:
-				listener.notify()
+				listener.notify(ids)
 			except:
-				ln.error("couldn't notify listener")
+				ln.error("couldn't notify listener %s", listener.ip+":"+str(listener.port))
 
 	def queryId(self, id):
 		results = {}
@@ -141,11 +130,10 @@ class CoreController(object):
 
 	def registerListener(self, ip, port):
 		listener = Listener(ip, port)
-		self.listeners.append(listener)
+		self.listeners[ip+":"+str(port)] = listener
 
 	def notifyNewDocuments(self):
-		if not self.updating:
-			self.update()
+		deferToThread(self.update)
 
 
 

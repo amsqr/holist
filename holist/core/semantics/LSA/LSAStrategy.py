@@ -5,6 +5,7 @@ from holist.core.semantics.ISemanticsStrategy import ISemanticsStrategy
 from gensim import models
 import numpy
 import datetime
+import time
 
 # SETTINGS
 NUM_TOPICS = 100
@@ -16,13 +17,11 @@ ONEPASS = True
 # MODEL CODE
 class LSAStrategy(ISemanticsStrategy):
     NAME = "LSA"
-    def __init__(self,corpus, dictionary, index, textIndex, load=False):
+    def __init__(self,corpus, dictionary, load=False):
         """
         Initialize the model. This doesn't add any documents yet.
         """
         self.dictionary = dictionary
-        self.index = index
-        self.textIndex = textIndex
         self.corpus = corpus
         ln.info("initializing LSA model..")
         self.savename = self.NAME+"_"+"_".join([source.__class__.__name__ for source in  self.corpus.getDescription()]) 
@@ -30,6 +29,14 @@ class LSAStrategy(ISemanticsStrategy):
         ln.debug("DICT size is %s, corpus size is %s", len(self.dictionary), len(self.corpus))
         self.model = models.lsimodel.LsiModel(corpus=None,num_topics=NUM_TOPICS, chunksize=CHUNKSIZE, id2word=self.dictionary,
             decay=DECAY, distributed=DISTRIBUTED, onepass=ONEPASS)
+        
+        import logging
+        lsi_log = logging.getLogger("gensim.models.lsimodel")
+        mat_log = logging.getLogger("gensim.matutils")
+        
+        lsi_log.setLevel(logging.INFO)
+        mat_log.setLevel(logging.INFO)
+
         ln.info("LSA Initialized")
 
     @staticmethod
@@ -47,62 +54,16 @@ class LSAStrategy(ISemanticsStrategy):
         #get minimalized forms
         minimalized = (doc.preprocessed for doc in documents)
 
-        #minimalized form is usually removed stop words, stemming, and then converted to BoW
-        #print "DEBUG: ", list(minimalized)[0]
-        #update our model
-        #if self.model.projection.u is None:
-        #    self.model.projection = gensim.models.lsimodel.Projection(NUM_TOPICS)
+        #minimalized form is generally removed stop words, stemming, and then converted to BoW
         self.model.add_documents(minimalized)
 
         #add the document vector space representations
         self.computeVectorRepresentations(documents)
-        self.indexDocuments(documents)
-
-    def indexDocuments(self, documents):
-        ln.debug("LSA: processed documents, now updating index.")
-        documents = sorted(documents,key=lambda doc: doc.id)
-
-        
-        for idx, document in enumerate(documents):
-            if idx % 100 == 0:
-                ln.debug("indexed %s documents..." % idx)
-
-            # iterate through all documents for indexing
-            relevantDocs = self.textIndex.queryText(document.preprocessed)
-            relevantDocs = sorted(relevantDocs)
-
-            for otherDocId in relevantDocs:
-                if otherDocId <= document.id:
-                    continue
-                otherDoc = self.corpus[otherDocId]
-                #add to index
-                comp = self.compare(document.vectors[self.NAME], otherDoc.vectors[self.NAME])
-
-                self.index.addEntry(document.id, otherDoc.id, comp)
-                self.index.addEntry(otherDoc.id, document.id, comp)
 
 
     def __getitem__(self, item):
         return self.model[item]
 
-    def queryText(self, textMinimalized, num_best):
-        result = []
-        plainTextSearchResults = self.textIndex.queryText(textMinimalized) # set of docIDs containing any words in the query
-        textLSAVect = [val for (k,val) in self[textMinimalized]]
-
-        for docId in  plainTextSearchResults:
-            docLSAVect = self.corpus[docId].vectors[self.NAME]
-            result.append((docId,self.compare(textLSAVect,docLSAVect))) #actual ranking determined by vecotr space similarity
-
-        return sorted(result, key=lambda k: k[1], reverse=True)[:num_best]
-
-
-    def queryId(self, docid):
-        return self.index.query(docid)
-
-    def compare(self, vec1, vec2, query=False):
-        dot = numpy.dot(vec1, vec2)
-        return dot / (abs(numpy.linalg.norm(vec1)) * abs(numpy.linalg.norm(vec2)))
 
     def getOverview(self):
         return self.model.print_topics()

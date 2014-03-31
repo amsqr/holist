@@ -2,14 +2,20 @@
 backupCount = 0
 
 updateLogMaxWaitTime = 10
-logFilename = "vdvserver%s.log"
+logFilename = "holistserver%s.log"
 logNameLength = 18
 logFormat = '%(asctime)s %(levelname)-8s %(name)-18s: %(message)s'
 
 showDebugLogs = True
 
-dblocation = "tmac.local"
+collectNodeIP = "localhost"
+collectNodePort = 12137
+
+holistcoreurl = "localhost"
+holistcoreport = 1157
+
+dblocation = "localhost"
 dbport = 27017
-dbname = "crushed"
+dbname = "holist"#"crushed"
 #dblocation = "ds059957.mongolab.com"
 #dbport = 59957

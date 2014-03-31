@@ -10,6 +10,7 @@ class IConfiguration(object):
 	SOURCES = []
 	STRATEGIES = []
 	CORPUS = None
+	DATASUPPLYWRAPPER = None
 	PREPROCESSOR  = None
 	INDEX = None
 	DICTIONARY = None

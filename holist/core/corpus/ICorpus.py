@@ -7,23 +7,20 @@ class ICorpus(object):
 	def getDescription(self):
 		raise Exception("Not implemented!")
 
-	def isStatic(self):
-		raise Exception("Not implemented!")
-
-	def update(self):
-		raise Exception("Not implemented!")
-
-	def __iter__(self):
+	def addDocuments(self, docs):
 		raise Exception("Not implemented!")
 	
-	def iterSinceLastUpdate(self):
+	def addDocument(self, doc):
+		raise Exception("Not implemented!")
+	
+	def __iter__(self):
 		raise Exception("Not implemented!")
 	
 	def __getitem__(self, key):
 		raise Exception("Not implemented!")
 
+	def getDocuments(self, docidlist):
+		raise Exception("Not implemented")
+
 	def __len__(self):
 		raise Exception("Not implemented!")
-	
-	def commitChanges(self):
-		raise Exception("Not implemented")

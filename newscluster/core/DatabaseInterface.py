@@ -3,30 +3,30 @@ from pymongo import MongoClient
 from newscluster.core.Cluster import Cluster
 from holist.core.Document import Document
 
-LOCAL_DB_LOCATION = "tmac.local"
-LOCAL_DB_PORT = 27017
-LOCAL_DB_NAME = "crushed"
+from holist.util import config
 
-CLUSTER_DB_LOCATION = "ds059957.mongolab.com"
-CLUSTER_DB_PORT =  59957
-CLUSTER_DB_NAME = "heroku_app23257563"
+LOCAL_DB_LOCATION = config.dblocation #"tmac.local"
+LOCAL_DB_PORT = config.dbport #27017
+LOCAL_DB_NAME = config.dbname #"crushed"
 
-def DatabaseInterface(object):
+CLUSTER_DB_LOCATION = config.dblocation #"ds059957.mongolab.com"
+CLUSTER_DB_PORT = config.dbport
+CLUSTER_DB_NAME = config.dbname
+
+class DatabaseInterface(object):
 	def __init__(self):
 		self.documentClient = MongoClient(LOCAL_DB_LOCATION, LOCAL_DB_PORT)
 		self.documents = self.documentClient[LOCAL_DB_NAME].articles
-		self.processedIds = self.documentClient[LOCAL_DB_NAME].processed_article_ids
 
 		self.clustersClient = MongoClient(CLUSTER_DB_LOCATION, CLUSTER_DB_PORT)
 		self.clusters = self.clustersClient[CLUSTER_DB_NAME].clusters
 
-	def getNewDocuments(self):
+	def getNewDocuments(self, ids):
 		documents = []
-		for entry in self.processedIds.find():
-			__id = entry["docid"]
-			documentbson = self.documents.find_one(__id)
+		for entry in self.documents.find({"_id":{"$in":ids}}):
 			document = Document()
-			document.__dict__ = documentbson
+			document.__dict__ = entry
+
 			documents.append(document)
 		return documents
 
@@ -38,7 +38,7 @@ def DatabaseInterface(object):
 
 	def saveCluster(self, cluster):
 		clusterbson = cluster.__dict__
-		clusterbson.remove("documentsFull")
+		del clusterbson["documentsFull"]
 		self.clusters.save(clusterbson)
 
 	def getClusters(json=True, full=False):
