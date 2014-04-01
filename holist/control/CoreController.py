@@ -59,37 +59,35 @@ class CoreController(object):
 		if not self.datasupply.isRemote():
 			# we only need to start an update loop if the data supply is internal
 			# otherwise, updating is triggered through the REST API by the data collector node 
-			
 			bg = lambda : deferToThread(self.__updateSupplyAndAnalyze)
 			dataUpdateLoop = LoopingCall(bg)
 			dataUpdateLoop.start(10)
+
 		self.updating = False
+		self.updateQueued = False
 		ln.info("running reactor.")
 		reactor.run()
 
 	def __updateSupplyAndAnalyze(self):
+		ln.debug("__updateSupplyAndAnalyze")
 		self.datasupply.update()
 		self.update()
 
 	def update(self): #called on notify through data collector
 		#ln.debug("update called in core controller")
-		if self.updating:
-			return
 		self.updating = True
-		ln.debug("running update iteration.")
 
 		#data supply: fetch new documents
 		self.newDocuments = self.datasupply.getNewDocuments()
 		if not self.newDocuments:
-			self.updating = False
+			ln.debug("No new documents. Cancelling update iteration.")
 			return
-
+		ln.info("running update iteration.")
 		#preprocess these documents
 		for document in self.newDocuments:
 			self.preprocessor.preprocess(document)
 
 		#throw the new documents against our models.
-
 		deferreds = []
 		for strategy in self.strategies:
 			deferred = deferToThread(strategy.handleDocuments, self.newDocuments)
@@ -104,6 +102,7 @@ class CoreController(object):
 			self.notifyListeners([doc._id for doc in self.newDocuments])
 		self.newDocuments = []
 		self.updating = False
+		
 
 	def queryText(self,searchString, minimize=True):
 		if minimize:
@@ -133,7 +132,29 @@ class CoreController(object):
 		self.listeners[ip+":"+str(port)] = listener
 
 	def notifyNewDocuments(self):
-		deferToThread(self.update)
+		self.updateQueued = True
+		ln.info("An update was queued.")
+		if not self.updating:
+			deferToThread(self.startUpdateLoop)
+
+	def startUpdateLoop(self):
+		self.triggeredLoop = LoopingCall(self.__updateLoopIteration)
+		self.triggeredLoop.start(10)
+
+	def __updateLoopIteration(self):
+		if self.updating:
+			return
+		if self.updateQueued:
+			self.updateQueued = False # only the last queued update is interesting, so we don't need an actual queue
+			self.update()
+		else:
+			try:
+				ln.debug("stopping triggered loop.")
+				self.triggeredLoop.stop()
+			except Exception, e:
+				ln.debug("exception stopping triggered loop: %s", str(e))
+				pass
+
 
 
 

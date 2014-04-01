@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 class Reuters21578DataSource(IDataSource):
     def __init__(self):
         self.reutersFiles = []
-        self.loadFiles = ["reuters21578/reut2-00%s.sgm" % str(num) for num in range(10)] + ["reuters21578/reut2-0%s.sgm" % str(num) for num in range(10,22)] 
+        self.loadFiles = ["reuters21578/reut2-00%s.sgm" % str(num) for num in range(10)]#s + ["reuters21578/reut2-0%s.sgm" % str(num) for num in range(10,22)] 
         self.updateCount = 0
         self.updating = False
 

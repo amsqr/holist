@@ -66,7 +66,6 @@ class SimpleDataSupply(object):
 			for doc in source.updateAndGetDocuments():
 				new = True
 				self.newDocuments[doc.id] = doc
-
 		if new:
 			self.notifyController()
 
