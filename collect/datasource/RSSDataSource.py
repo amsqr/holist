@@ -67,9 +67,10 @@ class RSSFeed(object):
             else: #add to new documents
                 listToAppendTo = self.newDocuments
 
-            document = Document()
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
+            document = Document(item.description)
+            document.id = item.id
             listToAppendTo.append(document)
 
 class RSSDataSource(IDataSource):
