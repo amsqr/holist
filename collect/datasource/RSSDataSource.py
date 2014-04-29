@@ -34,7 +34,7 @@ class LimitedSizeDict(OrderedDict):
 class RSSFeed(object):
     def __init__(self, feedURL):
         self.url = feedURL
-        self.idUpdateMemory = LimitedSizeDict(size_limit=250) # remember the last 250 feed entry ids and change dates
+        self.idUpdateMemory = LimitedSizeDict(size_limit=400) # remember the last 400 feed entry ids and change dates
         self.etag = None
         self.modified = None
 
@@ -59,20 +59,24 @@ class RSSFeed(object):
             ln.debug("feed %s wasn't updated.", self.url)
             return [], []
         ln.debug("Got %s entries from feed %s",len(res.entries), self.url)
+        newDocuments = []
+        updatedDocuments = []
         for item in res.entries:
             if item.id in self.idUpdateMemory:
                 if item.modified == self.idUpdateMemory[item.id]:
+                    ln.debug("continuing, no update for article %s", item.id)
                     continue # we know this article and it hasn't been updated
                 else: #add to updates
-                    listToAppendTo = self.updatedDocuments    
+                    listToAppendTo = updatedDocuments    
             else: #add to new documents
-                listToAppendTo = self.newDocuments
+                listToAppendTo = newDocuments
 
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
             document = Document(item.description)
             document.id = item.id
             listToAppendTo.append(document)
+        return newDocuments, updatedDocuments
 
 class RSSDataSource(IDataSource):
     def __init__(self):
@@ -108,5 +112,9 @@ class RSSDataSource(IDataSource):
         return self.newDocuments #, self.updatedDocuments
 
     def __onAllFeedsUpdated(self, results):
+        for _, (new, updated) in results:
+            self.newDocuments += new 
+            self.updatedDocuments +=updated
         self.updating = False
+
 
