@@ -56,7 +56,6 @@ class RSSFeed(object):
         else: # we're on the first iteration OR neither etag nor modified is supported
             ln.debug("started update of feed %s with no updating info", self.url)
             res = feedparser.parse(self.url)
-            ln.debug("parsed feed %s", self.url)
             self.etag = res.get("etag", None)
             ln.debug("feed %s got modified etag %s", self.url, self.etag)
             self.modified = res.get("modified", None)
@@ -78,6 +77,8 @@ class RSSFeed(object):
                     listToAppendTo = updatedDocuments    
             else: #add to new documents
                 listToAppendTo = newDocuments
+
+            self.idUpdateMemory[item.id] = item.modified
 
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
