@@ -20,7 +20,6 @@ class MongoDataSupply(object): #This handles ONLY the new_documents collection
 		return True
 	
 	def connect(self):
-
 		try:
 			ln.info("attempting to connect to collector node at %s:%s",config.collectNodeIP, config.collectNodePort)
 			data = {"ip":config.holistcoreurl, "port":config.holistcoreport}
@@ -37,40 +36,3 @@ class MongoDataSupply(object): #This handles ONLY the new_documents collection
 		ids = [doc._id for doc in newDocuments]
 		self.newDocumentsCollection.remove({"_id":{"$in":ids}})
 		return newDocuments
-
-class SimpleDataSupply(object):
-	"""
-	can be used to have a data supply completely INTERNAL to the core.
-	"""
-	def __init__(self, controller, sources):
-		self.sources = sources
-		self.controller = controller
-		self.newDocuments = dict()
-		
-		for source in self.sources:
-			for doc in source.getDocuments():
-				self.newDocuments[doc.id] = doc
-
-	def getNewDocuments(self):
-		ret = self.newDocuments.values()[:]
-		self.newDocuments = dict()
-		return ret
-	
-	@classmethod
-	def isRemote(self):
-		return False
-
-	def update(self):
-		new = False
-		for source in self.sources:
-			for doc in source.updateAndGetDocuments():
-				new = True
-				self.newDocuments[doc.id] = doc
-		if new:
-			self.notifyController()
-
-	def setHandled(self, doc):
-		del self.newDocuments[doc.id] # drop from new document
-
-	def notifyController(self):
-		self.controller.notifyNewDocuments()

@@ -12,14 +12,15 @@ from collect.view.RESTfulFrontend import RESTfulFrontend
 from collect.db.DatabaseInterface import DatabaseInterface
 from holist.core.server.Listener import Listener
 
-from holist.datasupply.datasource.Reuters.Reuters21578DataSource import Reuters21578DataSource
+from collect.datasource.Reuters.Reuters21578DataSource import Reuters21578DataSource
+from collect.datasource.RSSDataSource import RSSDataSource
 
 class DataCollector(object):
 	def __init__(self):
 		self.listeners = dict()
 		self.frontend = RESTfulFrontend(self)
 		self.databaseInterface = DatabaseInterface()
-		self.sources = [Reuters21578DataSource()]
+		self.sources = [RSSDataSource()] #Reuters21578DataSource()]
 		
 		self.connected = False
 		self.loop = LoopingCall(self.update)
@@ -40,6 +41,7 @@ class DataCollector(object):
 				d.addErrback(err)
 
 	def handleData(self, source, result):
+		ln.debug(result)
 		self.databaseInterface.addDocuments(result)
 		source.updating = False
 		if result:

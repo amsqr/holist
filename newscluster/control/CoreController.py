@@ -40,8 +40,6 @@ class CoreController(object):
 				self.loop.stop()
 		except Exception, e:
 			ln.error(str(e))
-			
-
 
 	def getClusters(self, json=True, full=False):
 		return self.databaseInterface.getClusters(json, full)

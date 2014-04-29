@@ -11,15 +11,6 @@ class ISemanticsStrategy(object):
     def handleDocument(self, document):
         raise Exception("Not implemented!")
 
-    def queryText(self, query, num_best=None):
-        raise Exception("Not implemented!")
-
-    def queryId(self, docid, num_best=None):
-        raise Exception("Not implemented!")
-
-    def compare(self, doc1, doc2):
-    	raise Exception("Not implemented!")
-
     def load(self):
         raise Exception("Not implemented!")
 

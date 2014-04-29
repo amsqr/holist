@@ -17,7 +17,6 @@ class CoreController(object):
 		for Source in configuration.SOURCES:
 			self.sources.append(Source())
 
-		
 		self.corpus = configuration.CORPUS()
 		self.dictionary = configuration.DICTIONARY()
 		self.preprocessor = configuration.PREPROCESSOR(self.dictionary) #updates dictionary
@@ -38,8 +37,6 @@ class CoreController(object):
 		for Strategy in configuration.STRATEGIES:
 			#index = configuration.INDEX(Strategy.NAME, self.corpus, Strategy.getNumFeatures())
 			self.strategies.append(Strategy(self.corpus, self.dictionary))
-
-
 
 		self.frontend = configuration.FRONTEND(self)
 		computeStrategies = []
@@ -102,17 +99,6 @@ class CoreController(object):
 			self.notifyListeners([doc._id for doc in self.newDocuments])
 		self.newDocuments = []
 		self.updating = False
-		
-
-	def queryText(self,searchString, minimize=True):
-		if minimize:
-			search = self.preprocessor.preprocess(searchString)
-		else:
-			search = searchString.split(" ")
-		results = {}
-		for strategy in self.strategies:
-			results[strategy.NAME] = strategy.queryText(search, 10)
-		return results
 
 	def notifyListeners(self, ids):
 		for listener in self.listeners.values():
@@ -120,12 +106,6 @@ class CoreController(object):
 				listener.notify(ids)
 			except:
 				ln.error("couldn't notify listener %s", listener.ip+":"+str(listener.port))
-
-	def queryId(self, id):
-		results = {}
-		for strategy in self.strategies:
-			results[strategy.NAME] = strategy.queryId(id)
-		return results
 
 	def registerListener(self, ip, port):
 		listener = Listener(ip, port)

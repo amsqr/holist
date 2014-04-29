@@ -39,6 +39,13 @@ class LSAStrategy(ISemanticsStrategy):
 
         ln.info("LSA Initialized")
 
+        """
+        dispatcher.initialize(id2word=self.id2word, num_topics=num_topics,
+                                      chunksize=chunksize, decay=decay,
+                                      power_iters=self.power_iters, extra_samples=self.extra_samples,
+                                      distributed=False, onepass=onepass)
+        """
+
     @staticmethod
     def getNumFeatures():
         return NUM_TOPICS

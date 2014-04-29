@@ -34,15 +34,10 @@ class MongoDBCorpus(ICorpus): #This updates ONLY the articles collection
         return self.documents.find().count()
 
     def __iter__(self):
-        if self.isEmpty():
-            ln.debug("iterating through CACHE")
-            for doc in self.cache.values():
-                yield doc
-        else:
-            ln.debug("iterating through DATABASE")
-            for docbson in self.documents.find():
-                document = convertToDocument(docbson)
-                yield document
+        ln.debug("iterating through DATABASE")
+        for docbson in self.documents.find():
+            document = convertToDocument(docbson)
+            yield document
 
     def getDescription(self):
         return "MongoDBCorpus"

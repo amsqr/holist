@@ -3,7 +3,7 @@ ln = getModuleLogger(__name__)
 
 from holist.control.config.IConfiguration import IConfiguration
 
-MANDATORY = ["DATASUPPLY","STRATEGIES","CORPUS","PREPROCESSOR","INDEX","TEXTINDEX","DICTIONARY","FRONTEND", "LOAD_STRATEGIES"]
+MANDATORY = ["DATASUPPLY","STRATEGIES","CORPUS","PREPROCESSOR","DICTIONARY","FRONTEND", "LOAD_STRATEGIES"]
 
 def readConfig(filename):
 	f = open(filename, "r")
@@ -34,9 +34,6 @@ def readConfig(filename):
 			if datasupply == "MongoDataSupply":
 				from holist.datasupply.DataSupply import MongoDataSupply
 				config.DATASUPPLY = MongoDataSupply
-			elif datasupply == "SimpleDataSupply":
-				from holist.datasupply.DataSupply import SimpleDataSupply
-				config.DATASUPPLY = SimpleDataSupply
 			else:
 				raise Exception("Unkown data supply wrapper in config: %s" % (datasupply,))
 			MANDATORY.remove("DATASUPPLY")
@@ -74,16 +71,6 @@ def readConfig(filename):
 				raise Exception("Unkown preprocessor in config: %s" % (preprocessor,))
 			MANDATORY.remove("PREPROCESSOR")
 
-
-		elif fieldName == "INDEX":
-			index = fieldValue
-			if index == "LowMemoryIndex":
-				from holist.core.index.lowmemprio.LowMemoryIndex import LowMemoryIndex
-				config.INDEX = LowMemoryIndex
-			else:
-				raise Exception("Unkown index in config: %s", (index,))
-			MANDATORY.remove("INDEX")
-
 		elif fieldName == "LOAD_STRATEGIES":
 			load = fieldValue
 			if load == "True":
@@ -93,15 +80,6 @@ def readConfig(filename):
 			else:
 				raise Exception("Unkown LOAD_STRATEGIES value in config: %s", (load,))
 			MANDATORY.remove("LOAD_STRATEGIES")
-
-		elif fieldName == "TEXTINDEX":
-			index = fieldValue
-			if index == "SimpleTextIndex":
-				from holist.core.index.text.SimpleTextIndex import SimpleTextIndex
-				config.TEXTINDEX = SimpleTextIndex
-			else:
-				raise Exception("Unkown text index in config: %s", (index,))
-			MANDATORY.remove("TEXTINDEX")
 
 
 		elif fieldName == "DICTIONARY":
