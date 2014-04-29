@@ -48,18 +48,15 @@ class RSSFeed(object):
 
         # download using the etag and modified tags to save bandwidth
         if self.etag:
-            ln.debug("started update of feed %s with ETAG", self.url)
             res = feedparser.parse(self.url, etag = self.etag)
         elif self.modified:
-            ln.debug("started update of feed %s with modified date", self.url)
             res = feedparser.parse(self.url, modified=self.modified)
         else: # we're on the first iteration OR neither etag nor modified is supported
             ln.debug("started update of feed %s with no updating info", self.url)
             res = feedparser.parse(self.url)
-            self.etag = res.get("etag", None)
-            ln.debug("feed %s got modified etag %s", self.url, self.etag)
-            self.modified = res.get("modified", None)
-            ln.debug("feed %s got modified date %s", self.url, self.modified)
+
+        self.etag = res.get("etag", None)
+        self.modified = res.get("modified", None)
 
         if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
             ln.debug("feed %s wasn't updated.", self.url)
@@ -71,7 +68,6 @@ class RSSFeed(object):
         for item in res.entries:
             if item.id in self.idUpdateMemory:
                 if item.get("modified", item.id) == self.idUpdateMemory[item.id]:
-                    ln.debug("continuing, no update for article %s (or no modified date given)", item.id)
                     continue # we know this article and it hasn't been updated
                 else: #add to updates
                     listToAppendTo = updatedDocuments    
@@ -131,7 +127,7 @@ class RSSDataSource(IDataSource):
         for _, (new, updated) in results:
             self.newDocuments += new 
             self.updatedDocuments +=updated
-        ln.debug("Retrieved a total of %s new articles from %s RSS feeds.",len(results), len(self.feeds))
+        ln.debug("Retrieved a total of %s new articles from %s RSS feeds.",len(self.newDocuments), len(self.feeds))
         self.updating = False
 
 
