@@ -50,10 +50,13 @@ class RSSFeed(object):
             res = feedparser.parse(self.url, etag = self.etag)
         elif self.modified:
             res = feedparser.parse(self.url, modified=self.modified)
+
         else: # we're on the first iteration OR neither etag nor modified is supported
             res = feedparser.parse(self.url)
             self.etag = res.__dict__.get("etag", None)
+            ln.debug("feed %s got modified etag %s", self.etag)
             self.modified = res.__dict__.get("modified", None)
+            ln.debug("feed %s got modified date %s", self.modified)
 
         if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
             ln.debug("feed %s wasn't updated.", self.url)
@@ -115,6 +118,7 @@ class RSSDataSource(IDataSource):
         for _, (new, updated) in results:
             self.newDocuments += new 
             self.updatedDocuments +=updated
+        ln.debug("Retrieved a total of %s new articles from %s RSS feeds."len(results), len(self.feeds))
         self.updating = False
 
 

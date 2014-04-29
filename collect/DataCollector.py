@@ -41,7 +41,7 @@ class DataCollector(object):
 				d.addErrback(err)
 
 	def handleData(self, source, result):
-		ln.debug(result)
+		ln.debug("Retrieved a total of %s new documents from %s data sources."len(result), len(self.sources))
 		self.databaseInterface.addDocuments(result)
 		source.updating = False
 		if result:
