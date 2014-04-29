@@ -56,8 +56,9 @@ class RSSFeed(object):
             self.modified = res.__dict__.get("modified", None)
 
         if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
-                return [], []
-        
+            ln.debug("feed %s wasn't updated.", self.url)
+            return [], []
+        ln.debug("Got %s entries from feed %s",len(res.entries), self.url)
         for item in res.entries:
             if item.id in self.idUpdateMemory:
                 if item.modified == self.idUpdateMemory[item.id]:
