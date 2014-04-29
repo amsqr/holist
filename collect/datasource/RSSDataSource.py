@@ -45,22 +45,27 @@ class RSSFeed(object):
         """
         Update the feed. should not return duplicate or previously returned documents
         """
+
         # download using the etag and modified tags to save bandwidth
         if self.etag:
+            ln.debug("started update of feed %s with ETAG", self.url)
             res = feedparser.parse(self.url, etag = self.etag)
         elif self.modified:
+            ln.debug("started update of feed %s with modified date", self.url)
             res = feedparser.parse(self.url, modified=self.modified)
-
         else: # we're on the first iteration OR neither etag nor modified is supported
+            ln.debug("started update of feed %s with no updating info", self.url)
             res = feedparser.parse(self.url)
-            self.etag = res.__dict__.get("etag", None)
-            ln.debug("feed %s got modified etag %s", self.etag)
-            self.modified = res.__dict__.get("modified", None)
-            ln.debug("feed %s got modified date %s", self.modified)
+            ln.debug("parsed feed %s", self.url)
+            self.etag = res.get("etag", None)
+            ln.debug("feed %s got modified etag %s", self.url, self.etag)
+            self.modified = res.get("modified", None)
+            ln.debug("feed %s got modified date %s", self.url, self.modified)
 
         if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
             ln.debug("feed %s wasn't updated.", self.url)
             return [], []
+
         ln.debug("Got %s entries from feed %s",len(res.entries), self.url)
         newDocuments = []
         updatedDocuments = []
@@ -92,7 +97,9 @@ class RSSDataSource(IDataSource):
         self.updatedDocuments = []
 
     def getFeed(self, feedURL):
-        return self.feeds.get(feedURL, RSSFeed(feedURL))
+        res = self.feeds.get(feedURL, RSSFeed(feedURL))
+        self.feeds[feedURL] = res
+        return res
 
     def updateAndGetDocuments(self):
         self.updating = True
@@ -103,6 +110,7 @@ class RSSDataSource(IDataSource):
         for feedURLObj in self.RSSfeeds.find():
             feedURL = feedURLObj["url"]
             feed = self.getFeed(feedURL)
+            ln.debug("scheduled update of feed %s with URL %s", feed, feedURL)
             d = deferToThread(feed.getNewAndUpdatedDocuments)
             deferreds.append(d)
             
@@ -118,7 +126,7 @@ class RSSDataSource(IDataSource):
         for _, (new, updated) in results:
             self.newDocuments += new 
             self.updatedDocuments +=updated
-        ln.debug("Retrieved a total of %s new articles from %s RSS feeds."len(results), len(self.feeds))
+        ln.debug("Retrieved a total of %s new articles from %s RSS feeds.",len(results), len(self.feeds))
         self.updating = False
 
 

@@ -39,9 +39,11 @@ class DataCollector(object):
 				d.addCallback(cbk)
 				err = lambda result: self.handleFailure(source, result)
 				d.addErrback(err)
+			else:
+				ln.debug("skipping update for source of class %s", source.__class__)
 
 	def handleData(self, source, result):
-		ln.debug("Retrieved a total of %s new documents from %s data sources."len(result), len(self.sources))
+		ln.debug("Retrieved a total of %s new documents from %s data sources.",len(result), len(self.sources))
 		self.databaseInterface.addDocuments(result)
 		source.updating = False
 		if result:
