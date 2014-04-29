@@ -6,12 +6,14 @@ from twisted.internet import defer
 from pymongo import MongoClient
 from collections import OrderedDict
 import feedparser
+import time
 
 from holist.core.Document import Document
 from holist.util import config
 
 from collect.db.DatabaseInterface import DatabaseInterface
 from collect.datasource.IDataSource import IDataSource
+
 
 
 class LimitedSizeDict(OrderedDict):
@@ -35,6 +37,9 @@ class RSSFeed(object):
         self.idUpdateMemory = LimitedSizeDict(size_limit=250) # remember the last 250 feed entry ids and change dates
         self.etag = None
         self.modified = None
+
+        self.newDocuments = []
+        updatedDocuments = []
 
     def getNewAndUpdatedDocuments(self):
         """
