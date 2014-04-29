@@ -70,15 +70,15 @@ class RSSFeed(object):
         updatedDocuments = []
         for item in res.entries:
             if item.id in self.idUpdateMemory:
-                if item.modified == self.idUpdateMemory[item.id]:
-                    ln.debug("continuing, no update for article %s", item.id)
+                if item.get("modified", item.id) == self.idUpdateMemory[item.id]:
+                    ln.debug("continuing, no update for article %s (or no modified date given)", item.id)
                     continue # we know this article and it hasn't been updated
                 else: #add to updates
                     listToAppendTo = updatedDocuments    
             else: #add to new documents
                 listToAppendTo = newDocuments
 
-            self.idUpdateMemory[item.id] = item.modified
+            self.idUpdateMemory[item.id] = item.get("modified", item.id)
 
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
@@ -113,6 +113,7 @@ class RSSDataSource(IDataSource):
             feed = self.getFeed(feedURL)
             ln.debug("scheduled update of feed %s with URL %s", feed, feedURL)
             d = deferToThread(feed.getNewAndUpdatedDocuments)
+            d.addErrback(self.errback)
             deferreds.append(d)
             
         deferredList = defer.DeferredList(deferreds)
@@ -122,6 +123,9 @@ class RSSDataSource(IDataSource):
             time.sleep(0.2)
 
         return self.newDocuments #, self.updatedDocuments
+
+    def errback(self, error):
+        ln.exception(error)
 
     def __onAllFeedsUpdated(self, results):
         for _, (new, updated) in results:
