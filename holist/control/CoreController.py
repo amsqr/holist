@@ -8,6 +8,8 @@ from twisted.internet import defer
 from holist.core.server.Listener import Listener
 from holist.core.server.Broadcaster import Broadcaster
 
+import multiprocessing
+
 from holist.datasupply.DataSupply import MongoDataSupply
 from holist.core.semantics.LSA.LSAStrategy import LSAStrategy
 from holist.core.corpus.mongodb.MongoDBCorpus import MongoDBCorpus
@@ -61,18 +63,34 @@ class CoreController(object):
 		ln.info("running update iteration.")
 		#throw the new documents against our models.
 		deferreds = []
+		processes = []
 		for strategy in self.strategies:
 			#TODO: figure out a way to replace deferToThread with spawnProcess without changing functionality
-			deferred = deferToThread(strategy.handleDocuments, self.newDocuments)
-			deferreds.append(deferred)
-		deferreds = defer.DeferredList(deferreds)
-		deferreds.addCallback(self.__onStrategiesFinished)
+			#deferred = deferToThread(strategy.handleDocuments, self.newDocuments)
+			queue = multiprocessing.Queue()
+			process = multiprocessing.Process(target=strategy.handleDocuments, args=(self.newDocuments, queue))
+			processes.append((process, queue))
+			process.start()
 
-	def __onStrategiesFinished(self, results):
-		self.corpus.addDocuments(self.newDocuments)
+			#deferreds.append(deferred)
+		#deferreds = defer.DeferredList(deferreds)
+		#deferreds.addCallback(self.__onStrategiesFinished)
+
+		# This convoluted looking stuff is necessary for gathering results when we want to use proper subprocesses
+		allResults = dict()
+		for strategyProcess, resultsQueue in processes:
+			results = resultsQueue.get()
+			for docObj, (tag, vector) in results:
+				document = allResults.get(docObj._id, docObj)
+				document.vectors[tag] = vector
+				allResults[document._id] = document
+
+		allResults = allResults.values()
+		self.corpus.addDocuments(allResults)
+
 		ln.info("finished updating. sending broadcast.")
-		if len(self.newDocuments):
-			self.sendBroadcast([str(doc._id) for doc in self.newDocuments])
+		if len(allResults):
+			self.sendBroadcast([str(doc._id) for doc in allResults])
 		self.newDocuments = []
 		self.updating = False
 

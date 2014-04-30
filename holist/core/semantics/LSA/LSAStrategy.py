@@ -10,6 +10,7 @@ import datetime
 import time
 import itertools
 
+
 # SETTINGS
 NUM_TOPICS = 100
 CHUNKSIZE = 1000
@@ -64,12 +65,13 @@ class LSAStrategy(ISemanticsStrategy):
         self.models[sourceType] = model
         return model
 
-    def handleDocuments(self, docs):
+    def handleDocuments(self, docs, queue):
         """
         Add documents to the model, and update their vector representation fields.
         """
         
         documentGroups = itertools.groupby(docs, lambda d: d.sourceType)
+        results = []
         for sourceType, iterator in documentGroups:
             documents = list(iterator)
 
@@ -77,23 +79,16 @@ class LSAStrategy(ISemanticsStrategy):
             dictionary = self.dictionaries.get(sourceType, self.createDictionary(sourceType))
             model = self.models.get(sourceType, self.createModel(sourceType, dictionary))
 
-
             for doc in documents:
                 self.preprocessor.preprocess(doc, dictionary)
             #get minimalized documents (removed stop words, stemming, and then converted to BoW)
             minimalized = (doc.preprocessed for doc in documents)
-            
-            
+                        
             model.add_documents(minimalized)
 
             #add the document vector space representations
-            for document in documents:
-                document.vectors[self.NAME+"_"+document.sourceType] = [val for (k,val) in model[document.preprocessed]]
-
-
-    def __getitem__(self, item):
-        return self.model[item]
-
+            results += [(document, (self.NAME+"_"+document.sourceType, [val for (k,val) in model[document.preprocessed]])) for document in documents]
+        queue.put(results)
 
     def getOverview(self):
         return self.model.print_topics()
