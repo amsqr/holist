@@ -7,6 +7,9 @@ from twisted.internet.threads import deferToThread
 from twisted.internet import defer
 from holist.core.server.Listener import Listener
 
+from holist.datasupply.DataSupply import MongoDataSupply
+from holist.core.semantics.LSA.LSAStrategy import LSAStrategy
+
 # we wait until there are at least 20 new documents OR 3 minutes have passed.
 MINIMUM_QUEUE_SIZE = 20
 MINIMUM_WAIT_TIME = 60 * 3
@@ -14,46 +17,10 @@ MINIMUM_WAIT_TIME = 60 * 3
 class CoreController(object):
 	"""docstring for CoreController"""
 	def __init__(self, configuration):
-		# inititalize data source + corpus
-		self.listeners = dict()
-		self.sources = []
-		for Source in configuration.SOURCES:
-			self.sources.append(Source())
-
-		self.corpus = configuration.CORPUS()
-		self.dictionary = configuration.DICTIONARY()
-
-
-		self.datasupply = configuration.DATASUPPLY()
-		self.connectToDataSupply()
-		
-
-		self.strategies = []
-		for Strategy in configuration.STRATEGIES:
-			#index = configuration.INDEX(Strategy.NAME, self.corpus, Strategy.getNumFeatures())
-			self.strategies.append(Strategy(self.corpus, self.dictionary))
+		self.strategies = [LSAStrategy, NamedEntityStrategy]
+		self.datasupply = MongoDataSupply()
 
 		self.frontend = configuration.FRONTEND(self)
-		computeStrategies = []
-		if configuration.LOAD_STRATEGIES:
-			ln.info("attempting to load all strategies")
-			for strategy in self.strategies:
-				try:
-					strategy.load()
-					strategy.computeVectorRepresentations(self.corpus)
-				except:
-					ln.warn("failed to load strategy: %s. reinitiating later on.", strategy.NAME)
-					computeStrategies.append(strategy)
-		else:
-			computeStrategies += self.strategies
-		
-		
-		if not self.datasupply.isRemote():
-			# we only need to start an update loop if the data supply is internal
-			# otherwise, updating is triggered through the REST API by the data collector node 
-			bg = lambda : deferToThread(self.__updateSupplyAndAnalyze)
-			dataUpdateLoop = LoopingCall(bg)
-			dataUpdateLoop.start(10)
 
 		self.updating = False
 		self.updateQueued = False

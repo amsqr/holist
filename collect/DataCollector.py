@@ -19,6 +19,7 @@ class DataCollector(object):
 	def __init__(self):
 		self.listeners = dict()
 		self.frontend = RESTfulFrontend(self)
+		self.broadcaster = Broadcaster()
 		self.databaseInterface = DatabaseInterface()
 		self.sources = [RSSDataSource()] #Reuters21578DataSource()]
 		
@@ -44,27 +45,19 @@ class DataCollector(object):
 				err = lambda result: self.handleFailure(source, result)
 				d.addErrback(err)
 			else:
-				ln.debug("skipping update for source of class %s", source.__class__)
+				ln.debug("skipping update for source of type %s", source.__class__.__name__)
 
 	def handleData(self, source, result):
-		ln.debug("Retrieved a total of %s new documents from %s data sources.",len(result), len(self.sources))
+		ln.debug("Retrieved a total of %s new documents from data source.",len(result), source.__class__.__name__)
 		self.databaseInterface.addDocuments(result)
-		source.updating = False
 		if result:
-			self.notifyListeners()
+			self.notifyListeners(result)
+		source.updating = False
 	
 	def handleFailure(self, source, result):
-		ln.warn("there was an error from source %s: %s", source.__class__, result.getTraceback())
+		ln.warn("there was an error from source of type %s: %s", source.__class__.__name__, result.getTraceback())
 		source.updating = False
 
-	def registerListener(self, ip, port):
-		listener = Listener(ip, port)
-		self.listeners[ip+":"+str(port)] = listener
-		ln.info("registered listener at %s:%s",ip,port)
-
-	def notifyListeners(self):
-		for listener in self.listeners.values():
-			try:
-				listener.notify()
-			except:
-				ln.error("couldn't notify listener %s", listener.ip+":"+str(listener.port))
+	def notifyListeners(self,sourceType):
+		self.broadcaster.broadcast(self.__class__.__name__, {"source":})
+		

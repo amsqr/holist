@@ -81,7 +81,9 @@ class RSSFeed(object):
             # this is also where we could extract the full text if we want it
             document = Document(item.description)
             document.id = item.id
+
             document.sourceType = self.__class__.__name__
+            
             listToAppendTo.append(document)
         return newDocuments, updatedDocuments
 

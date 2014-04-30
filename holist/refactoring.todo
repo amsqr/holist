@@ -1,8 +1,13 @@
 refactoring:
 	- move toward true blackboard pattern
-		- remove the central core controller. Every strategy is now a listener to the data collector.
+		- decouple the central core controller from strategies. Strategies are to be run in separate processes
 			- every strategy needs a database wrapper, dictionary (reuse)
-		- create broadcast system instead of listener registration.
+			- the core controller assigns document sets to all annotating strategies
+			- when all strategies have processed a document, it is moved from the processing queue
+
+		- create broadcast system instead of listener registration. -> stub in place
+
+	later:
 	- improve multiprocessing
 		- provided by having strategies as separate nodes
 		- move away from twisted for threading within the strategies
