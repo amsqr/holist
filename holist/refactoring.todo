@@ -1,0 +1,9 @@
+refactoring:
+	- move toward true blackboard pattern
+		- remove the central core controller. Every strategy is now a listener to the data collector.
+			- every strategy needs a database wrapper, dictionary (reuse)
+		- create broadcast system instead of listener registration.
+	- improve multiprocessing
+		- provided by having strategies as separate nodes
+		- move away from twisted for threading within the strategies
+
