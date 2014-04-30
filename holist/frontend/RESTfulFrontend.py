@@ -17,8 +17,6 @@ class RESTfulFrontend(object):
     def setupResources(self):
         root = Resource()
 
-        queryTextPage = QueryText(self.controller)
-        queryIdPage = QueryId(self.controller)
         registerPage = RegisterListener(self.controller)
         notifyPage = Notify(self.controller)
         

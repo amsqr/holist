@@ -6,6 +6,7 @@ from twisted.internet.task import LoopingCall
 from twisted.internet.threads import deferToThread
 from twisted.internet import defer
 from holist.core.server.Listener import Listener
+from holist.core.server.Broadcaster import Broadcaster
 
 from holist.datasupply.DataSupply import MongoDataSupply
 from holist.core.semantics.LSA.LSAStrategy import LSAStrategy
@@ -18,13 +19,15 @@ MINIMUM_WAIT_TIME = 60 * 3
 
 class CoreController(object):
 	"""docstring for CoreController"""
-	def __init__(self, configuration):
-		self.strategies = [LSAStrategy]#, NamedEntityStrategy]
+	def __init__(self):
+		self.strategies = [LSAStrategy()]#, NamedEntityStrategy]
 		self.datasupply = MongoDataSupply() # for retrieving new documents
 		self.corpus = MongoDBCorpus() # for storing updated documents
 
 		self.frontend = RESTfulFrontend(self)
-		self.broadcaster = Broadcaster()
+		self.broadcaster = Broadcaster("core")
+
+		self.connectToDataSupply()
 
 		self.updating = False
 		self.updateQueued = False
@@ -69,12 +72,12 @@ class CoreController(object):
 		self.corpus.addDocuments(self.newDocuments)
 		ln.info("finished updating. sending broadcast.")
 		if len(self.newDocuments):
-			self.sendBroadcast([doc._id for doc in self.newDocuments])
+			self.sendBroadcast([str(doc._id) for doc in self.newDocuments])
 		self.newDocuments = []
 		self.updating = False
 
 	def sendBroadcast(self, ids):
-		self.broadcaster.broadcast("core", {"annotated_documents":ids})
+		self.broadcaster.broadcast({"annotated_documents":ids})
 
 	def onNewDocuments(self):
 		self.updateQueued = True

@@ -37,4 +37,4 @@ class MongoDataSupply(object): #This handles ONLY the new_documents collection
 		return newDocuments
 
 	def countNewDocuments(self):
-		return self.newDocumentsCollection.find().size()
+		return self.newDocumentsCollection.find().count()

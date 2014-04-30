@@ -10,12 +10,11 @@ STOPWORDS = set(stopwords.stopwords)
 
 
 class TokenizingPorter2Stemmer():
-    def __init__(self, dictionary, stopWords=STOPWORDS):
-        self.dict = dictionary
+    def __init__(self, stopWords=STOPWORDS):
         self.stopWords = set(map(stem,stopWords))
         #self.stopWords = set(self.stemWords(self.stopWords))
 
-    def preprocess(self, doc):
+    def preprocess(self, doc, dictionary):
         if isinstance(doc, str):
             text = doc
         else:
@@ -26,7 +25,7 @@ class TokenizingPorter2Stemmer():
         text = self.stemWords(text)
         text = self.removeStopWords(set(text))
         text = sorted(text, key=lambda x: -len(x))
-        text = self.getDocumentAsVector(text)
+        text = dictionary.doc2bow(text, allow_update=True)
         if isinstance(doc, str):
             return text
         else:
@@ -40,8 +39,3 @@ class TokenizingPorter2Stemmer():
     
     def stemWords(self, text):
         return map(stem, text)
-    
-    def getDocumentAsVector(self, document):
-        """convert the document to bag-of-words representation, 
-            and update our dictionary in the process"""
-        return self.dict.doc2bow(document, allow_update=True)

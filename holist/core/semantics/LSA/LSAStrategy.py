@@ -3,10 +3,12 @@ ln = getModuleLogger(__name__)
 
 from holist.core.semantics.ISemanticsStrategy import ISemanticsStrategy
 from holist.core.preprocess.TokenizingPorter2Stemmer import TokenizingPorter2Stemmer
+from holist.core.dictionary.hash.HashDictionary import HashDictionary
 from gensim import models
 import numpy
 import datetime
 import time
+import itertools
 
 # SETTINGS
 NUM_TOPICS = 100
@@ -15,18 +17,20 @@ DECAY = 0.8
 DISTRIBUTED = False
 ONEPASS = True
 
+DICTIONARY = HashDictionary
 
 class LSAStrategy(ISemanticsStrategy):
     NAME = "LSA"
-    def __init__(self, dictionary):
+    def __init__(self):
         """
         Initialize the model. This doesn't add any documents yet.
         """
-        self.dictionary = dictionary
-        self.preprocessor = TokenizingPorter2Stemmer(self.dictionary)
+        self.dictionaries = dict()
+        self.preprocessor = TokenizingPorter2Stemmer()
 
         #this dict keeps a model for every source type (since e.g. RSS feeds should be treated seperately from twitter feeds)
         self.models = dict()
+        #this dict keeps a dictionary for every source type 
         self.dictionaries = dict()
 
         self.silenceGensim()
@@ -45,35 +49,46 @@ class LSAStrategy(ISemanticsStrategy):
     def getNumFeatures():
         return NUM_TOPICS
 
-    def computeVectorRepresentations(self, documents):
-        for document in documents:
-            document.vectors[self.NAME+"_"+document.sourceType] = [val for (k,val) in self.model[document.preprocessed]]
+
+
+    def createDictionary(self, sourceType):
+        ln.info("creating a new dictionary for sourceType %s.", sourceType)
+        dictionary =  DICTIONARY()
+        self.dictionaries[sourceType] = dictionary
+        return dictionary
+
+    def createModel(self, sourceType, dictionary):
+        ln.info("creating a new LSA model for sourceType %s.", sourceType)
+        model = models.lsimodel.LsiModel(corpus=None,num_topics=NUM_TOPICS, chunksize=CHUNKSIZE, id2word=dictionary,
+                decay=DECAY, distributed=DISTRIBUTED, onepass=ONEPASS)
+        self.models[sourceType] = model
+        return model
 
     def handleDocuments(self, docs):
         """
         Add documents to the model, and update their vector representation fields.
         """
-        self.preprocessor.preprocess(documents)
+        
         documentGroups = itertools.groupby(docs, lambda d: d.sourceType)
-        for sourceType in documentGroups:
-            #retrieve the LSA model for this source
-            model = self.models.get(sourceType, None)
-            if model == None:
-                ln.info("creating a new LSA model for sourceType %s.", sourceType)
-                model = models.lsimodel.LsiModel(corpus=None,num_topics=NUM_TOPICS, chunksize=CHUNKSIZE, id2word=self.dictionary,
-                            decay=DECAY, distributed=DISTRIBUTED, onepass=ONEPASS)
-                self.models[sourceType] = model
+        for sourceType, iterator in documentGroups:
+            documents = list(iterator)
 
-            documents = documentGroups[sourceType]
+            #retrieve the sict and LSA model for this source, or create new ones
+            dictionary = self.dictionaries.get(sourceType, self.createDictionary(sourceType))
+            model = self.models.get(sourceType, self.createModel(sourceType, dictionary))
 
+
+            for doc in documents:
+                self.preprocessor.preprocess(doc, dictionary)
             #get minimalized documents (removed stop words, stemming, and then converted to BoW)
             minimalized = (doc.preprocessed for doc in documents)
             
             
-            self.model.add_documents(minimalized)
+            model.add_documents(minimalized)
 
             #add the document vector space representations
-            self.computeVectorRepresentations(documents)
+            for document in documents:
+                document.vectors[self.NAME+"_"+document.sourceType] = [val for (k,val) in model[document.preprocessed]]
 
 
     def __getitem__(self, item):
