@@ -47,5 +47,5 @@ class Notify(Resource):
     def __init__(self, controller):
         self.controller = controller
     def render_POST(self, request): # new data available
-        self.controller.notifyNewDocuments()
+        self.controller.onNewDocuments()
         return json.dumps({"word":"sure bro"}) 

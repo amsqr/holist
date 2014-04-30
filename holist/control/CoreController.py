@@ -9,6 +9,8 @@ from holist.core.server.Listener import Listener
 
 from holist.datasupply.DataSupply import MongoDataSupply
 from holist.core.semantics.LSA.LSAStrategy import LSAStrategy
+from holist.core.corpus.mongodb.MongoDBCorpus import MongoDBCorpus
+from holist.frontend.RESTfulFrontend import RESTfulFrontend
 
 # we wait until there are at least 20 new documents OR 3 minutes have passed.
 MINIMUM_QUEUE_SIZE = 20
@@ -17,10 +19,12 @@ MINIMUM_WAIT_TIME = 60 * 3
 class CoreController(object):
 	"""docstring for CoreController"""
 	def __init__(self, configuration):
-		self.strategies = [LSAStrategy, NamedEntityStrategy]
-		self.datasupply = MongoDataSupply()
+		self.strategies = [LSAStrategy]#, NamedEntityStrategy]
+		self.datasupply = MongoDataSupply() # for retrieving new documents
+		self.corpus = MongoDBCorpus() # for storing updated documents
 
-		self.frontend = configuration.FRONTEND(self)
+		self.frontend = RESTfulFrontend(self)
+		self.broadcaster = Broadcaster()
 
 		self.updating = False
 		self.updateQueued = False
@@ -42,8 +46,7 @@ class CoreController(object):
 		self.datasupply.update()
 		self.update()
 
-	def update(self): #called on notify through data collector
-		#ln.debug("update called in core controller")
+	def update(self): #called when data collector sends a broadcast
 		self.updating = True
 
 		#data supply: fetch new documents
@@ -51,11 +54,8 @@ class CoreController(object):
 		if not self.newDocuments:
 			ln.debug("No new documents. Cancelling update iteration.")
 			return
-		ln.info("running update iteration.")
-		#preprocess these documents
-		for document in self.newDocuments:
-			self.preprocessor.preprocess(document)
 
+		ln.info("running update iteration.")
 		#throw the new documents against our models.
 		deferreds = []
 		for strategy in self.strategies:
@@ -67,24 +67,16 @@ class CoreController(object):
 
 	def __onStrategiesFinished(self, results):
 		self.corpus.addDocuments(self.newDocuments)
-		ln.info("finished updating. notifying listeners.")
+		ln.info("finished updating. sending broadcast.")
 		if len(self.newDocuments):
-			self.notifyListeners([doc._id for doc in self.newDocuments])
+			self.sendBroadcast([doc._id for doc in self.newDocuments])
 		self.newDocuments = []
 		self.updating = False
 
-	def notifyListeners(self, ids):
-		for listener in self.listeners.values():
-			try:
-				listener.notify(ids)
-			except:
-				ln.error("couldn't notify listener %s", listener.ip+":"+str(listener.port))
+	def sendBroadcast(self, ids):
+		self.broadcaster.broadcast("core", {"annotated_documents":ids})
 
-	def registerListener(self, ip, port):
-		listener = Listener(ip, port)
-		self.listeners[ip+":"+str(port)] = listener
-
-	def notifyNewDocuments(self):
+	def onNewDocuments(self):
 		self.updateQueued = True
 		ln.info("An update was queued.")
 		if not self.updating:
@@ -102,10 +94,11 @@ class CoreController(object):
 				self.updateQueued = False # only the last queued update is interesting, so we don't need an actual queue
 				self.update()
 		else:
-			try:
-				self.triggeredLoop.stop()
-			except Exception, e:
-				pass
+			if self.triggeredLoop.running:
+				try:
+					self.triggeredLoop.stop()
+				except Exception, e:
+					ln.exception("while stopping loop:", e)
 
 
 

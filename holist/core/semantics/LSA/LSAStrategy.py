@@ -2,6 +2,7 @@ from holist.util.util import *
 ln = getModuleLogger(__name__)
 
 from holist.core.semantics.ISemanticsStrategy import ISemanticsStrategy
+from holist.core.preprocess.TokenizingPorter2Stemmer import TokenizingPorter2Stemmer
 from gensim import models
 import numpy
 import datetime
@@ -22,7 +23,8 @@ class LSAStrategy(ISemanticsStrategy):
         Initialize the model. This doesn't add any documents yet.
         """
         self.dictionary = dictionary
-        
+        self.preprocessor = TokenizingPorter2Stemmer(self.dictionary)
+
         #this dict keeps a model for every source type (since e.g. RSS feeds should be treated seperately from twitter feeds)
         self.models = dict()
         self.dictionaries = dict()
@@ -51,6 +53,7 @@ class LSAStrategy(ISemanticsStrategy):
         """
         Add documents to the model, and update their vector representation fields.
         """
+        self.preprocessor.preprocess(documents)
         documentGroups = itertools.groupby(docs, lambda d: d.sourceType)
         for sourceType in documentGroups:
             #retrieve the LSA model for this source
