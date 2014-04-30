@@ -31,7 +31,7 @@ class Reuters21578DataSource(IDataSource):
                 count += 1
                 d = Document(cont.text)
                 d.sourceType = self.__class__.__name__
-                documents.append()
+                documents.append(d)
         ln.info("on updating, got %s documents from file %s." % (count, filename))
         self.updateCount += 1
         self.updating = False

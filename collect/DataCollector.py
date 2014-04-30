@@ -4,6 +4,8 @@ import logging
 logging.basicConfig(format=holistConfig.logFormat,level=logging.DEBUG if holistConfig.showDebugLogs else logging.INFO)
 ln = util.getModuleLogger(__name__)
 
+import time
+
 from twisted.internet.threads import deferToThread
 from twisted.internet.task import LoopingCall
 from twisted.internet import reactor
@@ -20,7 +22,8 @@ class DataCollector(object):
 		self.listeners = dict()
 		self.frontend = RESTfulFrontend(self)
 		self.databaseInterface = DatabaseInterface()
-		self.sources = [RSSDataSource()] #Reuters21578DataSource()]
+		#self.sources = [RSSDataSource()] #Reuters21578DataSource()]
+		self.sources = [Reuters21578DataSource()]
 		
 		self.connected = False
 		self.loop = LoopingCall(self.update)
@@ -28,12 +31,15 @@ class DataCollector(object):
 
 		#status stuff
 		self.started = time.time()
-		self.articlesOnStartup = self.databaseInterface.getDocumentCount()
+		self.articlesOnStartup = self.databaseInterface.getQueuedDocumentCount()
 
 		reactor.run()
 
 	def update(self):
 		deferToThread(self.__update)
+
+	def getQueuedDocumentCount(self):
+		return self.databaseInterface.getQueuedDocumentCount()
 
 	def __update(self):
 		for source in self.sources:

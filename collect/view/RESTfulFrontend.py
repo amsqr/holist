@@ -9,6 +9,7 @@ from twisted.internet import reactor
 import cgi
 import json
 
+
 class RESTfulFrontend(object):
     def __init__(self, controller):
         self.controller = controller
@@ -44,6 +45,7 @@ class StatusPage(Resource):
         return json.dumps(
             {"started":self.controller.started,
              "documentsOnStartup":self.controller.articlesOnStartup,
-             "listeners":len(self.controller.listeners)
-             "sources":[source.__class__]})
+             "queuedDocuments":self.controller.getQueuedDocumentCount(),
+             "listeners":len(self.controller.listeners),
+             "sources":[source.__class__.__name__ for source in self.controller.sources]})
 
