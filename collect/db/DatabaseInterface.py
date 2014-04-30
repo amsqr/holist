@@ -16,3 +16,5 @@ class DatabaseInterface(object):
 			bson = document.__dict__
 			self.documents.insert(bson)
 
+	def getDocumentCount(self):
+		return self.documents.find().count()

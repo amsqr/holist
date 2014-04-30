@@ -74,12 +74,14 @@ class RSSFeed(object):
             else: #add to new documents
                 listToAppendTo = newDocuments
 
+            # save the modified date, if it's not available, just save the id (won't support updates!)
             self.idUpdateMemory[item.id] = item.get("modified", item.id)
 
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
             document = Document(item.description)
             document.id = item.id
+            document.sourceType = self.__class__.__name__
             listToAppendTo.append(document)
         return newDocuments, updatedDocuments
 
@@ -107,7 +109,6 @@ class RSSDataSource(IDataSource):
         for feedURLObj in self.RSSfeeds.find():
             feedURL = feedURLObj["url"]
             feed = self.getFeed(feedURL)
-            ln.debug("scheduled update of feed %s with URL %s", feed, feedURL)
             d = deferToThread(feed.getNewAndUpdatedDocuments)
             d.addErrback(self.errback)
             deferreds.append(d)

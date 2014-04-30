@@ -1,7 +1,6 @@
 from holist.util.util import *
 ln = getModuleLogger(__name__)
 
-from holist.core.preprocess.IPreprocessor import IPreprocessor
 from stemming.porter2 import stem
 import string
 import stopwords
@@ -10,7 +9,7 @@ import stopwords
 STOPWORDS = set(stopwords.stopwords)
 
 
-class TokenizingPorter2Stemmer(IPreprocessor):
+class TokenizingPorter2Stemmer():
     def __init__(self, dictionary, stopWords=STOPWORDS):
         self.dict = dictionary
         self.stopWords = set(map(stem,stopWords))

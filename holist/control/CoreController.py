@@ -7,6 +7,9 @@ from twisted.internet.threads import deferToThread
 from twisted.internet import defer
 from holist.core.server.Listener import Listener
 
+# we wait until there are at least 20 new documents OR 3 minutes have passed.
+MINIMUM_QUEUE_SIZE = 20
+MINIMUM_WAIT_TIME = 60 * 3
 
 class CoreController(object):
 	"""docstring for CoreController"""
@@ -19,19 +22,11 @@ class CoreController(object):
 
 		self.corpus = configuration.CORPUS()
 		self.dictionary = configuration.DICTIONARY()
-		self.preprocessor = configuration.PREPROCESSOR(self.dictionary) #updates dictionary
 
-		if configuration.DATASUPPLY.isRemote():
-			self.datasupply = configuration.DATASUPPLY()
-			def connectUntilDoneIteration():
-				ok = self.datasupply.connect()
-				if ok:
-					self.connectLoop.stop()
-			self.connectLoop = LoopingCall(connectUntilDoneIteration)
-			self.connectLoop.start(5)
-		else:
-			self.datasupply = configuration.DATASUPPLY(self,self.sources)
 
+		self.datasupply = configuration.DATASUPPLY()
+		self.connectToDataSupply()
+		
 
 		self.strategies = []
 		for Strategy in configuration.STRATEGIES:
@@ -65,6 +60,16 @@ class CoreController(object):
 		ln.info("running reactor.")
 		reactor.run()
 
+	def connectToDataSupply(self):
+		ln.debug("connecting to data supply...")
+		def connectUntilDoneIteration():
+			ok = self.datasupply.connect()
+			if ok:
+				self.connectLoop.stop()
+				ln.debug("successfully connected to data supply.")
+		self.connectLoop = LoopingCall(connectUntilDoneIteration)
+		self.connectLoop.start(5)
+
 	def __updateSupplyAndAnalyze(self):
 		ln.debug("__updateSupplyAndAnalyze")
 		self.datasupply.update()
@@ -87,6 +92,7 @@ class CoreController(object):
 		#throw the new documents against our models.
 		deferreds = []
 		for strategy in self.strategies:
+			#TODO: figure out a way to replace deferToThread with spawnProcess without changing functionality
 			deferred = deferToThread(strategy.handleDocuments, self.newDocuments)
 			deferreds.append(deferred)
 		deferreds = defer.DeferredList(deferreds)
@@ -125,14 +131,13 @@ class CoreController(object):
 		if self.updating:
 			return
 		if self.updateQueued:
-			self.updateQueued = False # only the last queued update is interesting, so we don't need an actual queue
-			self.update()
+			if self.datasupply.countNewDocuments() >= MINIMUM_QUEUE_SIZE or abs(time.time() - self.lastUpdated) >= MINIMUM_WAIT_TIME:
+				self.updateQueued = False # only the last queued update is interesting, so we don't need an actual queue
+				self.update()
 		else:
 			try:
-				ln.debug("stopping triggered loop.")
 				self.triggeredLoop.stop()
 			except Exception, e:
-				ln.debug("exception stopping triggered loop: %s", str(e))
 				pass
 
 

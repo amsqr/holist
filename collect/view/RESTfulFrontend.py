@@ -35,3 +35,9 @@ class RegisterListener(Resource):
             return json.dumps({"result":"success"}) 
         else:
             return json.dumps({"result":"failure"}) 
+
+class StatusPage(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+    def render_GET(self,request):
+        return json.dumps({"started":controller.started, "documentsOnStartup":controller.articlesOnStartup})

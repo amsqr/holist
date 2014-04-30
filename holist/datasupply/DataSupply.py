@@ -6,8 +6,7 @@ import json
 
 class MongoDataSupply(object): #This handles ONLY the new_documents collection
 	"""
-	not a full data supply.
-	this is used to fetch documents from the database when they're collected by the seperate datacollector nodeself.
+	this is used to fetch documents from the database, which they're collected by the separate datacollector node.
 	"""
 	def __init__(self):
 		self.client = getDatabaseConnection()
@@ -36,3 +35,6 @@ class MongoDataSupply(object): #This handles ONLY the new_documents collection
 		ids = [doc._id for doc in newDocuments]
 		self.newDocumentsCollection.remove({"_id":{"$in":ids}})
 		return newDocuments
+
+	def countNewDocuments(self):
+		return self.newDocumentsCollection.find().size()

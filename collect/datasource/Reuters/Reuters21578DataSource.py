@@ -29,7 +29,9 @@ class Reuters21578DataSource(IDataSource):
             contents = soup.find_all("content")
             for cont in contents:
                 count += 1
-                documents.append(Document(cont.text))
+                d = Document(cont.text)
+                d.sourceType = self.__class__.__name__
+                documents.append()
         ln.info("on updating, got %s documents from file %s." % (count, filename))
         self.updateCount += 1
         self.updating = False

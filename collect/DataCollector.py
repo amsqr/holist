@@ -26,6 +26,10 @@ class DataCollector(object):
 		self.loop = LoopingCall(self.update)
 		self.loop.start(10)
 
+		#status stuff
+		self.started = time.time()
+		self.articlesOnStartup = self.databaseInterface.getDocumentCount()
+
 		reactor.run()
 
 	def update(self):
