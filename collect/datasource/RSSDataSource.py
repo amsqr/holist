@@ -5,7 +5,11 @@ from twisted.internet.threads import deferToThread
 from twisted.internet import defer
 from pymongo import MongoClient
 from collections import OrderedDict
+
+import socket
+socket.setdefaulttimeout(10.0) # don't handle feeds that take longer than this
 import feedparser
+
 import time
 
 from holist.core.Document import Document
@@ -14,8 +18,7 @@ from holist.util import config
 from collect.db.DatabaseInterface import DatabaseInterface
 from collect.datasource.IDataSource import IDataSource
 
-import socket
-socket.setdefaulttimeout(10.0) # don't handle feeds that take longer than this
+
 
 
 class LimitedSizeDict(OrderedDict):
@@ -49,7 +52,6 @@ class RSSFeed(object):
         """
 
         # download using the etag and modified tags to save bandwidth
-        ln.debug("started up in feed %s", self.url)
         started = time.time()
         try:
             if self.etag:
