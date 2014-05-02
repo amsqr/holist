@@ -50,7 +50,7 @@ class RSSFeed(object):
         """
 
         # download using the etag and modified tags to save bandwidth
-        
+        started = time.time()
         if self.etag:
             res = feedparser.parse(self.url, etag = self.etag)
         elif self.modified:
@@ -89,6 +89,7 @@ class RSSFeed(object):
             document.sourceType = self.__class__.__name__
             
             listToAppendTo.append(document)
+        ln.debug("Updating %s took %s seconds", self.url, time.time() - started)
         return newDocuments, updatedDocuments
 
 class RSSDataSource(IDataSource):
