@@ -56,7 +56,7 @@ class DataCollector(object):
 		# don't re-add documents that were already in the DB when the node was started
 		ln.debug("have %s documents. Filtering...", len(result))
 		result = self.filterKnownDocuments(source, result)
-		ln.debug("Retrieved a total of %s new documents from %s data sources.",len(result), len(self.sources))
+		ln.info("Received a total of %s new documents from %s data sources.",len(result), len(self.sources))
 
 		self.databaseInterface.addDocuments(result)
 		source.updating = False
