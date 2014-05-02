@@ -78,13 +78,13 @@ class RSSFeed(object):
             if res.feed == {}:
                 return [],[]
             else:
-                ln.info("Attempting to handle anywayself.")
+                ln.info("Attempting to handle anyway.")
 
         if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
             ln.debug("feed %s wasn't updated.", self.url)
             return [], []
 
-        ln.debug("Got %s raw entries from feed %s",len(res.entries), self.url)
+        #ln.debug("Got %s raw entries from feed %s",len(res.entries), self.url)
         newDocuments = []
         updatedDocuments = []
         for item in res.entries:
