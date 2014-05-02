@@ -13,6 +13,7 @@ import time
 
 from holist.datasupply.DataSupply import MongoDataSupply
 from holist.core.semantics.LSA.LSAStrategy import LSAStrategy
+from holist.core.semantics.NER.NamedEntityStrategy import NamedEntityStrategy
 from holist.core.corpus.mongodb.MongoDBCorpus import MongoDBCorpus
 from holist.frontend.RESTfulFrontend import RESTfulFrontend
 
@@ -23,7 +24,9 @@ MINIMUM_WAIT_TIME = 60 * 3
 class CoreController(object):
 	"""docstring for CoreController"""
 	def __init__(self):
-		self.strategies = [LSAStrategy()]#, NamedEntityStrategy]
+		#self.strategies = [LSAStrategy(), NamedEntityStrategy()]
+		#self.strategies = [NamedEntityStrategy()]
+		self.strategies = [LSAStrategy()]
 		self.datasupply = MongoDataSupply() # for retrieving new documents
 		self.corpus = MongoDBCorpus() # for storing updated documents
 

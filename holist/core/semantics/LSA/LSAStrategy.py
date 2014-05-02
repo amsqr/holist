@@ -50,8 +50,6 @@ class LSAStrategy(ISemanticsStrategy):
     def getNumFeatures():
         return NUM_TOPICS
 
-
-
     def createDictionary(self, sourceType):
         ln.info("creating a new dictionary for sourceType %s.", sourceType)
         dictionary =  DICTIONARY()

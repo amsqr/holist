@@ -9,6 +9,8 @@ from collections import OrderedDict
 import socket
 socket.setdefaulttimeout(10.0) # don't handle feeds that take longer than this
 import feedparser
+#from goose import Goose
+
 
 import time
 
@@ -42,6 +44,8 @@ class RSSFeed(object):
         self.idUpdateMemory = LimitedSizeDict(size_limit=400) # remember the last 400 feed entry ids and change dates
         self.etag = None
         self.modified = None
+
+        #self.goose = Goose()
 
         self.newDocuments = []
         updatedDocuments = []
@@ -101,7 +105,11 @@ class RSSFeed(object):
 
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
-            document = Document(item.description)
+            text = item.title + "\n" + item.description
+            #if EXTRACT_FULL_TEXTS:
+                
+            #    text = self.goose.extract(url=url)
+            document = Document(text)
             document.id = item.id
 
             document.sourceType = self.__class__.__name__
