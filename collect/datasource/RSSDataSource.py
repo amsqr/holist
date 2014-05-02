@@ -116,7 +116,7 @@ class RSSDataSource(IDataSource):
         feeds = []
         for f in self.RSSfeeds.find():
             feeds.append(f)
-        ln.debug("got %s RSS feeds from the database")
+        ln.debug("got %s RSS feeds from the database", feeds)
 
         deferreds = []
         for feedURLObj in feeds:
