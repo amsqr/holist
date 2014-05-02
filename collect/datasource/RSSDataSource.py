@@ -70,7 +70,10 @@ class RSSFeed(object):
         self.modified = res.get("modified", None)
 
         if res.bozo:
-            ln.exception(res.bozo_exception)
+            try:
+                raise res.bozo_exception
+            except Exception as e:
+                ln.exception(e)
             return [],[]
 
         if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
