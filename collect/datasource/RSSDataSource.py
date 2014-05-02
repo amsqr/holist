@@ -113,8 +113,13 @@ class RSSDataSource(IDataSource):
         self.newDocuments = []
         self.updatedDocuments = []
 
+        feeds = []
+        for f in self.RSSfeeds.find():
+            feeds.append(f)
+        ln.debug("got %s RSS feeds from the database")
+
         deferreds = []
-        for feedURLObj in self.RSSfeeds.find():
+        for feedURLObj in feeds:
             feedURL = feedURLObj["url"]
             feed = self.getFeed(feedURL)
             d = deferToThread(feed.getNewAndUpdatedDocuments)
