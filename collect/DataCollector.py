@@ -22,8 +22,8 @@ class DataCollector(object):
 		self.listeners = dict()
 		self.frontend = RESTfulFrontend(self)
 		self.databaseInterface = DatabaseInterface()
-		#self.sources = [RSSDataSource()] #Reuters21578DataSource()]
-		self.sources = [Reuters21578DataSource()]
+		self.sources = [RSSDataSource()] #Reuters21578DataSource()]
+		#self.sources = [Reuters21578DataSource()]
 		
 		self.connected = False
 		self.loop = LoopingCall(self.update)
