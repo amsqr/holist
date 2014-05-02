@@ -88,7 +88,7 @@ class LSAStrategy(ISemanticsStrategy):
 
             #add the document vector space representations
             results += [(document, (self.NAME+"_"+document.sourceType, [val for (k,val) in model[document.preprocessed]])) for document in documents]
-        queue.put(results, self)
+        queue.put((results, self))
 
     def getOverview(self):
         return self.model.print_topics()
