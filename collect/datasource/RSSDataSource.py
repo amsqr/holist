@@ -73,6 +73,7 @@ class RSSFeed(object):
             try:
                 raise res.bozo_exception
             except Exception as e:
+                ln.error("Exception occurred in feed %s:", self.url)
                 ln.exception(e)
             return [],[]
 
@@ -129,7 +130,7 @@ class RSSDataSource(IDataSource):
         feeds = []
         for f in self.RSSfeeds.find():
             feeds.append(f)
-        ln.debug("got %s RSS feeds from the database", feeds)
+        ln.debug("got %s RSS feeds from the database", len(feeds))
 
         deferreds = []
         for feedURLObj in feeds:
