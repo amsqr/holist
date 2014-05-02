@@ -49,16 +49,20 @@ class RSSFeed(object):
         """
 
         # download using the etag and modified tags to save bandwidth
+        ln.debug("started up in feed %s", self.url)
         started = time.time()
-        if self.etag:
-            ln.debug("started update of feed %s with etag", self.url)
-            res = feedparser.parse(self.url, etag = self.etag)
-        elif self.modified:
-            ln.debug("started update of feed %s with last modified info", self.url)
-            res = feedparser.parse(self.url, modified=self.modified)
-        else: # we're on the first iteration OR neither etag nor modified is supported
-            ln.debug("started update of feed %s with no updating info", self.url)
-            res = feedparser.parse(self.url)
+        try:
+            if self.etag:
+                ln.debug("started update of feed %s with etag", self.url)
+                res = feedparser.parse(self.url, etag = self.etag)
+            elif self.modified:
+                ln.debug("started update of feed %s with last modified info", self.url)
+                res = feedparser.parse(self.url, modified=self.modified)
+            else: # we're on the first iteration OR neither etag nor modified is supported
+                ln.debug("started update of feed %s with no updating info", self.url)
+                res = feedparser.parse(self.url)
+        except Exception as e:
+            ln.exception(e)
 
         self.etag = res.get("etag", None)
         self.modified = res.get("modified", None)
