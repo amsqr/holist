@@ -13,7 +13,7 @@ class Broadcaster(object):
 	def broadcast(self, content):
 		#TODO look up how to send broadcast packets
 		packet = json.dumps({"sender":self.sendTag, "payload":content})
-		ln.debug("sending broadcast: %s", packet)
+		ln.debug("sending broadcast: %s...", packet[:140])
 		#requests.post("whatever the broadcast IP is", BROADCAST_PORT)
 
 

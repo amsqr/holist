@@ -106,7 +106,7 @@ class CoreController(object):
 
 	def onNewDocuments(self):
 		self.updateQueued = True
-		ln.info("An update was queued.")
+		ln.info("Queue size is %s.", self.datasupply.countNewDocuments())
 		if not self.updating:
 			deferToThread(self.startUpdateLoop)
 
