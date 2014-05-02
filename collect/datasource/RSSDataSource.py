@@ -75,7 +75,10 @@ class RSSFeed(object):
             except Exception as e:
                 ln.error("Exception occurred in feed %s:", self.url)
                 ln.exception(e)
-            return [],[]
+            if res.feed == {}:
+                return [],[]
+            else:
+                ln.info("Attempting to handle anywayself.")
 
         if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
             ln.debug("feed %s wasn't updated.", self.url)
