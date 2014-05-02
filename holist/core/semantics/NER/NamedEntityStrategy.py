@@ -21,7 +21,7 @@ class NamedEntityStrategy(ISemanticsStrategy):
         for sentence in sent_tokenize(text):
             chunks = ne_chunk(pos_tag(word_tokenize(sentence)))
             entities.extend([chunk for chunk in chunks if hasattr(chunk, 'node')])
-        return [(chunk.node, " ".join([x[0] for x in chunk.leaves()])) for chunk in entities]
+        return list(set([(chunk.node, " ".join([x[0] for x in chunk.leaves()])) for chunk in entities]))
 
     def handleDocuments(self, docs, queue):
         ln.info("Extracting entities..")
