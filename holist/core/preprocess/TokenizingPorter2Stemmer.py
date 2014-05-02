@@ -23,6 +23,7 @@ class TokenizingPorter2Stemmer():
         text = self.removePunctuation(text)
         text = text.split()
         text = self.stemWords(text)
+        text = self.removeNonsense(text)
         text = self.removeStopWords(set(text))
         text = sorted(text, key=lambda x: -len(x))
         text = dictionary.doc2bow(text, allow_update=True)
@@ -30,7 +31,19 @@ class TokenizingPorter2Stemmer():
             return text
         else:
             doc.preprocessed = text
-    
+    def removeNonsense(self, text):
+        def isNonsense(term):
+            if term[:4] == "http" or
+                term[:4] == "href" or
+                 term[:7] == "srchttp":
+                return True
+            if len(term) > 50: 
+                if term != "Lopado­­temacho­­selacho­­galeo­­kranio­­leipsano­­drim­­hypo­­trimmato­­silphio­­parao­­melito­­katakechy­­meno­­kichl­­epi­­kossypho­­phatto­­perister­­alektryon­­opte­­kephallio­­kigklo­­peleio­­lagoio­­siraio­­baphe­­tragano­­pterygon":
+                    return False
+                else: 
+                    return True
+            return False
+        return [term for term in text if not isNonsense(term)]
     def removePunctuation(self,text):
         return text.translate(string.maketrans("",""), string.punctuation)
     
