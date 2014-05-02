@@ -18,7 +18,6 @@ import socket
 socket.setdefaulttimeout(10.0) # don't handle feeds that take longer than this
 
 
-
 class LimitedSizeDict(OrderedDict):
     def __init__(self, *args, **kwds):
         self.size_limit = kwds.pop("size_limit", None)
@@ -52,8 +51,10 @@ class RSSFeed(object):
         # download using the etag and modified tags to save bandwidth
         started = time.time()
         if self.etag:
+            ln.debug("started update of feed %s with etag", self.url)
             res = feedparser.parse(self.url, etag = self.etag)
         elif self.modified:
+            ln.debug("started update of feed %s with last modified info", self.url)
             res = feedparser.parse(self.url, modified=self.modified)
         else: # we're on the first iteration OR neither etag nor modified is supported
             ln.debug("started update of feed %s with no updating info", self.url)
@@ -122,7 +123,12 @@ class RSSDataSource(IDataSource):
         deferredList = defer.DeferredList(deferreds)
         deferredList.addCallbacks(self.__onAllFeedsUpdated,self.__errback)
 
+        passed = 0
         while self.updating:
+            passed += 0.2
+            if passed % 30 == 0:
+                ln.warn("Have been waiting on sources to return for %s seconds.", passed)
+
             time.sleep(0.2)
 
         return self.newDocuments #, self.updatedDocuments
