@@ -112,19 +112,19 @@ class RSSDataSource(IDataSource):
             feedURL = feedURLObj["url"]
             feed = self.getFeed(feedURL)
             d = deferToThread(feed.getNewAndUpdatedDocuments)
-            d.addErrback(self.errback)
             deferreds.append(d)
             
         deferredList = defer.DeferredList(deferreds)
-        deferredList.addCallback(self.__onAllFeedsUpdated)
+        deferredList.addCallbacks(self.__onAllFeedsUpdated,self.__errback)
 
         while self.updating:
             time.sleep(0.2)
 
         return self.newDocuments #, self.updatedDocuments
 
-    def errback(self, error):
+    def __errback(self, error):
         ln.exception(error)
+        self.updating = False
 
     def __onAllFeedsUpdated(self, results):
         for _, (new, updated) in results:

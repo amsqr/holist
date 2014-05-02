@@ -3,7 +3,7 @@ ln = getModuleLogger(__name__)
 
 from holist.core.semantics.ISemanticsStrategy import ISemanticsStrategy
 from gensim import models
-import numpy
+import nltk
 import datetime
 
 class NamedEntityStrategy(ISemanticsStrategy):
@@ -13,9 +13,6 @@ class NamedEntityStrategy(ISemanticsStrategy):
 
     def getName(self):
         return self.NAME
-
-    def getNumFeatures(self):
-        return Exception("Not implemented!")
 
     def handleDocument(self, document):
         raise Exception("Not implemented!")
