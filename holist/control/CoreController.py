@@ -24,9 +24,9 @@ MINIMUM_WAIT_TIME = 60 * 3
 class CoreController(object):
 	"""docstring for CoreController"""
 	def __init__(self):
-		#self.strategies = [LSAStrategy(), NamedEntityStrategy()]
+		self.strategies = [LSAStrategy(), NamedEntityStrategy()]
 		#self.strategies = [NamedEntityStrategy()]
-		self.strategies = [LSAStrategy()]
+		#self.strategies = [LSAStrategy()]
 		self.datasupply = MongoDataSupply() # for retrieving new documents
 		self.corpus = MongoDBCorpus() # for storing updated documents
 
