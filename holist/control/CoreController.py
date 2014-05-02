@@ -121,6 +121,8 @@ class CoreController(object):
 			if self.datasupply.countNewDocuments() >= MINIMUM_QUEUE_SIZE or abs(time.time() - self.lastUpdated) >= MINIMUM_WAIT_TIME:
 				self.updateQueued = False # only the last queued update is interesting, so we don't need an actual queue
 				self.update()
+			else:
+				ln.debug("Not updating yet (not enough documents and not enough time passed)")
 		else:
 			if self.triggeredLoop.running:
 				try:

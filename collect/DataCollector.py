@@ -30,16 +30,8 @@ class DataCollector(object):
 		self.loop = LoopingCall(self.update)
 		self.loop.start(10)
 
-		#state stuff
-		self.articlesOnStartup = []
-		self.started = time.time()
-		for doc in self.databaseInterface.getQueuedDocuments():
-			document = Document(doc["text"])
-			document.__dict__ = doc
-			self.articlesOnStartup.append(document.id)
-		self.articlesOnStartup = set(self.articlesOnStartup)
-		
-
+		self.firstIteration = True
+		self.knownDocuments = set()
 
 		reactor.run()
 
@@ -62,6 +54,7 @@ class DataCollector(object):
 
 	def handleData(self, source, result):
 		# don't re-add documents that were already in the DB when the node was started
+		
 		result = self.filterKnownDocuments(result)
 		ln.debug("Retrieved a total of %s new documents from %s data sources.",len(result), len(self.sources))
 
@@ -72,8 +65,14 @@ class DataCollector(object):
 
 	def filterKnownDocuments(self, documents):
 		for document in documents:
-			if document.id in self.articlesOnStartup:
-				documents.remove(document)
+			if self.firstIteration:
+				if databaseInterface.isDocumentKnown(document):
+					self.knownDocuments.add(document.id)
+					documents.remove(document)
+			else:
+				if document.id in self.knownDocuments:
+					documents.remove(document)
+
 		return documents
 	
 	def handleFailure(self, source, result):
