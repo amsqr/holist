@@ -139,7 +139,7 @@ class RSSDataSource(IDataSource):
         return self.newDocuments #, self.updatedDocuments
 
     def __errback(self, error):
-        ln.exception(error)
+        ln.error(error)
         self.updating = False
 
     def __onAllFeedsUpdated(self, results):
