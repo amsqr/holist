@@ -14,6 +14,9 @@ from holist.util import config
 from collect.db.DatabaseInterface import DatabaseInterface
 from collect.datasource.IDataSource import IDataSource
 
+import socket
+socket.setdefaulttimeout(10.0) # don't handle feeds that take longer than this
+
 
 
 class LimitedSizeDict(OrderedDict):
@@ -47,6 +50,7 @@ class RSSFeed(object):
         """
 
         # download using the etag and modified tags to save bandwidth
+        
         if self.etag:
             res = feedparser.parse(self.url, etag = self.etag)
         elif self.modified:
