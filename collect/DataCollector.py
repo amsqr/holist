@@ -34,7 +34,7 @@ class DataCollector(object):
 		self.articlesOnStartup = []
 		self.started = time.time()
 		for doc in self.databaseInterface.getQueuedDocuments():
-			document = Document()
+			document = Document(doc["text"])
 			document.__dict__ = doc
 			self.articlesOnStartup.append(document.id)
 		self.articlesOnStartup = set(self.articlesOnStartup)
