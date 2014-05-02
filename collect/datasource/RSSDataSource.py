@@ -66,7 +66,7 @@ class RSSFeed(object):
             ln.debug("feed %s wasn't updated.", self.url)
             return [], []
 
-        ln.debug("Got %s entries from feed %s",len(res.entries), self.url)
+        ln.debug("Got %s raw entries from feed %s",len(res.entries), self.url)
         newDocuments = []
         updatedDocuments = []
         for item in res.entries:
@@ -89,7 +89,7 @@ class RSSFeed(object):
             document.sourceType = self.__class__.__name__
             
             listToAppendTo.append(document)
-        ln.debug("Updating %s took %s seconds", self.url, time.time() - started)
+        ln.debug("Updating %s took %s seconds. Got: %s new, %s updated.", self.url, time.time() - started, len(newDocuments), len(updatedDocuments))
         return newDocuments, updatedDocuments
 
 class RSSDataSource(IDataSource):
