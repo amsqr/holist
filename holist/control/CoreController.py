@@ -32,6 +32,8 @@ class CoreController(object):
 
 		self.connectToDataSupply()
 
+		self.lastUpdated = None
+
 		self.updating = False
 		self.updateQueued = False
 		ln.info("running reactor.")
@@ -61,7 +63,8 @@ class CoreController(object):
 			ln.debug("No new documents. Cancelling update iteration.")
 			return
 
-		ln.info("running update iteration.")
+		ln.info("running update iteration, got %s documents from collector.", len(self.newDocuments))
+
 		#throw the new documents against our models.
 		deferreds = []
 		processes = []
@@ -73,14 +76,16 @@ class CoreController(object):
 			processes.append((process, queue))
 			process.start()
 
-			#deferreds.append(deferred)
-		#deferreds = defer.DeferredList(deferreds)
-		#deferreds.addCallback(self.__onStrategiesFinished)
+		
+		# each strategy will return its instance, since it might have changed in the subprocess. We thus replace each strategy by this instance. 
+		self.strategies = []
 
-		# This convoluted looking stuff is necessary for gathering results when we want to use proper subprocesses
+		# This convoluted looking stuff is necessary for gathering results and maintaining instance states when we want to use proper subprocesses
 		allResults = dict()
 		for strategyProcess, resultsQueue in processes:
-			results = resultsQueue.get()
+			results, strategy = resultsQueue.get()
+			self.strategies.append(strategy)
+
 			for docObj, (tag, vector) in results:
 				document = allResults.get(docObj._id, docObj)
 				document.vectors[tag] = vector
@@ -93,6 +98,7 @@ class CoreController(object):
 		if len(allResults):
 			self.sendBroadcast([str(doc._id) for doc in allResults])
 		self.newDocuments = []
+		self.lastUpdated = time.time()
 		self.updating = False
 
 	def sendBroadcast(self, ids):
