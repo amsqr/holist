@@ -29,9 +29,16 @@ class DataCollector(object):
 		self.loop = LoopingCall(self.update)
 		self.loop.start(10)
 
-		#status stuff
+		#state stuff
+		self.articlesOnStartup = []
 		self.started = time.time()
-		self.articlesOnStartup = self.databaseInterface.getQueuedDocumentCount()
+		for doc in self.databaseInterface.getQueuedDocuments():
+			document = Document()
+			document.__dict__ = doc
+			self.articlesOnStartup.append(document.id)
+		self.articlesOnStartup = set(self.articlesOnStartup)
+		
+
 
 		reactor.run()
 
@@ -53,11 +60,20 @@ class DataCollector(object):
 				ln.debug("skipping update for source of class %s", source.__class__)
 
 	def handleData(self, source, result):
+		# don't re-add documents that were already in the DB when the node was started
+		result = self.filterKnownDocuments(result)
 		ln.debug("Retrieved a total of %s new documents from %s data sources.",len(result), len(self.sources))
+
 		self.databaseInterface.addDocuments(result)
 		source.updating = False
 		if result:
 			self.notifyListeners()
+
+	def filterKnownDocuments(self, documents):
+		for document in documents:
+			if document.id in self.articlesOnStartup:
+				documents.remove(document)
+		return documents
 	
 	def handleFailure(self, source, result):
 		ln.warn("there was an error from source %s: %s", source.__class__, result.getTraceback())

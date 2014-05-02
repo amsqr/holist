@@ -44,7 +44,7 @@ class StatusPage(Resource):
     def render_GET(self,request):
         return json.dumps(
             {"started":self.controller.started,
-             "documentsOnStartup":self.controller.articlesOnStartup,
+             "documentsOnStartup":len(self.controller.articlesOnStartup),
              "queuedDocuments":self.controller.getQueuedDocumentCount(),
              "listeners":len(self.controller.listeners),
              "sources":[source.__class__.__name__ for source in self.controller.sources]})

@@ -17,4 +17,4 @@ class DatabaseInterface(object):
 			self.documents.insert(bson)
 
 	def getQueuedDocumentCount(self):
-		return self.documents.find().count()
+		return self.documents.find()
