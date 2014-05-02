@@ -13,6 +13,7 @@ from twisted.internet import reactor
 from collect.view.RESTfulFrontend import RESTfulFrontend
 from collect.db.DatabaseInterface import DatabaseInterface
 from holist.core.server.Listener import Listener
+from holist.core.Document import Document
 
 from collect.datasource.Reuters.Reuters21578DataSource import Reuters21578DataSource
 from collect.datasource.RSSDataSource import RSSDataSource
