@@ -135,7 +135,7 @@ class RSSDataSource(IDataSource):
         for _, (new, updated) in results:
             self.newDocuments += new 
             self.updatedDocuments +=updated
-        ln.debug("Retrieved a total of %s new articles from %s RSS feeds.",len(self.newDocuments), len(self.feeds))
+        ln.debug("Retrieved a total of %s new articles (plus %s updated) from %s RSS feeds.",len(self.newDocuments), len(self.updatedDocuments), len(self.feeds))
         self.updating = False
 
 

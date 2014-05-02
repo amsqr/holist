@@ -36,9 +36,6 @@ class TokenizingPorter2Stemmer():
             if term[:4] == "http" or term[:4] == "href" or term[:7] == "srchttp":
                 return True
             if len(term) > 50: 
-                if term != "Lopado­­temacho­­selacho­­galeo­­kranio­­leipsano­­drim­­hypo­­trimmato­­silphio­­parao­­melito­­katakechy­­meno­­kichl­­epi­­kossypho­­phatto­­perister­­alektryon­­opte­­kephallio­­kigklo­­peleio­­lagoio­­siraio­­baphe­­tragano­­pterygon":
-                    return False
-                else: 
                     return True
             return False
         return [term for term in text if not isNonsense(term)]

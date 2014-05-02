@@ -24,4 +24,4 @@ class DatabaseInterface(object):
 		return self.documents.find().count()
 
 	def isDocumentKnown(self, document):
-	 	return bool(self.documents.find({"id":document.id).count()} + self.articles.find({"id":document.id}).count())
+	 	return bool(self.documents.find({"id":document.id}).count() + self.articles.find({"id":document.id}).count())
