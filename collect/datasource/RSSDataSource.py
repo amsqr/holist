@@ -100,17 +100,19 @@ class RSSFeed(object):
             else: #add to new documents
                 listToAppendTo = newDocuments
 
-            # save the modified date, if it's not available, just save the id (won't support updates!)
+            # save the modified date. if it's not available, just save the id (won't support updates for this link!)
             self.idUpdateMemory[item.id] = item.get("modified", item.id)
 
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
-            text = item.title + "\n" + item.description
+            text =  item.description
+            title = item.title
             #if EXTRACT_FULL_TEXTS:
                 
             #    text = self.goose.extract(url=url)
             document = Document(text)
-            document.id = item.id
+            document.link = item.id
+            document.title = item.title
 
             document.sourceType = self.__class__.__name__
             

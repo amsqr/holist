@@ -85,7 +85,7 @@ class LSAStrategy(ISemanticsStrategy):
             model.add_documents(minimalized)
 
             #add the document vector space representations
-            results += [(document, (self.NAME+"_"+document.sourceType, [val for (k,val) in model[document.preprocessed]])) for document in documents]
+            results += [(document, (self.NAME+"_"+document.sourceType, model[document.preprocessed])) for document in documents]
         queue.put((results, self))
 
     def getOverview(self):

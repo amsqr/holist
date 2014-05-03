@@ -43,7 +43,7 @@ class MongoDBCorpus(ICorpus): #This updates ONLY the articles collection
         return "MongoDBCorpus"
     
     def __getitem__(self, id):
-        return convertToDocument(self.documents.find_one({"id":id})) # otherwise fetch it from the DB
+        return convertToDocument(self.documents.find_one({"id":id})) 
     
     def getDocuments(self, idlist):
         return [convertToDocument(docbson) for docbson in self.documents.find({"id":{"$in":idlist}})]
