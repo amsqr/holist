@@ -1,8 +1,10 @@
 USAGE
 ====================
-To start core and data collection, from top level folder execute
-python coreStartup.py
-python collectStartup.py
+To start core and data collection, from top level folder execute:
+
+	python coreStartup.py
+	python collectStartup.py
+
 in seperate terminals.
 
 
