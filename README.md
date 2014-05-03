@@ -10,10 +10,10 @@ STRUCTURE / General
 ====================
 
 The code expects to be able to connect to a MongoDB on port 27017 (default), with a database named "holist". It will use (or automatically create) a "new_documents" collection to store new data, and an "articles" collection to store processed data, meaning articles with their annotated vectors, named entities, etc. It also expects a collection called "rss_feeds", which specifies the URLs of feeds to update. To insert a new source, do e.g.:
-# mongo 
-> use holist
-> db.rss_feeds.insert({"url":"http://feeds.reuters.com/reuters/topNews"})
->
+	# mongo 
+	> use holist
+	> db.rss_feeds.insert({"url":"http://feeds.reuters.com/reuters/topNews"})
+	>
 
 
 collectStartup.py starts the data collection node. This currently updates only RSS feeds, but later modules for Twitter, Blogs, etc. will be added in the collect package.
