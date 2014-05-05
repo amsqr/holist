@@ -7,6 +7,12 @@ To start core and data collection, from top level folder execute:
 
 in seperate terminals.
 
+SETUP
+===================
+
+install dependencies
+
+    # pip install -r requirements.txt
 
 STRUCTURE / General
 ====================

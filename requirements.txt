@@ -1,0 +1,6 @@
+pymongo >= 2.1
+numpy
+requests
+stemming
+gensim
+nltk
