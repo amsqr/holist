@@ -4,3 +4,5 @@ requests
 stemming
 gensim
 nltk
+BeautifulSoup4
+feedparser
