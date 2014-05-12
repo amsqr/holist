@@ -75,7 +75,6 @@ class DataCollector(object):
 			else:
 				if document.id not in self.knownDocuments:
 					keep.append(document)
-				else:
 		self.firstIteration[source.__class__.__name__] = False
 		return keep
 	
