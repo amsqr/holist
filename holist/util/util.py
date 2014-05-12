@@ -44,7 +44,7 @@ def startLogging():
     global keepLogging
     if not keepLogging:
         keepLogging = True
-        #reactor.callInThread(__refreshLog)
+        reactor.callInThread(__refreshLog)
 
 ## Schedules the logging thread to stop.
 def stopLogging():
