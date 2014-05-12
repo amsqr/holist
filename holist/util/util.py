@@ -78,7 +78,6 @@ def __refreshLog():
     #get log entry (blocking)
     todaysdate = datetime.date.today()
     logfile = open(config.logFilename % todaysdate, "a")
-    ln.debug("Started logging to file %s", (config.logFilename % todaysdate))
     while keepLogging:
         #check if we need to start a new file
         if(datetime.date.today() != todaysdate):
