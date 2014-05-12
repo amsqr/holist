@@ -40,11 +40,11 @@ def logReturnValue(function):
     return loggedFunction
 
 ## Starts the logging thread.
-def startLogging():
+def startLogging(name):
     global keepLogging
     if not keepLogging:
         keepLogging = True
-        reactor.callInThread(__refreshLog)
+        reactor.callInThread(__refreshLog, name)
 
 ## Schedules the logging thread to stop.
 def stopLogging():
@@ -73,17 +73,17 @@ def getModuleLogger(namespace):
     loggers.append(ln)
     return ln
 
-def __refreshLog():
+def __refreshLog(name):
     global keepLogging
     #get log entry (blocking)
     todaysdate = datetime.date.today()
-    logfile = open(config.logFilename % todaysdate, "a")
+    logfile = open((config.logFilename+name) % todaysdate, "a")
     while keepLogging:
         #check if we need to start a new file
         if(datetime.date.today() != todaysdate):
             logfile.close()
             todaysdate = datetime.date.today()
-            logfile = open(config.logFilename % todaysdate, "a")
+            logfile = open((config.logFilename+name) % todaysdate, "a")
         
         logentry = None
         try:
