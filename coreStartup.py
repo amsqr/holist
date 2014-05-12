@@ -6,5 +6,5 @@ ln = util.getModuleLogger(__name__)
 from holist.control.CoreController import CoreController
 
 
-#util.startLogging()
+util.startLogging("core")
 control = CoreController()
