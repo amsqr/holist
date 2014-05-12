@@ -91,9 +91,9 @@ def __refreshLog():
         except Exception, e:
             pass
         if logentry:
-            print logentry
+            #print logentry
             ## Write to file
-            logfile.write(logentry)
+            logfile.write(logentry+"\n")
     try:
         logfile.close()
     except:
