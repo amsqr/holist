@@ -54,7 +54,7 @@ class DataCollector(object):
 
 	def handleData(self, source, result):
 		# don't re-add documents that were already in the DB when the node was started
-		ln.debug("have %s documents. Filtering...", len(result))
+		ln.debug("have %s documents. Filtering out known documents...", len(result))
 		result = self.filterKnownDocuments(source, result)
 		ln.info("Received a total of %s new documents from %s data sources.",len(result), len(self.sources))
 
@@ -67,14 +67,17 @@ class DataCollector(object):
 		keep = []
 		for document in documents:
 			if self.firstIteration[source.__class__.__name__]:
+				ln.debug("first iteration, filtering from database.")
 				if self.databaseInterface.isDocumentKnown(document):
-					ln.debug("REMOVED know document: %s", document.id)
 					self.knownDocuments.add(document.id)
 				else:
 					keep.append(document)
 			else:
 				if document.id not in self.knownDocuments:
+					ln.debug("keeping %s", document.id)
 					keep.append(document)
+				else:
+					ln.debug("already know %s", document.id)
 		self.firstIteration[source.__class__.__name__] = False
 		return keep
 	
