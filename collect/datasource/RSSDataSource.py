@@ -111,6 +111,7 @@ class RSSFeed(object):
                 
             #    text = self.goose.extract(url=url)
             document = Document(text)
+            document.id = item.id
             document.link = item.id
             document.title = item.title
 

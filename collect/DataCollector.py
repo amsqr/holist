@@ -74,10 +74,8 @@ class DataCollector(object):
 					keep.append(document)
 			else:
 				if document.id not in self.knownDocuments:
-					ln.debug("keeping %s", document.id)
 					keep.append(document)
 				else:
-					ln.debug("already know %s", document.id)
 		self.firstIteration[source.__class__.__name__] = False
 		return keep
 	
