@@ -77,13 +77,13 @@ def __refreshLog(name):
     global keepLogging
     #get log entry (blocking)
     todaysdate = datetime.date.today()
-    logfile = open((config.logFilename+name) % todaysdate, "a")
+    logfile = open((name+config.logFilename) % todaysdate, "a")
     while keepLogging:
         #check if we need to start a new file
         if(datetime.date.today() != todaysdate):
             logfile.close()
             todaysdate = datetime.date.today()
-            logfile = open((config.logFilename+name) % todaysdate, "a")
+            logfile = open((name+config.logFilename) % todaysdate, "a")
         
         logentry = None
         try:
