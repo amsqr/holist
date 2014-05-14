@@ -1,7 +1,7 @@
 from core.util.util import *
 ln = getModuleLogger(__name__)
 
-from newscluster import config
+from core.util import config
 
 from twisted.web.resource import Resource
 from twisted.web.server import Site
@@ -24,26 +24,26 @@ class RESTfulFrontend(object):
         root.putChild("notify", notifyPage)
 
         factory = Site(root)
-        reactor.listenTCP(config.clusterapiport, factory)
+        reactor.listenTCP(config.holistcoreport, factory)
+
 
 class RegisterListener(Resource): 
     #todo: some checks for ip, port correctness
     def __init__(self, controller):
         self.controller = controller
     def render_POST(self, request):
+        ln.debug("received registration request: %s", request.args)
         ip = cgi.escape(request.args["ip"][0])
         port = cgi.escape(request.args["port"][0])
         if None not in (ip, port):
             self.controller.registerListener(ip, port)
-            return json.dumps({"success"}) 
+            return json.dumps({"result":"success"}) 
         else:
-            return json.dumps({"failure"}) 
+            return json.dumps({"result":"failure"}) 
 
 class Notify(Resource): 
     def __init__(self, controller):
         self.controller = controller
     def render_POST(self, request): # new data available
-        ids = request.args["ids"]
-        ln.debug("received notification, updating with %s documents.", len(ids))
-        self.controller.onNewData(ids)
-        return json.dumps({"whuuuat":"siiiick"}) 
+        self.controller.onNewDocuments()
+        return json.dumps({"word":"sure bro"}) 

@@ -1,10 +1,10 @@
-from holist.util import util
-from holist.util import config
+from core.util import util
+from core.util import config
 import logging
 logging.basicConfig(format=config.logFormat,level=logging.DEBUG if config.showDebugLogs else logging.INFO)
 ln = util.getModuleLogger(__name__)
-from holist.control.CoreController import CoreController
+from core.control.CoreController import CoreController
 
 
-util.startLogging("core")
+util.startLogging("model")
 control = CoreController()

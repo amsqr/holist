@@ -1,8 +1,8 @@
-from holist.util.util import *
+from core.util.util import *
 ln = getModuleLogger(__name__)
 
 from collect.datasource.IDataSource import IDataSource
-from holist.core.Document import Document
+from core.model.Document import Document
 from bs4 import BeautifulSoup
 
 class Reuters21578DataSource(IDataSource):

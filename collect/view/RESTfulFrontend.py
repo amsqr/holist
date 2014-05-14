@@ -1,7 +1,7 @@
-from holist.util.util import *
+from core.util.util import *
 ln = getModuleLogger(__name__)
 
-from holist.util.util import config as holistConfig
+from core.util.util import config as holistConfig
 
 from twisted.web.resource import Resource
 from twisted.web.server import Site

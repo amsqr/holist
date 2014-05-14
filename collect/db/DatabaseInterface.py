@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-from holist.util import config
+from core.util import config
 
 LOCAL_DB_LOCATION = config.dblocation
 LOCAL_DB_PORT = config.dbport 

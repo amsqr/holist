@@ -1,9 +1,9 @@
 from pymongo import MongoClient
 
 from newscluster.core.Cluster import Cluster
-from holist.core.Document import Document
+from core.model.Document import Document
 
-from holist.util import config
+from core.util import config
 
 LOCAL_DB_LOCATION = config.dblocation #"tmac.local"
 LOCAL_DB_PORT = config.dbport #27017
