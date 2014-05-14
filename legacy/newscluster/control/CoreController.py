@@ -1,22 +1,20 @@
 from core.util.util import *
+from legacy.newscluster.core import ClusterStrategy, DatabaseInterface
+from legacy.newscluster.view import RESTfulFrontend
+
 ln = getModuleLogger(__name__)
 
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 from twisted.internet.threads import deferToThread
-from core.model.server.Listener import Listener
 
-from newscluster.core.ClusterStrategy import ClusterStrategy
-from newscluster.core.DatabaseInterface import DatabaseInterface
-from newscluster.view.RESTfulFrontend import RESTfulFrontend
 from core.model.server.Listener import Listener
 
 from core.util import config as holistConfig
-from newscluster import config
+from legacy.newscluster import config
 
 import requests
-import time
-import json
+
 
 class CoreController(object):
 	def __init__(self):
@@ -33,7 +31,7 @@ class CoreController(object):
 
 	def connectToCore(self):
 		try:
-			data = {"ip":config.clusterapiurl,"port":config.clusterapiport}
+			data = {"ip": config.clusterapiurl,"port": config.clusterapiport}
 			res = requests.post("http://" + holistConfig.holistcoreurl +":"+ str(holistConfig.holistcoreport) +"/register_listener", data=data )
 			if success:
 				ln.info("successfully connected to model")

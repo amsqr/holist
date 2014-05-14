@@ -98,13 +98,13 @@ def readConfig(filename):
 		elif fieldName == "FRONTEND":
 			frontend = fieldValue
 			if frontend == "HolistFrontend":
-				from core.frontend.TwistedFrontend import HolistFrontend
+				from core.api.TwistedFrontend import HolistFrontend
 				config.FRONTEND = HolistFrontend
 			elif frontend == "RESTfulFrontend":
-				from core.frontend.RESTfulFrontend import RESTfulFrontend
+				from core.api.RESTfulFrontend import RESTfulFrontend
 				config.FRONTEND = RESTfulFrontend
 			else:
-				raise Exception("Unkown frontend in config: %s", (frontend,))
+				raise Exception("Unkown api in config: %s", (frontend,))
 			MANDATORY.remove("FRONTEND")
 		else:
 			raise Exception("Invalid category in %s: %s" % (filename, fieldName))

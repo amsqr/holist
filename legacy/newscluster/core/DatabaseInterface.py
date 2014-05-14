@@ -1,6 +1,6 @@
 from pymongo import MongoClient
+from legacy.newscluster.core import Cluster
 
-from newscluster.core.Cluster import Cluster
 from core.model.Document import Document
 
 from core.util import config

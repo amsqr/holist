@@ -10,7 +10,7 @@ from twisted.internet.threads import deferToThread
 from twisted.internet.task import LoopingCall
 from twisted.internet import reactor
 
-from collect.view.RESTfulFrontend import RESTfulFrontend
+from collect.api.RESTfulFrontend import RESTfulFrontend
 from collect.db.DatabaseInterface import DatabaseInterface
 from core.model.server.Listener import Listener
 from core.model.Document import Document

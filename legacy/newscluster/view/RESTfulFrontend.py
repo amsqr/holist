@@ -1,7 +1,7 @@
 from core.util.util import *
 ln = getModuleLogger(__name__)
 
-from newscluster import config
+from legacy.newscluster import config
 
 from twisted.web.resource import Resource
 from twisted.web.server import Site

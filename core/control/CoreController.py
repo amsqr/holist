@@ -15,7 +15,7 @@ from core.datasupply.DataSupply import MongoDataSupply
 from core.model.semantics.LSA.LSAStrategy import LSAStrategy
 from core.model.semantics.NER.NamedEntityStrategy import NamedEntityStrategy
 from core.model.corpus.mongodb.MongoDBCorpus import MongoDBCorpus
-from core.frontend.RESTfulFrontend import RESTfulFrontend
+from core.api.RESTfulFrontend import RESTfulFrontend
 
 # we wait until there are at least 20 new documents OR 3 minutes have passed.
 MINIMUM_QUEUE_SIZE = 20
