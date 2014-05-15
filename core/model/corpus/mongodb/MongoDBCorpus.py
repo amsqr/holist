@@ -1,19 +1,12 @@
 from core.util.util import *
 ln = getModuleLogger(__name__)
 
-import gensim
-
 from core.model.corpus.ICorpus import ICorpus
-from core.model.Document import Document
-import pymongo
-import getpass
-import numpy
+
 
 DOCUMENTS = "articles"
 NEWDOCUMENTS = "new_documents"
 
-UNAME = "crushedice"
-PASSWD = getpass.getpass()
 
 
 
@@ -23,7 +16,7 @@ class MongoDBCorpus(ICorpus): #This updates ONLY the articles collection
 
         self.client = getDatabaseConnection()
         self.database = self.client[config.dbname]
-        #self.database.authenticate(UNAME, PASSWD)
+
         self.documents = self.database.articles
 
         self.__len = len(self)
@@ -57,11 +50,5 @@ class MongoDBCorpus(ICorpus): #This updates ONLY the articles collection
         document.__dict__["id"] = self.__len
         for strategyName in document.vectors:
             document.vectors[strategyName] = list(document.vectors[strategyName])
-        self.documents.insert(document.__dict__) # insert the whole object to the main documents collection
+        self.documents.insert(document.__dict__)  # insert the whole object to the main documents collection
         self.__len += 1
-        
-
-
-
-
-        

@@ -11,8 +11,6 @@ showDebugLogs = True
 collectNodeIP = "localhost"
 collectNodePort = 12137
 
-
-
 holistcoreurl = "localhost"
 holistcoreport = 1157
 

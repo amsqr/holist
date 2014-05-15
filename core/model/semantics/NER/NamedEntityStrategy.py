@@ -19,12 +19,7 @@ REGISTER_PORT = config.strategyregisterport
 LISTEN_PORT = config.strategyregisterport + 4
 
 
-def extractEntities(text):
-    entities = []
-    for sentence in sent_tokenize(text):
-        chunks = ne_chunk(pos_tag(word_tokenize(sentence)))
-        entities.extend([chunk for chunk in chunks if hasattr(chunk, 'node')])
-    return list(set([(chunk.node, " ".join([x[0] for x in chunk.leaves()])) for chunk in entities]))
+class Document: pass
 
 
 class NamedEntityStrategy(ISemanticsStrategy):
@@ -58,19 +53,31 @@ class NamedEntityStrategy(ISemanticsStrategy):
     def _handleDocuments(self, returnTo, docs):
         documents = []
         for docDict in docs:
-            document = Document("")
+            document = Document()
             document.__dict__ = docDict
             documents.append(document)
 
         ln.info("Extracting entities..")
+        count = 0
         results = []
-        for document in documents:
-            entities = extractEntities(document.text)
-            results += [{"_id": document._id, "strategy": "named_entities", "vector": entities}
-                        for document in documents]
+        for doc in documents:
+            count += 1
+            if count % 50 == 0:
+                ln.debug("extracted %s documents. now handling was id:%s", count, doc._id)
+            entities = self.extractEntities(doc.text)
+            results.append({"_id": doc._id, "strategy": "named_entities", "vector": entities})
+
         ln.info("Done extracting entities.")
 
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
+
+    def extractEntities(self, text):
+        entities = []
+        for sentence in sent_tokenize(text):
+            chunks = ne_chunk(pos_tag(word_tokenize(sentence)))
+            entities.extend([chunk for chunk in chunks if hasattr(chunk, 'node')])
+        return list(set([(chunk.node, " ".join([x[0] for x in chunk.leaves()])) for chunk in entities]))
+
 
     def load(self):
         raise Exception("Not implemented!")

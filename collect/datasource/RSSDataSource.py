@@ -9,17 +9,14 @@ from collections import OrderedDict
 import socket
 socket.setdefaulttimeout(10.0)  # don't handle feeds that take longer than this
 import feedparser
-#from goose import Goose
 
-
+from Queue import Queue
 import time
 
 from core.model.Document import Document
 from core.util import config
 
 from collect.datasource.IDataSource import IDataSource
-
-
 
 
 class LimitedSizeDict(OrderedDict):
@@ -37,8 +34,10 @@ class LimitedSizeDict(OrderedDict):
             while len(self) > self.size_limit:
                 self.popitem(last=False)
 
+
 class RSSFeed(object):
-    def __init__(self, feedURL):
+    def __init__(self, dataSource, feedURL):
+        self.dataSource = dataSource
         self.url = feedURL
         self.idUpdateMemory = LimitedSizeDict(size_limit=400)  # remember the last 400 feed entry ids and change dates
         self.etag = None
@@ -47,24 +46,31 @@ class RSSFeed(object):
         #self.goose = Goose()
 
         self.newDocuments = []
-        updatedDocuments = []
 
     def getNewAndUpdatedDocuments(self):
         """
         Update the feed. should not return duplicate or previously returned documents
         """
+        try:
+            newDocuments, updatedDocuments = self._getNewAndUpdatedDocuments()
+        except:
+            ln.exception("Exception occurred trying to update feed %s", self.url)
+            newDocuments, updatedDocuments = [], []
 
+        self.dataSource.queue.put({"new": newDocuments, "updated": updatedDocuments})
+
+    def _getNewAndUpdatedDocuments(self):
         # download using the etag and modified tags to save bandwidth
         started = time.time()
         try:
             if self.etag:
-                ln.debug("started update of feed %s with etag", self.url)
-                res = feedparser.parse(self.url, etag = self.etag)
+                #ln.debug("started update of feed %s with etag", self.url)
+                res = feedparser.parse(self.url, etag=self.etag)
             elif self.modified:
-                ln.debug("started update of feed %s with last modified info", self.url)
+                #ln.debug("started update of feed %s with last modified info", self.url)
                 res = feedparser.parse(self.url, modified=self.modified)
             else: # we're on the first iteration OR neither etag nor modified is supported
-                ln.debug("started update of feed %s with no updating info", self.url)
+                #ln.debug("started update of feed %s with no updating info", self.url)
                 res = feedparser.parse(self.url)
         except Exception as e:
             ln.exception(e)
@@ -83,7 +89,7 @@ class RSSFeed(object):
             else:
                 ln.info("Attempting to handle anyway.")
 
-        if res.status == 304: # indicates that the feed has NOT been updated since we last checked it
+        if res.status == 304:  # indicates that the feed has NOT been updated since we last checked it
             ln.debug("feed %s wasn't updated.", self.url)
             return [], []
 
@@ -91,6 +97,10 @@ class RSSFeed(object):
         newDocuments = []
         updatedDocuments = []
         for item in res.entries:
+            try:
+                x = item.id
+            except AttributeError:
+                item.id = item.link
             if item.id in self.idUpdateMemory:
                 if item.get("modified", item.id) == self.idUpdateMemory[item.id]:
                     continue # we know this article and it hasn't been updated
@@ -109,16 +119,24 @@ class RSSFeed(object):
             #if EXTRACT_FULL_TEXTS:
                 
             #    text = self.goose.extract(url=url)
+
             document = Document(text)
             document.id = item.id
             document.link = item.id
             document.title = item.title
+            try:
+                document.timestamp = item.published
+            except AttributeError:
+                pass
+
 
             document.sourceType = self.__class__.__name__
             
             listToAppendTo.append(document)
         ln.debug("Updating %s took %s seconds. Got: %s new, %s updated.", self.url, time.time() - started, len(newDocuments), len(updatedDocuments))
+
         return newDocuments, updatedDocuments
+
 
 class RSSDataSource(IDataSource):
     def __init__(self):
@@ -126,12 +144,13 @@ class RSSDataSource(IDataSource):
         self.RSSfeeds = self.databaseClient[config.dbname].rss_feeds
         self.feeds = {}
         self.updating = False
+        self.queue = Queue()
 
         self.newDocuments = []
         self.updatedDocuments = []
 
     def getFeed(self, feedURL):
-        res = self.feeds.get(feedURL, RSSFeed(feedURL))
+        res = self.feeds.get(feedURL, RSSFeed(self, feedURL))
         self.feeds[feedURL] = res
         return res
 
@@ -145,35 +164,27 @@ class RSSDataSource(IDataSource):
             feeds.append(f)
         ln.debug("got %s RSS feeds from the database", len(feeds))
 
-        deferreds = []
+        waitFor = 0
         for feedURLObj in feeds:
             feedURL = feedURLObj["url"]
             feed = self.getFeed(feedURL)
-            d = deferToThread(feed.getNewAndUpdatedDocuments)
-            deferreds.append(d)
-            
-        deferredList = defer.DeferredList(deferreds)
-        deferredList.addCallbacks(self.__onAllFeedsUpdated,self.__errback)
+            deferToThread(feed.getNewAndUpdatedDocuments)
+            waitFor += 1
 
-        passed = 0
-        while self.updating:
-            passed += 0.2
-            if passed % 30 == 0:
-                ln.warn("Have been waiting on sources to return for %s seconds.", passed)
+        received = 0
+        while received < waitFor:
+            packet = self.queue.get(True)
+            self.newDocuments += packet["new"]
+            self.updatedDocuments += packet["updated"]
+            received += 1
+            ln.debug("received %s out of %s results.", received, waitFor)
 
-            time.sleep(0.2)
+        ln.debug("Retrieved a total of %s new articles (plus %s updated) from %s RSS feeds.",
+                 len(self.newDocuments), len(self.updatedDocuments), len(self.feeds))
 
-        return self.newDocuments #, self.updatedDocuments
-
-    def __errback(self, error):
-        ln.error(error)
         self.updating = False
+        return self.newDocuments  # , self.updatedDocuments
 
-    def __onAllFeedsUpdated(self, results):
-        for _, (new, updated) in results:
-            self.newDocuments += new 
-            self.updatedDocuments +=updated
-        ln.debug("Retrieved a total of %s new articles (plus %s updated) from %s RSS feeds.",len(self.newDocuments), len(self.updatedDocuments), len(self.feeds))
-        self.updating = False
+
 
 

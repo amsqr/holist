@@ -4,7 +4,8 @@ import core.util.config
 import requests
 import json
 
-class MongoDataSupply(object): #This handles ONLY the new_documents collection
+
+class MongoDataSupply(object):  # This handles ONLY the new_documents collection
     """
     this is used to fetch documents from the database, which they're collected by the separate datacollector node.
     """
@@ -13,10 +14,6 @@ class MongoDataSupply(object): #This handles ONLY the new_documents collection
         self.database = self.client[config.dbname]
         #self.database.authenticate(UNAME, PASSWD)
         self.newDocumentsCollection = self.database.new_documents
-
-    @classmethod
-    def isRemote(self):
-        return True
 
     def connect(self):
         try:
@@ -33,7 +30,7 @@ class MongoDataSupply(object): #This handles ONLY the new_documents collection
     def getNewDocuments(self):
         newDocuments = [convertToDocument(bson) for bson in self.newDocumentsCollection.find()]
         ids = [doc._id for doc in newDocuments]
-        self.newDocumentsCollection.remove({"_id":{"$in":ids}})
+        self.newDocumentsCollection.remove({"_id": {"$in": ids}})
         return newDocuments
 
     def countNewDocuments(self):

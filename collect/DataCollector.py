@@ -13,7 +13,8 @@ from twisted.internet import reactor
 from collect.api.RESTfulFrontend import RESTfulFrontend
 from collect.db.DatabaseInterface import DatabaseInterface
 from core.model.server.Listener import Listener
-from core.model.Document import Document
+
+import datetime
 
 from collect.datasource.Reuters.Reuters21578DataSource import Reuters21578DataSource
 from collect.datasource.RSSDataSource import RSSDataSource
@@ -57,6 +58,7 @@ class DataCollector(object):
         # don't re-add documents that were already in the DB when the node was started
         ln.debug("have %s documents. Filtering out known documents...", len(result))
         result = self.filterKnownDocuments(source, result)
+        result = self.completeTimestamps(result)
         ln.info("Received a total of %s new documents from %s data sources.",len(result), len(self.sources))
 
         self.databaseInterface.addDocuments(result)
@@ -64,11 +66,20 @@ class DataCollector(object):
         if result:
             self.notifyListeners()
 
+    def completeTimestamps(self, documents):
+        for document in documents:
+            try:
+                t = document.timestamp
+            except AttributeError:
+                document.timestamp = str(datetime.datetime.now())
+        return documents
+
     def filterKnownDocuments(self, source, documents):
+        if self.firstIteration[source.__class__.__name__]:
+                ln.debug("first iteration, filtering from database.")
         keep = []
         for document in documents:
             if self.firstIteration[source.__class__.__name__]:
-                ln.debug("first iteration, filtering from database.")
                 if self.databaseInterface.isDocumentKnown(document):
                     self.knownDocuments.add(document.id)
                 else:

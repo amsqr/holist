@@ -81,9 +81,11 @@ class StrategyManager(object):
         self.strategies.append(strategy)
 
     def handle(self, documents):
-        docDicts = [document.__dict__ for document in documents]
-        for docDict in docDicts:  # serialize object ids
-            docDict["_id"] = str(docDict["_id"])
+        docDicts = []
+        for document in documents:  # serialize object ids
+            docDict = document.__dict__
+            docDict["_id"] = str(document._id)
+            docDicts.append(docDict)
 
         taskData = {"respondTo": "http://localhost:"+str(config.strategyregisterport)+"/callback",
                     "documents": docDicts}
@@ -94,6 +96,7 @@ class StrategyManager(object):
 
         waitFor = 0
         for strategy in self.strategies:
+            #todo: error handling. if a strategy is not responsive, then remove it.
             requests.post("http://"+strategy.ip+":"+str(strategy.port)+"/task", json.dumps(taskData))
             waitFor += 1
 
