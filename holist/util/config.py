@@ -11,8 +11,12 @@ showDebugLogs = True
 collectNodeIP = "localhost"
 collectNodePort = 12137
 
+
+
 holistcoreurl = "localhost"
 holistcoreport = 1157
+
+strategyregisterport = 1158
 
 dblocation = "localhost"
 dbport = 27017

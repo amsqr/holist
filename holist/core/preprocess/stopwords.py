@@ -27,4 +27,5 @@ comes, concerning, consequently, consider, considering, contain, containing, con
             via, viz, vs, want, wants, was, wasn't, way, we, we'd, we'll, we're, we've, welcome, well, went, were, weren't, what, what's, 
             whatever, when, whence, whenever, where, where's, whereafter, whereas, whereby, wherein, whereupon, wherever, whether, 
             which, while, whither, who, who's, whoever, whole, whom, whose, why, will, willing, wish, with, within, without, won't, 
-            wonder, would, would, wouldn't, yes, yet, you, you'd, you'll, you're, you've, your, yours, yourself, yourselves, zero""").split(","))
+            wonder, would, would, wouldn't, yes, yet, you, you'd, you'll, you're, you've, your, yours, yourself, yourselves, zero,
+             relnofollowimg, br, img""").split(","))

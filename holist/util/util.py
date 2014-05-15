@@ -1,5 +1,6 @@
 import logging
 from twisted.internet import reactor
+from twisted.internet.threads import deferToThread
 from Queue import Queue
 import datetime
 import config
@@ -44,7 +45,7 @@ def startLogging(name):
     global keepLogging
     if not keepLogging:
         keepLogging = True
-        reactor.callInThread(__refreshLog, name)
+        deferToThread(__refreshLog, name)
 
 ## Schedules the logging thread to stop.
 def stopLogging():

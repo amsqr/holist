@@ -10,6 +10,7 @@ import cgi
 import json
 
 class RESTfulFrontend(object):
+
     def __init__(self, controller):
         self.controller = controller
         self.setupResources()

@@ -35,6 +35,8 @@ class TokenizingPorter2Stemmer():
         def isNonsense(term):
             if term[:4] == "http" or term[:4] == "href" or term[:7] == "srchttp":
                 return True
+            if any((x in term for x in "1234567890")):
+                return True
             if len(term) > 50: 
                     return True
             return False

@@ -80,7 +80,7 @@ class RSSFeed(object):
                 ln.error("Exception occurred in feed %s:", self.url)
                 ln.exception(e)
             if res.feed == {}:
-                return [],[]
+                return [], []
             else:
                 ln.info("Attempting to handle anyway.")
 
@@ -105,7 +105,7 @@ class RSSFeed(object):
 
             # TODO create the Document object
             # this is also where we could extract the full text if we want it
-            text =  item.description
+            text = item.description
             title = item.title
             #if EXTRACT_FULL_TEXTS:
                 

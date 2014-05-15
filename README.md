@@ -2,10 +2,12 @@ USAGE
 ====================
 To start core and data collection, from top level folder execute:
 
+    # python LSA_startup.py
+    # python NER_startup.py
 	# python coreStartup.py
 	# python collectStartup.py
 
-in seperate terminals.
+in separate terminals. (The first two should eventually be merged into a bash script that just starts all available strategies.)
 
 SETUP
 ===================
