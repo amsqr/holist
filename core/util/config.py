@@ -20,6 +20,6 @@ strategyregisterport = 1158
 
 dblocation = "localhost"
 dbport = 27017
-dbname = "core"#"crushed"
+dbname = "holist"
 #dblocation = "ds059957.mongolab.com"
 #dbport = 59957

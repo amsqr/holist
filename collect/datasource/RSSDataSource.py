@@ -7,7 +7,7 @@ from pymongo import MongoClient
 from collections import OrderedDict
 
 import socket
-socket.setdefaulttimeout(10.0) # don't handle feeds that take longer than this
+socket.setdefaulttimeout(10.0)  # don't handle feeds that take longer than this
 import feedparser
 #from goose import Goose
 
@@ -17,7 +17,6 @@ import time
 from core.model.Document import Document
 from core.util import config
 
-from collect.db.DatabaseInterface import DatabaseInterface
 from collect.datasource.IDataSource import IDataSource
 
 
@@ -41,7 +40,7 @@ class LimitedSizeDict(OrderedDict):
 class RSSFeed(object):
     def __init__(self, feedURL):
         self.url = feedURL
-        self.idUpdateMemory = LimitedSizeDict(size_limit=400) # remember the last 400 feed entry ids and change dates
+        self.idUpdateMemory = LimitedSizeDict(size_limit=400)  # remember the last 400 feed entry ids and change dates
         self.etag = None
         self.modified = None
 
