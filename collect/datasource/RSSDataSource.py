@@ -1,4 +1,4 @@
-from holist.util import util
+from core.util import util
 ln = util.getModuleLogger(__name__)
 
 from twisted.internet.threads import deferToThread
@@ -14,8 +14,8 @@ import feedparser
 
 import time
 
-from holist.core.Document import Document
-from holist.util import config
+from core.model.Document import Document
+from core.util import config
 
 from collect.db.DatabaseInterface import DatabaseInterface
 from collect.datasource.IDataSource import IDataSource
