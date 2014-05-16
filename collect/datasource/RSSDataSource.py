@@ -6,9 +6,10 @@ from twisted.internet import defer
 from pymongo import MongoClient
 from collections import OrderedDict
 
+
+import feedparser
 import socket
 socket.setdefaulttimeout(10.0)  # don't handle feeds that take longer than this
-import feedparser
 
 from Queue import Queue
 import time
@@ -104,9 +105,9 @@ class RSSFeed(object):
             if item.id in self.idUpdateMemory:
                 if item.get("modified", item.id) == self.idUpdateMemory[item.id]:
                     continue # we know this article and it hasn't been updated
-                else: #add to updates
+                else:  # add to updates
                     listToAppendTo = updatedDocuments    
-            else: #add to new documents
+            else:  # add to new documents
                 listToAppendTo = newDocuments
 
             # save the modified date. if it's not available, just save the id (won't support updates for this link!)
@@ -173,6 +174,7 @@ class RSSDataSource(IDataSource):
 
         received = 0
         while received < waitFor:
+            # todo this doesn't fully work yet, sometimes feeds never return
             packet = self.queue.get(True)
             self.newDocuments += packet["new"]
             self.updatedDocuments += packet["updated"]
