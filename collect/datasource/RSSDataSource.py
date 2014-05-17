@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 import feedparser
 import socket
-socket.setdefaulttimeout(10.0)  # don't handle feeds that take longer than this
+socket.setdefaulttimeout(30.0)  # don't handle feeds that take longer than this
 
 from Queue import Queue
 import time
