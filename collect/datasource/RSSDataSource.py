@@ -63,6 +63,7 @@ class RSSFeed(object):
     def _getNewAndUpdatedDocuments(self):
         # download using the etag and modified tags to save bandwidth
         started = time.time()
+        ln.debug("starting update for %s", self.url)
         try:
             if self.etag:
                 #ln.debug("started update of feed %s with etag", self.url)
@@ -75,6 +76,7 @@ class RSSFeed(object):
                 res = feedparser.parse(self.url)
         except Exception as e:
             ln.exception(e)
+        ln.debug("feedparser done for %s. Now handling results...", self.url)
 
         self.etag = res.get("etag", None)
         self.modified = res.get("modified", None)
@@ -98,13 +100,12 @@ class RSSFeed(object):
         newDocuments = []
         updatedDocuments = []
         for item in res.entries:
-            try:
-                x = item.id
-            except AttributeError:
+            if not hasattr(item, "id"):
                 item.id = item.link
+
             if item.id in self.idUpdateMemory:
                 if item.get("modified", item.id) == self.idUpdateMemory[item.id]:
-                    continue # we know this article and it hasn't been updated
+                    continue  # we know this article and it hasn't been updated
                 else:  # add to updates
                     listToAppendTo = updatedDocuments    
             else:  # add to new documents
