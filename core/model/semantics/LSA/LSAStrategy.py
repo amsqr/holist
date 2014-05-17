@@ -101,6 +101,7 @@ class LSAStrategy(ISemanticsStrategy):
         """
         Add documents to the model, and send back their vector representations.
         """
+        ln.info("LSA tasked with %s documents.", len(docs))
 
         documents = []
         for docDict in docs:

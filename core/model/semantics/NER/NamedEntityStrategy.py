@@ -51,6 +51,7 @@ class NamedEntityStrategy(ISemanticsStrategy):
         self.updating = False
 
     def _handleDocuments(self, returnTo, docs):
+        ln.info("NER tasked with %s documents.", len(docs))
         documents = []
         for docDict in docs:
             document = Document()
