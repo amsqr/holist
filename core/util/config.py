@@ -16,6 +16,9 @@ holistcoreport = 1157
 
 strategyregisterport = 1158
 
+link_node_ip = "localhost"
+link_node_port = 1159
+
 dblocation = "localhost"
 dbport = 27017
 dbname = "holist"
