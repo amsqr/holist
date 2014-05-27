@@ -11,10 +11,13 @@ ln = getModuleLogger(__name__)
 
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
+from link.api.RESTfulApi import RESTfulApi
 
 class LinkController(object):
 
     def __init__(self):
+
+        self.frontend = RESTfulApi(self)
 
         ln.info("Connecting to data collect node.")
         self.connectLoop = None
