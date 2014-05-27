@@ -26,8 +26,9 @@ class LinkController(object):
     def connectToCore(self):
 
         def connectUntilDoneIteration():
-            ok = self.subscribe()
-            if ok:
+
+            if self.subscribe():
+
                 self.connectLoop.stop()
                 ln.debug("successfully subscribed to core node.")
 
@@ -35,6 +36,7 @@ class LinkController(object):
         self.connectLoop.start(5)
 
     def subscribe(self):
+
         try:
             ln.info("attempting to subscribe to core node at %s:%s",config.holistcoreurl, config.holistcoreport)
 
