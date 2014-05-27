@@ -401,4 +401,51 @@
 2014-05-27 21:37:20,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
 2014-05-27 21:37:20,808 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
 2014-05-27 21:37:25,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
-2014-05-27 21:37:25,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPoo
+2014-05-27 21:37:25,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:37:30,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:37:30,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:37:35,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:37:35,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:37:40,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:37:40,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:37:45,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:37:45,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:37:50,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:37:50,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:37:55,805 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:37:55,808 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:00,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:00,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:05,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:05,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:10,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:10,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:15,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:15,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:20,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:20,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:25,805 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:25,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:30,805 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:30,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:35,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:35,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:40,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:40,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:45,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:45,810 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:50,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:50,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:38:55,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:38:55,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:39:00,805 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:39:00,808 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:39:05,805 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:39:05,808 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:39:10,805 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:39:10,808 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:39:15,805 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:39:15,808 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:39:20,806 INFO     asupply.DataSupply: attempting to connect to collector node at localhost:12137
+2014-05-27 21:39:20,809 WARNING  asupply.DataSupply: couldn't connect: HTTPConnectionPool(host='localhost', port=12137): Max retries exceeded with url: /register_listener (Caused by <class 'socket.error'>: [Errno 61] Connection refused)
+2014-05-27 21:39
