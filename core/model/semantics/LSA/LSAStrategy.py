@@ -13,6 +13,7 @@ from gensim import models
 import itertools
 
 from twisted.internet import reactor
+from twisted.internet.threads import deferToThread
 from twisted.internet.task import LoopingCall
 
 from Queue import Queue
@@ -61,6 +62,7 @@ class LSAStrategy(ISemanticsStrategy):
 
 
         self.queue = Queue()
+        self.modelQueue = Queue()
         self.nodeCommunicator = NodeCommunicator(self, LISTEN_PORT)
         self.nodeCommunicator.registerWithNode(CORE_IP, REGISTER_PORT)  # register this node with the core
 
@@ -97,6 +99,8 @@ class LSAStrategy(ISemanticsStrategy):
             self._handleDocuments(returnTo, docs)
         self.updating = False
 
+
+
     def _handleDocuments(self, returnTo, docs):
         """
         Add documents to the model, and send back their vector representations.
@@ -108,7 +112,7 @@ class LSAStrategy(ISemanticsStrategy):
             document = Document("")
             document.__dict__ = docDict
             documents.append(document)
-        
+
         documentGroups = itertools.groupby(documents, lambda d: d.sourceType)
         results = []
         for sourceType, iterator in documentGroups:
@@ -128,7 +132,7 @@ class LSAStrategy(ISemanticsStrategy):
                 self.preprocessor.preprocess(doc, dictionary)
 
             prep = (doc.preprocessed for doc in documents)
-                        
+
             model.add_documents(prep)
 
             # add the document vector space representations
@@ -156,3 +160,35 @@ class LSAStrategy(ISemanticsStrategy):
                 self.models[sourceType] = model
                 ln.info("loaded model %s for sourceType %s", filename, sourceType)
         ln.debug("Done loading models.")
+
+
+NUM_TRAIN = 500
+
+
+class CustomLsiModel(models.lsimodel.LsiModel):
+    # TODO make this work
+    def __init__(self, corpus, num_topics, chunksize, id2word, decay, distributed, onepass):
+        super(CustomLsiModel, self).__init__(corpus=corpus, num_topics=num_topics, chunksize=chunksize, id2word=id2word,
+                                             decay=decay, distributed=distributed, onepass=onepass)
+        self._currentChunk = []
+        self._numTrained = 0
+
+    def add_documents(self, documents):
+        self._currentChunk += documents
+        chunkSize = len(self._currentChunk)
+        if self._numTrained < NUM_TRAIN:
+            ln.debug("Training LSI model in foreground")
+            super(CustomLsiModel, self).add_documents(self._currentChunk)
+            self._numTrained += chunkSize
+        elif chunkSize > CHUNK_SIZE:
+            ln.debug("Training LSI model in background")
+            self._updateInBackground()
+
+    def _updateInBackground(self):
+        if self._updating:
+            return
+        self._updating = True
+        deferToThread(super(CustomLsiModel, self).add_documents, self._currentChunk[:])
+        self._currentChunk = []
+        self._updating = False
+

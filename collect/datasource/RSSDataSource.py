@@ -2,22 +2,27 @@ from core.util import util
 ln = util.getModuleLogger(__name__)
 
 from twisted.internet.threads import deferToThread
-from twisted.internet import defer
+from twisted.internet import reactor
 from pymongo import MongoClient
 from collections import OrderedDict
 
 
 import feedparser
 import socket
-socket.setdefaulttimeout(30.0)  # don't handle feeds that take longer than this
+socket.setdefaulttimeout(30.0)  # don't handle feeds that take longer than this -> this doesn't seem to work prefectly
+UPDATE_TIMEOUT_HARD = 60 * 3  # this is used to cancel the deferred that updates the feeds if it crashed (once a day)
+
 
 from Queue import Queue
 import time
+
 
 from core.model.Document import Document
 from core.util import config
 
 from collect.datasource.IDataSource import IDataSource
+
+
 
 
 class LimitedSizeDict(OrderedDict):
@@ -52,13 +57,24 @@ class RSSFeed(object):
         """
         Update the feed. should not return duplicate or previously returned documents
         """
+
+
         try:
             newDocuments, updatedDocuments = self._getNewAndUpdatedDocuments()
         except:
             ln.exception("Exception occurred trying to update feed %s", self.url)
             newDocuments, updatedDocuments = [], []
 
+        return newDocuments, updatedDocuments
+
+
+    def updateCallback(self, res):
+        newDocuments, updatedDocuments = res
         self.dataSource.queue.put({"new": newDocuments, "updated": updatedDocuments})
+
+    def updateErrback(self, err):
+        ln.error("General timeout in updating RSS feeds. This should NOT happen more than once a day.")
+        self.dataSource.queue.put({"new": [], "updated": []})
 
     def _getNewAndUpdatedDocuments(self):
         # download using the etag and modified tags to save bandwidth
@@ -71,7 +87,7 @@ class RSSFeed(object):
             elif self.modified:
                 #ln.debug("started update of feed %s with last modified info", self.url)
                 res = feedparser.parse(self.url, modified=self.modified)
-            else: # we're on the first iteration OR neither etag nor modified is supported
+            else:  # we're on the first iteration OR neither etag nor modified is supported
                 #ln.debug("started update of feed %s with no updating info", self.url)
                 res = feedparser.parse(self.url)
         except Exception as e:
@@ -114,10 +130,8 @@ class RSSFeed(object):
             # save the modified date. if it's not available, just save the id (won't support updates for this link!)
             self.idUpdateMemory[item.id] = item.get("modified", item.id)
 
-            # TODO create the Document object
             # this is also where we could extract the full text if we want it
             text = item.description
-            title = item.title
             #if EXTRACT_FULL_TEXTS:
                 
             #    text = self.goose.extract(url=url)
@@ -170,12 +184,14 @@ class RSSDataSource(IDataSource):
         for feedURLObj in feeds:
             feedURL = feedURLObj["url"]
             feed = self.getFeed(feedURL)
-            deferToThread(feed.getNewAndUpdatedDocuments)
+            d = deferToThread(feed.getNewAndUpdatedDocuments)
+            d.addCallback(feed.updateCallback)
+            d.addErrback(feed.updateErrback)
+            reactor.callLater(UPDATE_TIMEOUT_HARD, d.cancel)
             waitFor += 1
 
         received = 0
         while received < waitFor:
-            # todo this doesn't fully work yet, sometimes feeds never return
             packet = self.queue.get(True)
             self.newDocuments += packet["new"]
             self.updatedDocuments += packet["updated"]
