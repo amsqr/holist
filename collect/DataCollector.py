@@ -102,6 +102,7 @@ class DataCollector(object):
     def notifyListeners(self):
         for listener in self.listeners.values():
             try:
+                
                 listener.notify()
             except:
                 ln.error("couldn't notify listener %s", listener.ip+":"+str(listener.port))
