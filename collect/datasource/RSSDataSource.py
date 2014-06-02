@@ -50,6 +50,7 @@ class RSSFeed(object):
         self.modified = None
 
         #self.goose = Goose()
+        self.updating = False
 
         self.newDocuments = []
 
@@ -58,7 +59,7 @@ class RSSFeed(object):
         Update the feed. should not return duplicate or previously returned documents
         """
 
-
+        self.updating = True
         try:
             newDocuments, updatedDocuments = self._getNewAndUpdatedDocuments()
         except:
@@ -71,10 +72,12 @@ class RSSFeed(object):
     def updateCallback(self, res):
         newDocuments, updatedDocuments = res
         self.dataSource.queue.put({"new": newDocuments, "updated": updatedDocuments})
+        self.updating = False
 
     def updateErrback(self, err):
         ln.error("General timeout in updating RSS feeds. This should NOT happen more than once a day.")
         self.dataSource.queue.put({"new": [], "updated": []})
+        self.updating = False
 
     def _getNewAndUpdatedDocuments(self):
         # download using the etag and modified tags to save bandwidth
@@ -184,6 +187,9 @@ class RSSDataSource(IDataSource):
         for feedURLObj in feeds:
             feedURL = feedURLObj["url"]
             feed = self.getFeed(feedURL)
+            if feed.updating:
+                ln.info("%s is already updating, skipping. ", feed.url)
+                continue
             d = deferToThread(feed.getNewAndUpdatedDocuments)
             d.addCallback(feed.updateCallback)
             d.addErrback(feed.updateErrback)
