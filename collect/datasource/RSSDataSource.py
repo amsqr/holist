@@ -45,9 +45,25 @@ class RSSFeed(object):
     def __init__(self, dataSource, feedURL):
         self.dataSource = dataSource
         self.url = feedURL
-        self.idUpdateMemory = LimitedSizeDict(size_limit=400)  # remember the last 400 feed entry ids and change dates
-        self.etag = None
-        self.modified = None
+        self.idUpdateMemory = LimitedSizeDict(size_limit=1000)  # remember the last 1000 feed entry ids and change dates
+        try:
+            f = open(str("last_etag_and_modified_%s.txt" % str(self.url.replace("/", ""))), "r")
+            lines = list(f.readlines())
+            ln.debug("read etag and modified")
+            #print lines
+            self.etag = unicode(lines[0].strip())
+            self.modified = lines[1]
+            known = lines[2:]
+            for entry in known:
+                id = entry[:entry.find(" <:>")]
+                mod = entry[entry.find("<:>") + 4:]
+                self.idUpdateMemory[id] = mod
+            f.close()
+        except Exception as e:
+            ln.exception(e)
+            ln.debug("couldn't read etag and modified")
+            self.etag = None
+            self.modified = None
 
         #self.goose = Goose()
         self.updating = False
@@ -152,6 +168,11 @@ class RSSFeed(object):
             document.sourceType = self.__class__.__name__
             
             listToAppendTo.append(document)
+
+            with open(str("last_etag_and_modified_%s.txt" % str(self.url.replace("/", ""))), "w") as f:
+                f.write(str(self.etag) + "\n" + str(self.modified))
+                f.write("\n".join(["%s <:> %s" % (id, mod) for id, mod in self.idUpdateMemory.items()]))
+
         ln.debug("Updating %s took %s seconds. Got: %s new, %s updated.", self.url, time.time() - started, len(newDocuments), len(updatedDocuments))
 
         return newDocuments, updatedDocuments
@@ -169,8 +190,10 @@ class RSSDataSource(IDataSource):
         self.updatedDocuments = []
 
     def getFeed(self, feedURL):
-        res = self.feeds.get(feedURL, RSSFeed(self, feedURL))
-        self.feeds[feedURL] = res
+        res = self.feeds.get(feedURL, None)
+        if not res:
+            res = RSSFeed(self, feedURL)
+            self.feeds[feedURL] = res
         return res
 
     def updateAndGetDocuments(self):
