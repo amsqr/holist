@@ -47,4 +47,6 @@ class Notify(Resource):
         self.controller = controller
     def render_POST(self, request): # new data available
         self.controller.onNewDocuments()
-        return json.dumps({"word":"sure bro"}) 
+        return json.dumps({"word":"sure bro"})
+
+# todo: create an interface to compute lsa vector for entity

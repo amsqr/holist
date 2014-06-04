@@ -35,6 +35,6 @@ class Notify(Resource):
 class PerformSearch(Resource):
     def __init__(self, controller):
         self.controller = controller
-    def render_POST(self, request):
+    def render_GET(self, request):
         ln.info("Somebody just performed a search.")
         return json.dumps({"result":"We have to work on that."})
