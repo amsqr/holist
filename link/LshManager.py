@@ -1,5 +1,7 @@
 __author__ = 'raoulfriedrich'
 
+import json
+from pprint import pprint
 from lshash import LSHash
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
 
@@ -16,6 +18,10 @@ class LshManager(object):
             lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS)
             self.lshIndexList.append(lsh)
 
+        json_data=open('/Users/raoulfriedrich/Education/TUM/MA2/WebAppEng/Development/legacy/sample_document.bson.json')
+        data = json.load(json_data)
+        pprint(json_data)
+        json_data.close()
         #addDocument()
 
     # adds a document to all lsh indexes

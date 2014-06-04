@@ -29,7 +29,7 @@
  'sourceType': 'RSSFeed',
  'text': 'Image forensics firm NetClean Technologies has come up with a way to use its world-renowned child porn image-fingerprinting technology to help police document and investigate images and videos connected to a much wider range of crimes.',
  'title': 'NetClean forensic tool gives police way of analysing growing volume of image evidence',
- 'vectors': {'LSA_RSSFeed': [[0, -3.4941749514173757],
+ 'vectors': {'LSA': [[0, -3.4941749514173757],
                              [1, 1.719878955937212],
                              [2, 2.846776078438612],
                              [3, -1.1307219324018396],

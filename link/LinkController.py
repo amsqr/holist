@@ -12,7 +12,7 @@ ln = getModuleLogger(__name__)
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 from link.api.RESTfulApi import RESTfulApi
-import LshManager
+from LshManager import LshManager
 
 class LinkController(object):
 
