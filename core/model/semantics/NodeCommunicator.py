@@ -17,7 +17,7 @@ class Task(Resource):
         self.controller = controller
 
     def render_POST(self, request):
-        data  = request.content.read()
+        data = request.content.read()
         ln.debug("received task: %s", data[:1000])
         try:
             data = json.loads(data)
