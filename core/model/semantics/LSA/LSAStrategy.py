@@ -20,7 +20,7 @@ from Queue import Queue
 
 CORE_IP = "localhost"
 REGISTER_PORT = config.strategyregisterport
-LISTEN_PORT = config.strategyregisterport + 5
+LISTEN_PORT = config.lsa_strategy_port
 
 # SETTINGS
 NUM_TOPICS = 200
@@ -136,12 +136,24 @@ class LSAStrategy(ISemanticsStrategy):
             model.add_documents(prep)
 
             # add the document vector space representations
-            sourceTypeTag = self.NAME+"_"+document.sourceType
+            sourceTypeTag = self.NAME#+"_"+document.sourceType
 
             results += [{"_id": document._id, "strategy": sourceTypeTag, "vector": model[document.preprocessed]}
                         for document in documents]
 
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
+
+    def handleOne(self, text):
+        res = {"vectors": []}
+        for modelName in self.models:
+            res["vectors"].append(
+                {
+                    "_id": None,
+                    "vector": self.models[modelName][text],
+                    "strategy": modelName
+                }
+            )
+        return res
 
     def save(self):
         ln.debug("saving models")

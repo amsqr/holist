@@ -1,6 +1,7 @@
 __author__ = 'raoulfriedrich'
 
 from lshash import LSHash
+import json
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
 
 NUMBER_OF_LSH_INDEXES = 3
@@ -13,21 +14,21 @@ class LshManager(object):
         self.lshIndexList = []
 
         # create a list of lsh indexes
-        for x in xrange(NUMBER_OF_LSH_INDEXES):
-            lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS)
-            self.lshIndexList.append(lsh)
+        self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES)
 
     # adds a document to all lsh indexes
     def addDocument(self, document):
-
         lsa_vector = document.vectors["LSA"]
 
         dense_vector = self._sparseToDenseConverter(lsa_vector)
 
-        database_id = document._id
+        extra = json.dumps({
+            "_id": document._id,
+            "timestamp": document.timestamp,
+            "title": document.title
+        })
 
-        for x in self.lshIndexList:
-            x.index(dense_vector, extra_data=database_id)
+        self.lsh.index(dense_vector, extra_data=extra)  # extra MUST be hashable
 
     # takes a document and returns database ids of similar documents
     # uses cosine function to determine similarity
@@ -38,13 +39,20 @@ class LshManager(object):
         dense_vector = self._sparseToDenseConverter(lsa_vector)
 
         resultSet = set()
+        results = []
 
-        for x in self.lshIndexList:
+        for result in self.lsh.query(dense_vector, num_results=20, distance_func="cosine"):
+            # example:
+            # [
+            #   (((1, 2, 3), "{'extra1':'data'}"), 0),
+            #   (((1, 1, 3), "{'extra':'data'}"), 1)
+            # ]
+            docJson = result[0][1]
+            if not docJson in resultSet:
+                resultSet.add(docJson)
+                results.append(json.loads(docJson))
 
-            for result in x.query(dense_vector, num_results=10, distance_func="cosine"):
-                resultSet.add(result[0][1])
-
-        return list(resultSet)
+        return results
 
     # converts a vector in sparse format to a vector in dense format
     def _sparseToDenseConverter(self, sparseVector):

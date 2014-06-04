@@ -89,16 +89,19 @@ class RetrieveDocuments(Resource):
             "documents": [
                 {
                     "id": "article1",
+                    "date": "2014-06-13 18:08:42",
                     "title": "Holist IPO",
                     "text": "blah blah blah IPO"
                 },
                 {
                     "id": "article2",
+                    "date": "2014-06-04 18:08:14",
                     "title": "Holist IPO successful",
                     "text": "blah blah blah IPO"
                 },
                 {
                     "id": "article3",
+                    "date": "2014-06-01 18:00:00 ",
                     "title": "What does the Holist IPO mean for you?",
                     "text": "blah blah blah IPO"
                 }

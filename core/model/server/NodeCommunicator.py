@@ -10,7 +10,7 @@ from twisted.internet.task import LoopingCall
 import requests
 import json
 import time
-
+import cgi
 
 class Task(Resource):
     def __init__(self, controller, strategy):
@@ -37,6 +37,13 @@ class Task(Resource):
 
         return json.dumps({"result": "ok"})
 
+class SmallTask(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+
+    def render_GET(self, request):
+        document = cgi.escape(request.args["document"][0])
+        return json.dumps(self.controller.handleOne(document))
 
 class NodeCommunicator(object):
 
@@ -52,6 +59,7 @@ class NodeCommunicator(object):
         root = Resource()
         taskPage = Task(self.controller, self.isStrategy)
         if self.isStrategy:
+            root.putChild("small_task", SmallTask(self.controller))
             root.putChild("task", taskPage)
         else:
             root.putChild("notify", taskPage)

@@ -13,11 +13,15 @@ collectNodePort = 12137
 
 holistcoreurl = "localhost"
 holistcoreport = 1157
-
 strategyregisterport = 1158
 
+lsa_strategy_port = 1159
+ner_strategy_port = 1160
+
 link_node_ip = "localhost"
-link_node_port = 11592
+link_node_port = 8081
+
+
 
 dblocation = "localhost"
 dbport = 27017

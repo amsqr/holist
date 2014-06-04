@@ -17,7 +17,7 @@ from twisted.internet.task import LoopingCall
 CORE_IP = "localhost"
 REGISTER_PORT = config.strategyregisterport
 
-LISTEN_PORT = config.strategyregisterport + 4
+LISTEN_PORT = config.ner_strategy_port
 
 
 class Document: pass
@@ -80,6 +80,16 @@ class NamedEntityStrategy(ISemanticsStrategy):
             entities.extend([chunk for chunk in chunks if hasattr(chunk, 'node')])
         return list(set([(chunk.node, " ".join([x[0] for x in chunk.leaves()])) for chunk in entities]))
 
+    def handleOne(self, text):
+        res = {"vectors": []}
+        res["vectors"].append(
+            {
+                "_id" : None,
+                "vector": self.extractEntities(text),
+                "strategy": "named_entities"
+            }
+        )
+        return res
 
     def load(self):
         raise Exception("Not implemented!")
