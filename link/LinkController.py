@@ -3,21 +3,21 @@ __author__ = 'raoulfriedrich'
 from core.util.util import *
 
 import logging
+import requests
+import json
 
 logging.basicConfig(format=config.logFormat, level=logging.DEBUG if config.showDebugLogs else logging.INFO)
 ln = getModuleLogger(__name__)
 
 from twisted.internet import reactor
+from twisted.internet.task import LoopingCall
 from link.api.RESTfulApi import RESTfulApi
 from core.model.server.NodeCommunicator import NodeCommunicator
-
 from link.LshManager import LshManager
-from link.NamedEntityIndex import NamedEntityIndex
-from link.ClusterStratgy import SimpleClusterStrategy
 
 CORE_IP = "localhost"
 REGISTER_PORT = config.holistcoreport
-LISTEN_PORT = config.link_node_port
+LISTEN_PORT = config.link_node_port + 1
 
 
 class Document:
@@ -36,6 +36,10 @@ class LinkController(object):
         self.clusterStrategy = SimpleClusterStrategy()
 
         self.frontend = RESTfulApi(self)
+
+        # PUT THIS LINES WHEN CONNECTION TO CORE IS ESTABLISHED
+        #heartbeatThread = HearbeatClient(CORE_IP, 43278)
+        #heartbeatThread.start()
 
         ln.info("running reactor.")
         reactor.run()

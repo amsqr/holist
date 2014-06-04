@@ -13,6 +13,7 @@ collectNodePort = 12137
 
 holistcoreurl = "localhost"
 holistcoreport = 1157
+
 strategyregisterport = 1158
 
 lsa_strategy_port = 1159

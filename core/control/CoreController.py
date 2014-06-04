@@ -14,6 +14,7 @@ from core.control.StrategyManager import StrategyManager
 from core.datasupply.DataSupply import MongoDataSupply
 from core.model.corpus.mongodb.MongoDBCorpus import MongoDBCorpus
 from core.api.RESTfulFrontend import RESTfulFrontend
+from shared.Heartbeat.HeartbeatClient import HearbeatClient
 
 
 # we wait until there are at least 20 new documents OR 3 minutes have passed.
@@ -32,6 +33,9 @@ class CoreController(object):
 
     def __init__(self):
         self.listeners = []
+
+        heartbeatThread = HearbeatClient(self.listeners)
+        heartbeatThread.start()
 
         self.dataSupply = MongoDataSupply()  # for retrieving new documents
         self.strategyManager = StrategyManager(self)
