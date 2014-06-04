@@ -83,7 +83,7 @@ class CoreController(object):
         self.corpus.addDocuments(results)
         ln.info("finished updating. Notifying listeners.")
         for listener in self.listeners:
-            listener.notify(json.dumps({"annotated_documents": convertDocumentsToDicts(results)}))
+            listener.notify(json.dumps({"respondTo": "None", "documents": convertDocumentsToDicts(results)}))
         self.newDocuments = []
         self.lastUpdated = time.time()
         self.updating = False

@@ -39,6 +39,18 @@ class Notify(Resource):
         self.controller = controller
 
     def render_POST(self, request): # new data available
+        data = request.content.read()
+        ln.debug("received task: %s", data[:1000])
+        try:
+            data = json.loads(data)
+        except:
+            ln.error("got invalid data: %s", data[:1000])
+            return 0
+
+        annotated = data["annotated_documents"]
+
+        self.controller.handleNewDocuments(annotated)
+
         ln.info("New data is available.")
         return json.dumps({"word": "sure bro"})
 

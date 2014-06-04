@@ -35,21 +35,22 @@ class Task(Resource):
 
 class NodeCommunicator(object):
 
-    def __init__(self, strategy, listenPort):
-        self.strategy = strategy
+    def __init__(self, controller, listenPort, strategy=True):
+        self.controller = controller
         self.listenPort = listenPort
+        self.isStrategy = strategy
 
         self.setupResources()
         self.loopingCall = None
 
     def setupResources(self):
         root = Resource()
-        taskPage = Task(self.strategy)
+        taskPage = Task(self.controller)
         root.putChild("task", taskPage)
         factory = Site(root)
         reactor.listenTCP(self.listenPort, factory)
 
-        ln.debug("LSA listening on port %s", self.listenPort)
+        ln.debug("Listening on port %s", self.listenPort)
 
     def respond(self, sender, data):
         ln.debug("attempting to respond to %s", sender)
@@ -62,8 +63,12 @@ class NodeCommunicator(object):
         for x in range(maxRetries):
             ln.debug("attempting to register with core on %s:%s", nodeIp, registerPort)
             try:
-                r = requests.post("http://" + nodeIp + ":"+str(registerPort)+"/register_strategy",
-                              {"strategy": self.strategy.NAME, "ip": "localhost", "port": self.listenPort})
+                if self.isStrategy:
+                    r = requests.post("http://" + nodeIp + ":"+str(registerPort)+"/register_strategy",
+                                      {"strategy": self.controller.NAME, "ip": "localhost", "port": self.listenPort})
+                else:
+                    r = requests.post("http://" + nodeIp + ":"+str(registerPort)+"/register_listener",
+                                      {"ip": "localhost", "port": self.listenPort})
 
             except Exception as e:
                 ln.error("Couldn't connect to core on localhost:%s", registerPort)

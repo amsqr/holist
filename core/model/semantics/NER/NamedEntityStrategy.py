@@ -1,9 +1,9 @@
+from core.model.server import NodeCommunicator
 from core.util.util import *
 ln = getModuleLogger(__name__)
 
 
 from core.model.semantics.ISemanticsStrategy import ISemanticsStrategy
-from core.model.semantics.NodeCommunicator import NodeCommunicator
 
 from nltk import sent_tokenize, word_tokenize, pos_tag, ne_chunk
 
