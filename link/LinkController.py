@@ -10,10 +10,10 @@ logging.basicConfig(format=config.logFormat, level=logging.DEBUG if config.showD
 ln = getModuleLogger(__name__)
 
 from twisted.internet import reactor
-from twisted.internet.task import LoopingCall
 from link.api.RESTfulApi import RESTfulApi
 from core.model.server.NodeCommunicator import NodeCommunicator
 from link.LshManager import LshManager
+from shared.Heartbeat.HeartbeatClient import HearbeatClient
 
 CORE_IP = "localhost"
 REGISTER_PORT = config.holistcoreport
@@ -30,9 +30,11 @@ class LinkController(object):
         self.nodeCommunicator = NodeCommunicator(self, LISTEN_PORT, strategy=False)
         self.nodeCommunicator.registerWithNode(CORE_IP, REGISTER_PORT)
 
-        self.lshManager = LshManager()
-
         self.frontend = RESTfulApi(self)
+
+        # PUT THIS LINES WHEN CONNECTION TO CORE IS ESTABLISHED
+        #heartbeatThread = HearbeatClient(CORE_IP, 43278)
+        #heartbeatThread.start()
 
         ln.info("running reactor.")
         reactor.run()
@@ -44,8 +46,6 @@ class LinkController(object):
             document.__dict__ = docDict
             documents.append(document)
         ln.debug("Got %s new documents.", len(documents))
-
-
 
     def performEntitySearch(self, entityName):
         ln.warn("implement performEntitySearch")

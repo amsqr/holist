@@ -5,6 +5,7 @@ from twisted.web.resource import Resource
 from twisted.web.server import Site
 from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
+from shared.Heartbeat.TwistedBeatServer import TwistedBeatServer
 from twisted.internet.task import LoopingCall
 
 import requests
@@ -84,6 +85,8 @@ class NodeCommunicator(object):
                 continue
             if r.status_code == 200:
                 ln.info("registered with core.")
+                self.heartbeatServer = TwistedBeatServer(self.handleServerDown, self.listenPort)
                 return True
         return False
 
+    def handleServerDown(self, clients):pass

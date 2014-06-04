@@ -1,0 +1,51 @@
+__author__ = 'raoulfriedrich'
+
+from core.util.util import *
+ln = getModuleLogger(__name__)
+
+UDP_PORT = 11593; CHECK_PERIOD = 20; CHECK_TIMEOUT = 15
+
+import time
+from twisted.application import internet
+from twisted.internet import protocol, reactor, task
+
+class TwistedBeatServer(object):
+
+    def __init__(self, callback, udp_port):
+
+        detectorSvc = DetectorService(callback)
+
+        receiver = Receiver()
+        receiver.callback = detectorSvc.update
+
+        ln.info("Listen for heartbeats at port %s", udp_port)
+        reactor.listenUDP(udp_port, receiver)
+
+class Receiver(protocol.DatagramProtocol):
+
+    def datagramReceived(self, data, (ip, port)):
+        if data == 'PyHB':
+            ln.debug("Heartbeat received from %s:%s", ip, port)
+            self.callback(ip)
+
+class DetectorService(internet.TimerService):
+
+    def __init__(self, callback):
+        self.callback = callback
+        self.beats = {}
+        self.lc = task.LoopingCall(self.detect)
+        self.lc.start(CHECK_PERIOD)
+
+    def update(self, ip):
+        self.beats[ip] = time.time()
+
+    def detect(self):
+        limit = time.time() - CHECK_TIMEOUT
+        silent = [ip for (ip, ipTime) in self.beats.items() if ipTime < limit]
+
+        for ip in silent:
+            del self.beats[ip]
+
+        if(silent):
+            ln.error("Silent clients: %s", silent)
+            self.callback(silent)

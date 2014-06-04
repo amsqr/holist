@@ -8,18 +8,18 @@ logFormat = '%(asctime)s %(levelname)-8s %(name)-18s: %(message)s'
 
 showDebugLogs = True
 
-collectNodeIP = "localhost"
+collectNodeIP = "127.0.0.1"
 collectNodePort = 12137
 
-holistcoreurl = "localhost"
+holistcoreurl = "127.0.0.1"
 holistcoreport = 1157
 
 strategyregisterport = 1158
 
-link_node_ip = "localhost"
+link_node_ip = "127.0.0.1"
 link_node_port = 11592
 
-dblocation = "localhost"
+dblocation = "127.0.0.1"
 dbport = 27017
 dbname = "holist"
 #dblocation = "ds059957.mongolab.com"
