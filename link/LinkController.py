@@ -6,39 +6,32 @@ import logging
 import requests
 import json
 
-logging.basicConfig(format=config.logFormat,level=logging.DEBUG if config.showDebugLogs else logging.INFO)
+logging.basicConfig(format=config.logFormat, level=logging.DEBUG if config.showDebugLogs else logging.INFO)
 ln = getModuleLogger(__name__)
 
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 from link.api.RESTfulApi import RESTfulApi
-import LshManager
+from core.model.server.NodeCommunicator import NodeCommunicator
+from link.LshManager import LshManager
+
+CORE_IP = "localhost"
+REGISTER_PORT = config.holistcoreport
+LISTEN_PORT = config.strategyregisterport + 14
+
 
 class LinkController(object):
 
     def __init__(self):
+        self.nodeCommunicator = NodeCommunicator(self, LISTEN_PORT)
+        self.nodeCommunicator.registerWithNode(CORE_IP, REGISTER_PORT)
+
         self.lshManager = LshManager()
 
         self.frontend = RESTfulApi(self)
 
-        ln.info("Connecting to data collect node.")
-        self.connectLoop = None
-        self.connectToCore()
-
         ln.info("running reactor.")
         reactor.run()
-
-    def connectToCore(self):
-
-        def connectUntilDoneIteration():
-
-            if self.subscribe():
-
-                self.connectLoop.stop()
-                ln.debug("successfully subscribed to core node.")
-
-        self.connectLoop = LoopingCall(connectUntilDoneIteration)
-        self.connectLoop.start(5)
 
     def subscribe(self):
 
@@ -58,6 +51,14 @@ class LinkController(object):
         except Exception, e:
             ln.warn("couldn't subscribe: %s", str(e))
             return False
+
+    def handleNewDocuments(self, newDocuments):
+        documents = []
+        for docDict in newDocuments:
+            document = Document()
+            document.__dict__ = docDict
+            documents.append(document)
+
 
     def performEntitySearch(self, entityName):
         ln.warn("implement performEntitySearch")

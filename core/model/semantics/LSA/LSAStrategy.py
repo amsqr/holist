@@ -1,3 +1,4 @@
+from core.model.server import NodeCommunicator
 from core.util.util import *
 ln = getModuleLogger(__name__)
 
@@ -7,7 +8,6 @@ from core.util import config
 from core.model.semantics.ISemanticsStrategy import ISemanticsStrategy
 from core.model.preprocess.TokenizingPorter2Stemmer import TokenizingPorter2Stemmer
 from core.model.dictionary.hash.HashDictionary import HashDictionary
-from core.model.semantics.NodeCommunicator import NodeCommunicator
 
 from gensim import models
 import itertools

@@ -1,38 +1,42 @@
-{'_id': '5371c8271d1d5769fc30025b',
- 'id': 1820,
- 'link': 'http://news.techworld.com/security/3516150/netclean-forensic-tool-gives-police-way-of-analysing-growing-volume-of-image-evidence/',
- 'preprocessed': [[1361, 1],
-                  [18120, 1],
-                  [29952, 1],
-                  [33688, 1],
-                  [38081, 1],
-                  [66292, 1],
-                  [73323, 1],
-                  [73755, 1],
-                  [95991, 1],
-                  [97604, 1],
-                  [102502, 1],
-                  [102784, 1],
-                  [123001, 1],
-                  [123439, 1],
-                  [125752, 1],
-                  [125788, 1],
-                  [137819, 1],
-                  [158015, 1],
-                  [168513, 1],
-                  [171738, 1],
-                  [188751, 1],
-                  [189365, 1],
-                  [198379, 1],
-                  [213232, 1],
-                  [213457, 1]],
- 'sourceType': 'RSSFeed',
- 'text': 'Image forensics firm NetClean Technologies has come up with a way to use its world-renowned child porn image-fingerprinting technology to help police document and investigate images and videos connected to a much wider range of crimes.',
- 'title': 'NetClean forensic tool gives police way of analysing growing volume of image evidence',
- 'vectors': {'LSA_RSSFeed': [[0, -3.4941749514173757],
-                             [1, 1.719878955937212],
-                             [2, 2.846776078438612],
-                             [3, -1.1307219324018396],
-                             [4, 0.6708887065876233]],
-             'NamedEntities': [['GPE', 'Image'],
-                               ['ORGANIZATION', 'NetClean Technologies']]}}
+{
+  "vectors": {
+    "LSA_RSSFeed": [
+      [
+        0, 
+        -3.4941749514173757
+      ], 
+      [
+        1, 
+        1.719878955937212
+      ], 
+      [
+        2, 
+        2.846776078438612
+      ], 
+      [
+        3, 
+        -1.1307219324018396
+      ], 
+      [
+        4, 
+        0.6708887065876233
+      ]
+    ], 
+    "NamedEntities": [
+      [
+        "GPE", 
+        "Image"
+      ], 
+      [
+        "ORGANIZATION", 
+        "NetClean Technologies"
+      ]
+    ]
+  }, 
+  "link": "http://news.techworld.com/security/3516150/netclean-forensic-tool-gives-police-way-of-analysing-growing-volume-of-image-evidence/", 
+  "sourceType": "RSSFeed", 
+  "title": "NetClean forensic tool gives police way of analysing growing volume of image evidence", 
+  "text": "Image forensics firm NetClean Technologies has come up with a way to use its world-renowned child porn image-fingerprinting technology to help police document and investigate images and videos connected to a much wider range of crimes.", 
+  "_id": "5371c8271d1d5769fc30025b", 
+  "id": 1820
+}

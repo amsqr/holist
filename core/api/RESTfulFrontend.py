@@ -26,11 +26,11 @@ class RESTfulFrontend(object):
         root.putChild("notify", notifyPage)
 
         factory = Site(root)
+        ln.info("listening on port %s", config.holistcoreport)
         reactor.listenTCP(config.holistcoreport, factory)
 
 
-class RegisterListener(Resource): 
-    #todo: some checks for ip, port correctness
+class RegisterListener(Resource):
     def __init__(self, controller):
         self.controller = controller
 
