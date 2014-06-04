@@ -13,10 +13,10 @@ from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 from link.api.RESTfulApi import RESTfulApi
 
+
 class LinkController(object):
 
     def __init__(self):
-
         self.frontend = RESTfulApi(self)
 
         ln.info("Connecting to data collect node.")
@@ -56,3 +56,15 @@ class LinkController(object):
         except Exception, e:
             ln.warn("couldn't subscribe: %s", str(e))
             return False
+
+    def performEntitySearch(self, entityName):
+        ln.warn("implement performEntitySearch")
+        return None
+
+    def retrieveDocuments(self, documentIds):
+        ln.warn("implement retrieveDocuments")
+        return None
+
+    def searchSimilar(self, docId):
+        ln.warn("implement searchSimilar")
+        return None
