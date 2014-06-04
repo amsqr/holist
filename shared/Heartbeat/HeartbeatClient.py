@@ -14,8 +14,6 @@ class HearbeatClient(threading.Thread):
         super(HearbeatClient, self).__init__()
         self.listeners = listeners
 
-    #def addListener(self, listener):
-
     def run(self):
         while True:
             hbSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

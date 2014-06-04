@@ -24,9 +24,10 @@ class TwistedBeatServer(object):
 class Receiver(protocol.DatagramProtocol):
 
     def datagramReceived(self, data, (ip, port)):
-        if data == 'PyHB':
+        if data.startswith('PyHB'):
             ln.debug("Heartbeat received from %s:%s", ip, port)
-            self.callback(ip)
+            #todo extract port from data
+            self.callback(ip, port)
 
 class DetectorService(internet.TimerService):
 
@@ -36,12 +37,12 @@ class DetectorService(internet.TimerService):
         self.lc = task.LoopingCall(self.detect)
         self.lc.start(CHECK_PERIOD)
 
-    def update(self, ip):
-        self.beats[ip] = time.time()
+    def update(self, ip, port):
+        self.beats[ip] = [time.time(), port]
 
     def detect(self):
         limit = time.time() - CHECK_TIMEOUT
-        silent = [ip for (ip, ipTime) in self.beats.items() if ipTime < limit]
+        silent = [(ip, port) for (ip, (ipTime, port)) in self.beats.items() if ipTime < limit]
 
         for ip in silent:
             del self.beats[ip]
