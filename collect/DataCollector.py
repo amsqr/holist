@@ -1,7 +1,7 @@
 from core.util import util
 from core.util import config as holistConfig
 import logging
-logging.basicConfig(format=holistConfig.logFormat,level=logging.DEBUG if holistConfig.showDebugLogs else logging.INFO)
+logging.basicConfig(format=holistConfig.logFormat, level=logging.DEBUG if holistConfig.showDebugLogs else logging.INFO)
 ln = util.getModuleLogger(__name__)
 
 import time
@@ -102,6 +102,7 @@ class DataCollector(object):
     def notifyListeners(self):
         for listener in self.listeners.values():
             try:
+
                 listener.notify()
             except:
                 ln.error("couldn't notify listener %s", listener.ip+":"+str(listener.port))

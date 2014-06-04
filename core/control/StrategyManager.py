@@ -35,6 +35,7 @@ class Strategy(object):
         self.name = name
         self.ip = ip
         self.port = port
+        self.online = True
 
 
 class StrategyCallback(Resource):
@@ -81,6 +82,8 @@ class StrategyManager(object):
         self.strategies.append(strategy)
 
     def handle(self, documents):
+        self.strategies = [strategy for strategy in self.strategies if strategy.online]  # filter out unreachable nodes
+
         docDicts = []
         for document in documents:  # serialize object ids
             docDict = document.__dict__
@@ -96,9 +99,13 @@ class StrategyManager(object):
 
         waitFor = 0
         for strategy in self.strategies:
-            #todo: error handling. if a strategy is not responsive, then remove it.
-            requests.post("http://"+strategy.ip+":"+str(strategy.port)+"/task", json.dumps(taskData))
-            waitFor += 1
+            try:
+                requests.post("http://"+strategy.ip+":"+str(strategy.port)+"/task", json.dumps(taskData))
+                waitFor += 1
+            except:
+                ln.warn("Node %s could not be reached at %s:%s! Scheduled removal.",
+                        strategy.name, strategy.ip, strategy.port)
+                strategy.online = False  # mark the node as unreachable
 
         results = []
         received = 0
