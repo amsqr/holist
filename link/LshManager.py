@@ -21,8 +21,17 @@ class LshManager(object):
     # adds a document to all lsh indexes
     def addDocument(self, document):
 
-        lsa_vector = document.vectors.LSA
+        lsa_vector = document.vectors["LSA"]
+
+        dense = {}
+        for x in range(200):
+            dense[x] = 0
+
+        for dim, val in lsa_vector:
+            dense[dim] = val
+        dense_vector = [value for key, value in dense.items()]
+
         database_id = document._id
 
         for x in self.lshIndexList:
-            x.index(lsa_vector, extra_data=database_id)
+            x.index(dense_vector, extra_data=database_id)
