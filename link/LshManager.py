@@ -5,6 +5,7 @@ from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
 
 NUMBER_OF_LSH_INDEXES = 3
 
+
 class LshManager(object):
 
     def __init__(self):

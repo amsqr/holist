@@ -17,7 +17,6 @@ import LshManager
 class LinkController(object):
 
     def __init__(self):
-
         self.lshManager = LshManager()
 
         self.frontend = RESTfulApi(self)
@@ -59,3 +58,15 @@ class LinkController(object):
         except Exception, e:
             ln.warn("couldn't subscribe: %s", str(e))
             return False
+
+    def performEntitySearch(self, entityName):
+        ln.warn("implement performEntitySearch")
+        return None
+
+    def retrieveDocuments(self, documentIds):
+        ln.warn("implement retrieveDocuments")
+        return None
+
+    def searchSimilar(self, docId):
+        ln.warn("implement searchSimilar")
+        return None
