@@ -16,10 +16,10 @@ class RESTfulApi(object):
     def setupResources(self):
         root = Resource()
 
-        searchApi = PerformSearch(self.controller)
+        searchApi = SearchEntity(self.controller)
         notifyApi = Notify(self.controller)
 
-        root.putChild("perform_search", searchApi)
+        root.putChild("search_entity", searchApi)
         root.putChild("notify", notifyApi)
 
         factory = Site(root)
@@ -32,7 +32,16 @@ class Notify(Resource):
         ln.info("New data is available.")
         return json.dumps({"word":"sure bro"})
 
-class PerformSearch(Resource):
+# this API returns a graph for a given entity string
+class SearchEntity(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+    def render_GET(self, request):
+        ln.info("Somebody just performed a search.")
+        return json.dumps({"result":"We have to work on that."})
+
+#
+class RetrieveArticles(Resource):
     def __init__(self, controller):
         self.controller = controller
     def render_GET(self, request):
