@@ -4,7 +4,7 @@ from lshash import LSHash
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
 
 NUMBER_OF_LSH_INDEXES = 3
-
+NUMBER_OF_BITS_PER_HASH = 6
 
 class LshManager(object):
 
@@ -13,12 +13,16 @@ class LshManager(object):
         self.lshIndexList = []
 
         for x in xrange(NUMBER_OF_LSH_INDEXES):
-            lsh = LSHash(6, NUM_TOPICS)
+            lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS)
             self.lshIndexList.append(lsh)
 
+        #addDocument()
 
-    # adds a lsa vector to all lsh indexes
-    def addVector(self, lsaVector):
+    # adds a document to all lsh indexes
+    def addDocument(self, document):
+
+        lsa_vector = document.vectors.LSA
+        database_id = document._id
 
         for x in self.lshIndexList:
-            x.index(lsaVector)
+            x.index(lsa_vector, extra_data=database_id)
