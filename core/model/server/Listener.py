@@ -8,10 +8,11 @@ class Listener(object):
         self.ip = ip
         self.port = port
 
-    def notify(self, ids=[]):
+    def notify(self, data=""):
         try:
-            data = {"ids":ids}
             requests.post("http://"+self.ip+":"+str(self.port) + "/notify", data=data)
-            ln.debug("notified: %s","http://"+self.ip+":"+str(self.port))
+            ln.debug("notified: %s", "http://"+self.ip+":"+str(self.port))
+            return True
         except Exception, e:
             ln.debug("error occured: %s", str(e))
+            return False

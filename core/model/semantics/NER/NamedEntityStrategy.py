@@ -4,6 +4,7 @@ ln = getModuleLogger(__name__)
 
 
 from core.model.semantics.ISemanticsStrategy import ISemanticsStrategy
+from core.model.server.NodeCommunicator import NodeCommunicator
 
 from nltk import sent_tokenize, word_tokenize, pos_tag, ne_chunk
 

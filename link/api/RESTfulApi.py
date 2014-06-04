@@ -19,12 +19,10 @@ class RESTfulApi(object):
     def setupResources(self):
         root = Resource()
 
-        notifyApi = Notify(self.controller)
         searchApi = SearchEntity(self.controller)
         retrieveApi = RetrieveDocuments(self.controller)
         searchSimilarApi = SearchSimilarDocuments(self.controller)
 
-        root.putChild("notify", notifyApi)
         root.putChild("search_entity", searchApi)
         root.putChild("retrieve_documents", retrieveApi)
         root.putChild("search_similar", searchSimilarApi)
@@ -32,27 +30,6 @@ class RESTfulApi(object):
 
         factory = Site(root)
         reactor.listenTCP(config.link_node_port, factory)
-
-
-class Notify(Resource):
-    def __init__(self, controller):
-        self.controller = controller
-
-    def render_POST(self, request): # new data available
-        data = request.content.read()
-        ln.debug("received task: %s", data[:1000])
-        try:
-            data = json.loads(data)
-        except:
-            ln.error("got invalid data: %s", data[:1000])
-            return 0
-
-        annotated = data["annotated_documents"]
-
-        self.controller.handleNewDocuments(annotated)
-
-        ln.info("New data is available.")
-        return json.dumps({"word": "sure bro"})
 
 
 # this API returns a graph for a given entity string

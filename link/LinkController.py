@@ -17,13 +17,17 @@ from link.LshManager import LshManager
 
 CORE_IP = "localhost"
 REGISTER_PORT = config.holistcoreport
-LISTEN_PORT = config.strategyregisterport + 14
+LISTEN_PORT = config.link_node_port + 1
+
+
+class Document:
+    pass
 
 
 class LinkController(object):
 
     def __init__(self):
-        self.nodeCommunicator = NodeCommunicator(self, LISTEN_PORT)
+        self.nodeCommunicator = NodeCommunicator(self, LISTEN_PORT, strategy=False)
         self.nodeCommunicator.registerWithNode(CORE_IP, REGISTER_PORT)
 
         self.lshManager = LshManager()
@@ -33,31 +37,14 @@ class LinkController(object):
         ln.info("running reactor.")
         reactor.run()
 
-    def subscribe(self):
-
-        try:
-            ln.info("attempting to subscribe to core node at %s:%s",config.holistcoreurl, config.holistcoreport)
-
-            # my ip and port for callback
-            data = {"ip":config.link_node_ip, "port":config.link_node_port}
-
-            # create http post
-            res = requests.post("http://"+config.holistcoreurl+":"+str(config.holistcoreport)+"/register_listener", data=data)
-            success = json.loads(res.text)["result"] == "success"
-
-            ln.info("successfully subscribed.")
-            return success
-
-        except Exception, e:
-            ln.warn("couldn't subscribe: %s", str(e))
-            return False
-
     def handleNewDocuments(self, newDocuments):
         documents = []
         for docDict in newDocuments:
             document = Document()
             document.__dict__ = docDict
             documents.append(document)
+        ln.debug("Got %s new documents.", len(documents))
+
 
 
     def performEntitySearch(self, entityName):

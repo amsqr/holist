@@ -21,7 +21,7 @@ from collect.datasource.RSSDataSource import RSSDataSource
 
 class DataCollector(object):
     def __init__(self):
-        self.listeners = dict()
+        self.listeners = []
         self.frontend = RESTfulFrontend(self)
         self.databaseInterface = DatabaseInterface()
         self.sources = [RSSDataSource()] #Reuters21578DataSource()]
@@ -96,13 +96,12 @@ class DataCollector(object):
 
     def registerListener(self, ip, port):
         listener = Listener(ip, port)
-        self.listeners[ip+":"+str(port)] = listener
+        self.listeners.append(listener)
         ln.info("registered listener at %s:%s",ip,port)
 
     def notifyListeners(self):
-        for listener in self.listeners.values():
-            try:
-
-                listener.notify()
-            except:
-                ln.error("couldn't notify listener %s", listener.ip+":"+str(listener.port))
+        for listener in self.listeners[:]:
+            res = listener.notify()
+            if not res:
+                ln.warn("Listener at %s:%s not responsive, removing.", listener.ip, listener.port)
+                self.listeners.remove(listener)

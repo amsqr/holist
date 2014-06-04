@@ -8,7 +8,7 @@ from core.util import config
 from core.model.semantics.ISemanticsStrategy import ISemanticsStrategy
 from core.model.preprocess.TokenizingPorter2Stemmer import TokenizingPorter2Stemmer
 from core.model.dictionary.hash.HashDictionary import HashDictionary
-
+from core.model.server.NodeCommunicator import NodeCommunicator
 from gensim import models
 import itertools
 

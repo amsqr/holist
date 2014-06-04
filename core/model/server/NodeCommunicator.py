@@ -13,8 +13,9 @@ import time
 
 
 class Task(Resource):
-    def __init__(self, controller):
+    def __init__(self, controller, strategy):
         self.controller = controller
+        self.isStrategy = strategy
 
     def render_POST(self, request):
         data = request.content.read()
@@ -24,10 +25,14 @@ class Task(Resource):
         except:
             ln.error("got invalid data: %s", data[:1000])
             return 0
-        sender = data["respondTo"]
-        docs = data["documents"]
 
-        self.controller.queueDocuments(sender, docs)
+        if self.isStrategy:
+            sender = data["respondTo"]
+            docs = data["documents"]
+            self.controller.queueDocuments(sender, docs)
+        else:
+            docs = data["documents"]
+            self.controller.handleNewDocuments(docs)
         ln.info("Queued task.")
 
         return json.dumps({"result": "ok"})
@@ -45,8 +50,11 @@ class NodeCommunicator(object):
 
     def setupResources(self):
         root = Resource()
-        taskPage = Task(self.controller)
-        root.putChild("task", taskPage)
+        taskPage = Task(self.controller, self.isStrategy)
+        if self.isStrategy:
+            root.putChild("task", taskPage)
+        else:
+            root.putChild("notify", taskPage)
         factory = Site(root)
         reactor.listenTCP(self.listenPort, factory)
 

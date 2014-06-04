@@ -25,6 +25,7 @@ def convertDocumentsToDicts(documents):
     dicts = [document.__dict__ for document in documents]
     for docDict in dicts:
         docDict["_id"] = str("_id")
+    return dicts
 
 
 class CoreController(object):
@@ -82,11 +83,18 @@ class CoreController(object):
     def analysisResultCallback(self, results):
         self.corpus.addDocuments(results)
         ln.info("finished updating. Notifying listeners.")
-        for listener in self.listeners:
-            listener.notify(json.dumps({"respondTo": "None", "documents": convertDocumentsToDicts(results)}))
+        self.notifyListeners(results)
         self.newDocuments = []
         self.lastUpdated = time.time()
         self.updating = False
+
+    def notifyListeners(self, results):
+        for listener in self.listeners[:]:
+            res = listener.notify(json.dumps({"documents": convertDocumentsToDicts(results)}))
+            if not res:
+                ln.warn("Listener at %s:%s not responsive, removing.", listener.ip, listener.port)
+                self.listeners.remove(listener)
+
 
     def _updateLoopIteration(self):
         if self.updating or not self.dataSupply.countNewDocuments():
