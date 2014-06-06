@@ -143,14 +143,16 @@ class LSAStrategy(ISemanticsStrategy):
 
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
-    def handleOne(self, text):
+    def handleOne(self, text, sourceType="RSSFeed"):
+        dictionary = self.dictionaries[sourceType]
+        text = self.preprocessor.preprocess(text, dictionary)
         res = {"vectors": []}
         for modelName in self.models:
             res["vectors"].append(
                 {
                     "_id": None,
                     "vector": self.models[modelName][text],
-                    "strategy": modelName
+                    "strategy": "LSA_" + modelName
                 }
             )
         return res

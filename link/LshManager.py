@@ -1,10 +1,16 @@
+from core.util.util import *
+ln = getModuleLogger(__name__)
+
+from link.LinkController import Document
+
 __author__ = 'raoulfriedrich'
 
 from lshash import LSHash
 import json
+import ast
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
 
-NUMBER_OF_LSH_INDEXES = 3
+NUMBER_OF_LSH_INDEXES = 10
 NUMBER_OF_BITS_PER_HASH = 6
 
 class LshManager(object):
@@ -14,7 +20,8 @@ class LshManager(object):
         self.lshIndexList = []
 
         # create a list of lsh indexes
-        self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES)
+        self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES,
+                          storage_config={"redis": {"host": "localhost", "port": 6379}})
 
     # adds a document to all lsh indexes
     def addDocument(self, document):
@@ -33,8 +40,10 @@ class LshManager(object):
     # takes a document and returns database ids of similar documents
     # uses cosine function to determine similarity
     def getSimilarDocuments(self, document):
-
-        lsa_vector = document.vectors["LSA"]
+        if isinstance(document, Document):
+            lsa_vector = document.vectors["LSA"]
+        else:
+            lsa_vector = document
 
         dense_vector = self._sparseToDenseConverter(lsa_vector)
 
@@ -47,10 +56,13 @@ class LshManager(object):
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
-            docJson = result[0][1]
+            res = ast.literal_eval(result[0].replace("}\"", "}").replace("\"{", "{").replace("\\", ""))
+
+            docJson = json.dumps(res[1])
             if not docJson in resultSet:
+                ln.debug("json: %s", docJson)
                 resultSet.add(docJson)
-                results.append(json.loads(docJson))
+                results.append(res[1])
 
         return results
 

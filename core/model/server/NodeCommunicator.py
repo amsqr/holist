@@ -73,7 +73,7 @@ class NodeCommunicator(object):
         ln.debug("attempting to respond to %s", sender)
         requests.post(sender, data=json.dumps(data))
 
-    def registerWithNode(self, nodeIp, registerPort, maxRetries=30):
+    def registerWithNode(self, nodeIp, registerPort, maxRetries=300):
         deferToThread(self._registerWithNode, nodeIp, registerPort, maxRetries)
 
     def _registerWithNode(self, nodeIp, registerPort, maxRetries):
@@ -97,4 +97,4 @@ class NodeCommunicator(object):
                 return True
         return False
 
-    def handleServerDown(self, clients):pass
+    def handleServerDown(self, clients): pass

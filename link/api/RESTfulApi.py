@@ -38,12 +38,16 @@ class SearchEntity(Resource):
         self.controller = controller
 
     def render_GET(self, request):
-        entityName = cgi.escape(request.args["entityName"][0])
+        try:
+            entityName = cgi.escape(request.args["entityName"][0])
+        except KeyError:
+            request.setResponseCode(400)
+            return json.dumps({"reason": "need entityName paramerter"})
 
         ln.info("Somebody just performed a search with entityName = %s.", entityName)
         # TODO LinkController.performEntitySearch(entityName)
-        self.controller.performEntitySearch(entityName)
-
+        return json.dumps(self.controller.performEntitySearch(entityName))
+"""
         return json.dumps(
             {"nodes": [
                 {
@@ -65,14 +69,15 @@ class SearchEntity(Resource):
                     "title": "Holist gets 3 billion valuation",
                     "documents": ["article1232", "article1115"]
                 }
-            ], "adj": [
+            ],
+            "adj": [
                 ("entity_id1234", "cluster_1"),
                 ("entity_id1234", "cluster_2"),
                 ("entity_id1234", "cluster_3")
             ]
             }
         )
-
+"""
 
 class RetrieveDocuments(Resource):
     def __init__(self, controller):

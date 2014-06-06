@@ -3,8 +3,6 @@ __author__ = 'raoulfriedrich'
 from core.util.util import *
 
 import logging
-import requests
-import json
 
 logging.basicConfig(format=config.logFormat, level=logging.DEBUG if config.showDebugLogs else logging.INFO)
 ln = getModuleLogger(__name__)
@@ -26,6 +24,7 @@ LISTEN_PORT = config.link_node_port + 1
 class Document:
     pass
 
+TESTING = True
 
 class LinkController(object):
 
@@ -36,7 +35,7 @@ class LinkController(object):
         self.lshManager = LshManager()
         self.namedEntityIndex = NamedEntityIndex()
 
-        self.clusterStrategy = SimpleClusterStrategy()
+        self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
 
         self.frontend = RESTfulApi(self)
 
@@ -61,15 +60,15 @@ class LinkController(object):
 
     def performEntitySearch(self, entityName):
         # check that we know this entity
-        if not self.namedEntityIndex.query(entityName):
+        if not self.namedEntityIndex.query(entityName) and not TESTING:
             return {"result": "False", "reason": "Unknown entity."}
 
-        res, success = self.clusterStrategy.cluster(entityName)
+        nodes, adj,  success = self.clusterStrategy.cluster(entityName)
 
         if not success:
-            return res
+            return nodes, adj
 
-        return {"nodes": res}
+        return {"nodes": nodes, "adj": adj}
 
     def retrieveDocuments(self, documentIds):
         ln.warn("implement retrieveDocuments")

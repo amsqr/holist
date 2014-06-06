@@ -65,7 +65,7 @@ class NamedEntityStrategy(ISemanticsStrategy):
         for doc in documents:
             count += 1
             if count % 50 == 0:
-                ln.debug("extracted %s documents. now handling was id:%s", count, doc._id)
+                ln.debug("extracted entities from %s documents.", count)
             entities = self.extractEntities(doc.text)
             results.append({"_id": doc._id, "strategy": "named_entities", "vector": entities})
 

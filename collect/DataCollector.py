@@ -68,10 +68,10 @@ class DataCollector(object):
 
     def completeTimestamps(self, documents):
         for document in documents:
-            try:
-                t = document.timestamp
-            except AttributeError:
-                document.timestamp = str(datetime.datetime.now())
+        #    try:
+        #        t = document.timestamp
+        #    except AttributeError:
+            document.timestamp = str(datetime.datetime.now())
         return documents
 
     def filterKnownDocuments(self, source, documents):

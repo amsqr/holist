@@ -1,5 +1,8 @@
 __author__ = 'dowling'
 
+from core.util.util import *
+ln = getModuleLogger(__name__)
+
 from collections import defaultdict
 
 
@@ -12,7 +15,7 @@ class NamedEntityIndex(object):
         self.index = defaultdict(list)
 
     def addDocument(self, document):
-        for namedEntity in document.vectors["NamedEntities"]:
+        for entityType, namedEntity in document.vectors["named_entities"]:
             self.index[namedEntity].append(document._id)
 
     def query(self, namedEntity):

@@ -25,7 +25,7 @@ MINIMUM_WAIT_TIME = 60 * 3
 def convertDocumentsToDicts(documents):
     dicts = [document.__dict__ for document in documents]
     for docDict in dicts:
-        docDict["_id"] = str("_id")
+        docDict["_id"] = str(docDict["_id"])
     return dicts
 
 
