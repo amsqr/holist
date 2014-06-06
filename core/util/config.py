@@ -2,7 +2,7 @@
 backupCount = 0
 
 updateLogMaxWaitTime = 10
-logFilename = "_holistserver%s.log"
+logFilename = "log/%s_holistserver%s.log"
 logNameLength = 18
 logFormat = '%(asctime)s %(levelname)-8s %(name)-18s: %(message)s'
 

@@ -6,5 +6,5 @@ ln = util.getModuleLogger(__name__)
 from core.control.CoreController import CoreController
 
 
-util.startLogging("model")
+util.startLogging("core")
 control = CoreController()

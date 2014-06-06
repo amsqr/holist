@@ -1,5 +1,4 @@
 import logging
-from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
 from Queue import Queue
 import datetime
@@ -32,9 +31,9 @@ def convertToDocument(bson):
 ## Used as decorator to log a functions return value, using the appropriate logger. 
 def logReturnValue(function):
     def loggedFunction(*args):
-    	moduleName = function.__module__
-    	funcName = function.__name__
-    	moduleLogger = getModuleLogger(moduleName)
+        moduleName = function.__module__
+        funcName = function.__name__
+        moduleLogger = getModuleLogger(moduleName)
         ret = function(*args)
         moduleLogger.debug("%s returned %s...", funcName, str(ret))
         return ret
@@ -74,18 +73,19 @@ def getModuleLogger(namespace):
     loggers.append(ln)
     return ln
 
+
 def __refreshLog(name):
     global keepLogging
     #get log entry (blocking)
     todaysdate = datetime.date.today()
-    logfile = open((name+config.logFilename) % todaysdate, "a")
+    logfile = open(config.logFilename % (name, todaysdate), "a")
     while keepLogging:
         #check if we need to start a new file
-        if(datetime.date.today() != todaysdate):
+        if datetime.date.today() != todaysdate:
             logfile.close()
             todaysdate = datetime.date.today()
-            logfile = open((name+config.logFilename) % todaysdate, "a")
-        
+            logfile = open(config.logFilename % (name, todaysdate), "a")
+
         logentry = None
         try:
             logentry = logQueue.get(True, 3)

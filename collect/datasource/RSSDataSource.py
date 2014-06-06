@@ -22,7 +22,7 @@ from core.util import config
 
 from collect.datasource.IDataSource import IDataSource
 
-
+PERSISTENCE_FILENAME = "persist/last_etag_and_modified_%s.txt"
 
 
 class LimitedSizeDict(OrderedDict):
@@ -47,7 +47,7 @@ class RSSFeed(object):
         self.url = feedURL
         self.idUpdateMemory = LimitedSizeDict(size_limit=1000)  # remember the last 1000 feed entry ids and change dates
         try:
-            f = open(str("last_etag_and_modified_%s.txt" % str(self.url.replace("/", ""))), "r")
+            f = open(str(PERSISTENCE_FILENAME % str(self.url.replace("/", ""))), "r")
             lines = list(f.readlines())
             ln.debug("read etag and modified")
             #print lines
@@ -111,6 +111,7 @@ class RSSFeed(object):
                 res = feedparser.parse(self.url)
         except Exception as e:
             ln.exception(e)
+
         ln.debug("feedparser done for %s. Now handling results...", self.url)
 
         self.etag = res.get("etag", None)
@@ -169,7 +170,7 @@ class RSSFeed(object):
             
             listToAppendTo.append(document)
 
-            with open(str("last_etag_and_modified_%s.txt" % str(self.url.replace("/", ""))), "w") as f:
+            with open(str(PERSISTENCE_FILENAME % str(self.url.replace("/", ""))), "w") as f:
                 f.write(str(self.etag) + "\n" + str(self.modified))
                 f.write("\n".join(["%s <:> %s" % (id, mod) for id, mod in self.idUpdateMemory.items()]))
 
