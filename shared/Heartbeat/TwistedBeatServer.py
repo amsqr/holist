@@ -25,7 +25,7 @@ class Receiver(protocol.DatagramProtocol):
 
     def datagramReceived(self, data, (ip, port)):
         if data.startswith('PyHB'):
-            ln.debug("Heartbeat received from %s:%s", ip, port)
+            #ln.debug("Heartbeat received from %s:%s", ip, port)
             #todo extract port from data
             self.callback(ip, port)
 
