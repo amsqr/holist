@@ -42,7 +42,7 @@ class SimpleClusterStrategy(object):  # just cluster document by date
                 {
                     "id": "cluster_" + str(idx),
                     "title": cluster[0]["title"],
-                    "documents": dict([("id", d["_id"]) for d in cluster])
+                    "documents": [{"id": d["_id"], "title": d["title"]} for d in cluster]
                 }
             )
             adj.append(("center", "cluster_" + str(idx)))

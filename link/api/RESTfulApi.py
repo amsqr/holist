@@ -38,52 +38,23 @@ class SearchEntity(Resource):
         self.controller = controller
 
     def render_GET(self, request):
+        request.setHeader("content-type", "application/json")
         try:
             entityName = cgi.escape(request.args["entityName"][0])
         except KeyError:
             request.setResponseCode(400)
-            return json.dumps({"reason": "need entityName paramerter"})
+            return json.dumps({"reason": "need entityName parameter"})
 
         ln.info("Somebody just performed a search with entityName = %s.", entityName)
-        # TODO LinkController.performEntitySearch(entityName)
-        return json.dumps(self.controller.performEntitySearch(entityName))
-"""
-        return json.dumps(
-            {"nodes": [
-                {
-                    "id": "entity_id1234",
-                    "title": "Holist"
-                },
-                {
-                    "id": "cluster_1",
-                    "title": "Holist IPO",
-                    "documents": ["article1", "article2", "article3"]
-                },
-                {
-                    "id": "cluster_2",
-                    "title": "Holist joins y-combinator",
-                    "documents": ["article3", "article6", "article10", "article4w32", "article12345"]
-                },
-                {
-                    "id": "cluster_3",
-                    "title": "Holist gets 3 billion valuation",
-                    "documents": ["article1232", "article1115"]
-                }
-            ],
-            "adj": [
-                ("entity_id1234", "cluster_1"),
-                ("entity_id1234", "cluster_2"),
-                ("entity_id1234", "cluster_3")
-            ]
-            }
-        )
-"""
+        return json.dumps(self.controller.performEntitySearch(entityName), indent=2)
+
 
 class RetrieveDocuments(Resource):
     def __init__(self, controller):
         self.controller = controller
 
     def render_GET(self, request):
+        request.setHeader("content-type", "application/json")
         documentIds = cgi.escape(request.args["document"])
 
         ln.info("Somebody is trying to retrieve documents: %s", documentIds)
@@ -119,6 +90,7 @@ class SearchSimilarDocuments(Resource):
         self.controller = controller
 
     def render_GET(self, request):
+        request.setHeader("content-type", "application/json")
         docId = cgi.escape(request.args["document"][0])
 
         ln.info("Somebody just performed a search for similar documents: %s.", docId)

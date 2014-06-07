@@ -95,6 +95,10 @@ class DataCollector(object):
         source.updating = False
 
     def registerListener(self, ip, port):
+        for listener in self.listeners:
+            if listener.ip == ip and listener.port == port:
+                return
+
         listener = Listener(ip, port)
         self.listeners.append(listener)
         ln.info("registered listener at %s:%s",ip,port)

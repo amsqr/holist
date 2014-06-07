@@ -1,0 +1,26 @@
+- General: create a bash startup script for all nodes
+- General: create an overview dashboard for the whole server
+
+
+- Core: don't send documents to link without both named entities and LSA vector
+
+- Link: persist the known named entities
+- Link: add flag for LSH index reconstruction (for testing different bit lengths)
+- Link: implement article retrieval, named entity auto completion, similar document search
+- Link: add more clustering methods
+- Link: think about different "seeds" than just the search term in LSA space
+- Link: find a way to retrieve linked entities
+
+- LSAStrategy: save and load LSA model files
+- LSAStrategy: refactor such that one node handles conversion, and sends samples to a second node to update the model
+
+- Shared: fix heartbeat and registration setup such that all nodes can be plugged in and out at will
+
+- add retroactive analysis when a node is restarted
+   - StrategyManager, Link Controller need to save the _id of the last document they processed
+   - LinkController: on start, retrieve all documents available since then, and process them
+   - StrategyManager: when a new strategy comes online, reprocess all the documents that were added in the mean time
+
+- Collect: create Twitter data source
+- Collect: Find more RSS feeds
+

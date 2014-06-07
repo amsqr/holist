@@ -115,5 +115,9 @@ class CoreController(object):
         ln.info("Queue size is %s.", self.dataSupply.countNewDocuments())
 
     def registerListener(self, ip, port):
+        for listener in self.listeners:
+            if listener.ip == ip and listener.port == port:
+                return
+
         listener = Listener(ip, port)
         self.listeners.append(listener)
