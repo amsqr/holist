@@ -138,7 +138,7 @@ class LSAStrategy(ISemanticsStrategy):
                 model.add_documents(prep)
 
             # add the document vector space representations
-            sourceTypeTag = self.NAME#+"_"+document.sourceType
+            sourceTypeTag = self.NAME  # +"_"+document.sourceType
 
             results += [{"_id": document._id, "strategy": sourceTypeTag, "vector": model[document.preprocessed]}
                         for document in documents]
