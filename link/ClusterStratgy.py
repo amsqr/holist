@@ -35,17 +35,21 @@ class SimpleClusterStrategy(object):  # just cluster document by date
             bucket = str(date.date()) + " " + str(date.hour)
             clusters[bucket].append(document)
 
-        nodes = [{"id": "center", "title": entityName}]
+        nodes = [{"id": "center", "name": "center", "title": entityName}]
         adj = []
         for idx, (day, cluster) in enumerate(clusters.items()):
-            nodes.append(
-                {
-                    "id": "cluster_" + str(idx),
-                    "title": cluster[0]["title"],
-                    "documents": [{"id": d["_id"], "title": d["title"]} for d in cluster]
-                }
-            )
-            adj.append({"source": 0, "target": idx + 1, "value": "1"})
+            node = {
+                "id": "cluster_" + str(idx),
+                "name": "cluster_" + str(idx),
+                "title": cluster[0]["title"],
+                "documents": [{"id": d["_id"], "title": d["title"]} for d in cluster]
+            }
+            nodes.append(node)
+            #adj.append({"source": 0, "target": idx + 1, "value": "1"})
+            adj.append({"source": nodes[0], "target": node, "value": "1"})
+            #adj.append({"source": "center", "sourceTitle": entityName,
+            #            "target": "cluster_" + str(idx), "targetTitle": cluster[0]["title"],
+            #            "value": "1"})
         ln.debug(nodes)
 
         return nodes, adj, True
