@@ -35,7 +35,7 @@ class LshManager(object):
         dense_vector = self._sparseToDenseConverter(lsa_vector)
 
         extra = json.dumps({
-            "_id": document._id,
+            "id": document._id,
             "timestamp": document.timestamp,
             "title": document.title
         })
@@ -55,7 +55,7 @@ class LshManager(object):
         resultSet = set()
         results = []
 
-        for result in self.lsh.query(dense_vector, num_results=20, distance_func="cosine"):
+        for result in self.lsh.query(dense_vector, num_results=6, distance_func="cosine"):
             # example:
             # [
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),

@@ -24,6 +24,14 @@ LISTEN_PORT = config.link_node_port + 1
 class Document:
     pass
 
+def bsonToClientBson(bson):
+    clientDoc = {}
+    clientDoc["id"] = str(bson["_id"])
+    clientDoc["title"] = bson["title"]
+    clientDoc["text"] = bson["text"]
+    clientDoc["timestamp"] = bson["timestamp"]
+    return clientDoc
+
 TESTING = True
 REBUILD = True
 
@@ -89,9 +97,28 @@ class LinkController(object):
         return {"nodes": nodes, "links": adj}
 
     def retrieveDocuments(self, documentIds):
-        ln.warn("implement retrieveDocuments")
-        return None
+        client = getDatabaseConnection()
+        results = []
+        for docId in documentIds:
+            try:
+                bson = client.holist.articles.find({"_id": docId}).next()
+                clientDoc = bsonToClientBson(bson)
+                results.append(clientDoc)
+            except StopIteration:
+                ln.error("Client requested ID not in database: %s", docId)
+        return {"documents": results}
 
     def searchSimilar(self, docId):
-        ln.warn("implement searchSimilar")
-        return None
+        client = getDatabaseConnection()
+        try:
+            bson = client.holist.articles.find({"_id": docId}).next()
+
+        except StopIteration:
+            ln.error("Client requested ID not in database: %s", docId)
+            return []
+        document = convertToDocument(bson)
+        similar = self.lshManager.getSimilarDocuments(document)
+        res = []
+        for doc in similar:
+            res.append(doc)
+        return {"documents": res}

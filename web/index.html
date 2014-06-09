@@ -6,7 +6,7 @@
         .link { stroke: #ccc; }
         .nodetext { pointer-events: none; font: 10px sans-serif; }
         body { width:100%; height:100%; margin:none; padding:none; }
-        #graph { width:500px;height:500px; }
+        #graph { width:1500px;height:1500px; }
 
 
         .link {
@@ -88,7 +88,8 @@ function myGraph(el) {
         for (var i=0; i < nodes.length; i++) {
             if (nodes[i].id === id)
                 return i
-        };
+        }
+        return -1;
     }
 
     function mouseover() {
@@ -98,14 +99,26 @@ function myGraph(el) {
     }
     
     function expand(){
-      var clickedId = d3.select(this).select("id")[0][0].getAttribute("id");
-      var clickedNode = nodes[clickedId];
-      var docs = clickedNode.documents;
-      var argstring = "?";
-      docs.forEach(function (doc){
-        argstring = argstring + "document=" + doc.id + "&"
-      });
-      newNodes = JSON.parse(httpGet("/retrieve_documents"+argstring));
+      var clickedId = d3.select(this)[0][0].getAttribute("id");
+      var clickedNode = findNode(clickedId);
+      try{
+        var docs = clickedNode.documents;
+        var argstring = "?";
+        docs.forEach(function (doc){
+            argstring = argstring + "document=" + doc.id + "&"
+        });
+        var newNodes = JSON.parse(httpGet("/retrieve_documents"+argstring));
+      }
+      catch(err){
+        newNodes =JSON.parse(httpGet("/search_similar?id="+clickedId));
+      }
+      newNodes.documents.forEach(function(doc){
+            var idx = findNodeIndex(doc.id);
+            if(  idx == -1){
+                graph.addNode(doc);
+            };
+            graph.addLink(clickedId, doc.id)
+        })
     }
     
     function mouseout() {
@@ -115,17 +128,17 @@ function myGraph(el) {
     }
 
     // set up the D3 visualisation in the specified element
-    var w = 1000,
-        h = 1000;
+    var w = 1500,
+        h = 1500;
 
     var vis = this.vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("height", h);
 
     var force = d3.layout.force()
-        .gravity(.05)
-        .distance(100)
-        .charge(-100)
+        .gravity(.04)
+        .distance(150)
+        .charge(-850)
         .size([w, h]);
 
     var nodes = force.nodes(),
@@ -149,14 +162,8 @@ function myGraph(el) {
             .call(force.drag);
 
         nodeEnter.append("circle")
-            .attr("r", 15);
-
-        nodeEnter.append("image")
-            .attr("class", "circle")
-            .attr("x", "-8px")
-            .attr("y", "-8px")
-            .attr("width", "16px")
-            .attr("height", "16px")
+            .attr("r", 15)
+            .attr("id", function(d) {return d.id;})
             .on("mouseover", mouseover)
             .on("click", expand)
             .on("mouseout", mouseout);
@@ -167,8 +174,8 @@ function myGraph(el) {
             .attr("dy", ".35em")
             .text(function(d) {return d.title});
 
-        nodeEnter.append("id").attr("id", function(d) {return d.id;});
         
+
         node.exit().remove();
 
         force.on("tick", function() {
