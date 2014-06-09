@@ -81,7 +81,27 @@ class StrategyManager(object):
         strategy = Strategy(name, ip, port)
         self.strategies.append(strategy)
 
-    def handle(self, documents):
+    def relabelStrategy(self, strategyName):
+        ln.info("Triggered complete relabel of strategy %s.", strategyName)
+        count = 0
+        alldocuments = []
+        client = getDatabaseConnection()
+        for documentBSON in client.holist.articles.find():
+            try:
+                alldocuments.append(convertToDocument(documentBSON))
+            except:
+                ln.debug(documentBSON)
+        results = self.handle(alldocuments, [strategyName])  # all documents with updated vectors
+        for document in results:
+            count += 1
+            client.holist.articles.update({"_id": document._id}, document.__dict__)
+        ln.info("Relabelled %s documents.", count)
+
+
+    def handle(self, documents, handleStrategies=None):
+        if handleStrategies:
+            ln.debug("Relabelling strategies %s. Have registered strategies %s.", handleStrategies,
+                     [s.name for s in self.strategies])
         self.strategies = [strategy for strategy in self.strategies if strategy.online]  # filter out unreachable nodes
 
         docDicts = []
@@ -90,15 +110,20 @@ class StrategyManager(object):
             docDict["_id"] = str(document._id)
             docDicts.append(docDict)
 
-        taskData = {"respondTo": "http://localhost:"+str(config.strategyregisterport)+"/callback",
-                    "documents": docDicts}
-
         docIndex = dict()
         for doc in documents:
             docIndex[str(doc._id)] = doc
 
         waitFor = 0
         for strategy in self.strategies:
+
+            if handleStrategies is not None:
+                if not strategy.name in handleStrategies:
+                    ln.debug("Skipping relabel of strategy %s.", strategy.name)
+                    continue
+
+            taskData = {"respondTo": "http://localhost:"+str(config.strategyregisterport)+"/callback",
+                        "documents": docDicts, "relabel": handleStrategies is not None}
             try:
                 requests.post("http://"+strategy.ip+":"+str(strategy.port)+"/task", json.dumps(taskData))
                 waitFor += 1

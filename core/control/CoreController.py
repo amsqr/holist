@@ -21,6 +21,7 @@ from shared.Heartbeat.HeartbeatClient import HearbeatClient
 MINIMUM_QUEUE_SIZE = 20
 MINIMUM_WAIT_TIME = 60 * 3
 
+RELABEL = True
 
 def convertDocumentsToDicts(documents):
     dicts = [document.__dict__ for document in documents]
@@ -57,8 +58,14 @@ class CoreController(object):
         self.updateLoop = LoopingCall(self._updateLoopIteration)
         self.updateLoop.start(10)
 
+        if RELABEL:
+            reactor.callLater(15, self._relabelStrategy, "LSA")
+
         ln.info("running reactor.")
         reactor.run()
+
+    def _relabelStrategy(self, strategy):
+        deferToThread(self.strategyManager.relabelStrategy, strategy)
 
     def connectToDataSupply(self):
 

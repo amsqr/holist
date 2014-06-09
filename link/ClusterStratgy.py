@@ -18,7 +18,7 @@ class SimpleClusterStrategy(object):  # just cluster document by date
         # retrieve the entity in LSA space
         response = requests.get("http://localhost:" + str(config.lsa_strategy_port) + "/small_task", params={"document": entityName})
         if response.status_code != 200:
-            return {"result": "False", "reason": "Couldn't run entity search. This is an internal error."}, False
+            return {"result": "False", "reason": "Couldn't run entity search. This is an internal error."}, [], False
 
         entityLSA = None
         responseJSON = json.loads(response.text)
@@ -45,7 +45,7 @@ class SimpleClusterStrategy(object):  # just cluster document by date
                     "documents": [{"id": d["_id"], "title": d["title"]} for d in cluster]
                 }
             )
-            adj.append(("center", "cluster_" + str(idx)))
+            adj.append({"source": 0, "target": idx + 1, "value": "1"})
         ln.debug(nodes)
 
         return nodes, adj, True

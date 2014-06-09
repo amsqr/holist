@@ -5,6 +5,7 @@ ln = getModuleLogger(__name__)
 
 from twisted.web.resource import Resource
 from twisted.web.server import Site
+from twisted.web.static import File
 from twisted.internet import reactor
 import json
 import cgi
@@ -23,6 +24,7 @@ class RESTfulApi(object):
         retrieveApi = RetrieveDocuments(self.controller)
         searchSimilarApi = SearchSimilarDocuments(self.controller)
 
+        root.putChild("graph", File("./web/index.html"))
         root.putChild("search_entity", searchApi)
         root.putChild("retrieve_documents", retrieveApi)
         root.putChild("search_similar", searchSimilarApi)

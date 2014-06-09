@@ -35,6 +35,7 @@ class RegisterListener(Resource):
         self.controller = controller
 
     def render_POST(self, request):
+        request.setHeader("content-type", "application/json")
         ln.debug("received registration request: %s", request.args)
         ip = cgi.escape(request.args["ip"][0])
         port = cgi.escape(request.args["port"][0])
@@ -48,8 +49,10 @@ class RegisterListener(Resource):
 class Notify(Resource): 
     def __init__(self, controller):
         self.controller = controller
-    def render_POST(self, request): # new data available
+
+    def render_POST(self, request):  # new data available
+        request.setHeader("content-type", "application/json")
         self.controller.onNewDocuments()
-        return json.dumps({"word":"sure bro"})
+        return json.dumps({"word": "sure bro"})
 
 # todo: create an interface to compute lsa vector for entity

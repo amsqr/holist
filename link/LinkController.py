@@ -25,6 +25,7 @@ class Document:
     pass
 
 TESTING = True
+REBUILD = True
 
 class LinkController(object):
 
@@ -39,12 +40,29 @@ class LinkController(object):
 
         self.frontend = RESTfulApi(self)
 
+        if REBUILD:
+            self.rebuildIndex()
+
         # PUT THIS LINES WHEN CONNECTION TO CORE IS ESTABLISHED
         #heartbeatThread = HearbeatClient(CORE_IP, 43278)
         #heartbeatThread.start()
 
         ln.info("running reactor.")
         reactor.run()
+
+    def rebuildIndex(self):
+        ln.info("Triggered complete index rebuild.")
+        count, failed = 0, 0
+        self.lshManager.clearIndex()
+        client = getDatabaseConnection()
+        for articleBSON in client.holist.articles.find():
+            doc = convertToDocument(articleBSON)
+            try:
+                self.lshManager.addDocument(doc)
+                count += 1
+            except KeyError:
+                failed += 1
+        ln.info("Rebuild complete. Added %s documents, failed on %s.", count, failed)
 
     def handleNewDocuments(self, newDocuments):
         documents = []
@@ -68,7 +86,7 @@ class LinkController(object):
         if not success:
             return nodes, adj
 
-        return {"nodes": nodes, "adj": adj}
+        return {"nodes": nodes, "links": adj}
 
     def retrieveDocuments(self, documentIds):
         ln.warn("implement retrieveDocuments")

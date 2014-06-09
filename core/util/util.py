@@ -24,8 +24,8 @@ def getDatabaseConnection():
 def convertToDocument(bson):
     document = Document("")
     document.__dict__ = bson
-    for strategyName in document.vectors:
-        document.vectors[strategyName] = numpy.array(document.vectors[strategyName])
+    #for strategyName in document.vectors:
+    #    document.vectors[strategyName] = numpy.array(document.vectors[strategyName])
     return document
 
 ## Used as decorator to log a functions return value, using the appropriate logger. 

@@ -6,6 +6,7 @@ from link.LinkController import Document
 __author__ = 'raoulfriedrich'
 
 from lshash import LSHash
+import redis
 import json
 import ast
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
@@ -19,9 +20,13 @@ class LshManager(object):
 
         self.lshIndexList = []
 
+
         # create a list of lsh indexes
         self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES,
                           storage_config={"redis": {"host": "localhost", "port": 6379}})
+
+    def clearIndex(self):
+        redis.Redis().flushall()
 
     # adds a document to all lsh indexes
     def addDocument(self, document):

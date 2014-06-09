@@ -19,6 +19,7 @@ class Task(Resource):
         self.isStrategy = strategy
 
     def render_POST(self, request):
+        request.setHeader("content-type", "application/json")
         data = request.content.read()
         ln.debug("received task: %s", data[:1000])
         try:
@@ -30,7 +31,9 @@ class Task(Resource):
         if self.isStrategy:
             sender = data["respondTo"]
             docs = data["documents"]
-            self.controller.queueDocuments(sender, docs)
+            relabel = data.get("relabel", False)
+
+            self.controller.queueDocuments(sender, docs, relabel)
         else:
             docs = data["documents"]
             self.controller.handleNewDocuments(docs)
@@ -43,6 +46,7 @@ class SmallTask(Resource):
         self.controller = controller
 
     def render_GET(self, request):
+        request.setHeader("content-type", "application/json")
         document = cgi.escape(request.args["document"][0])
         return json.dumps(self.controller.handleOne(document))
 

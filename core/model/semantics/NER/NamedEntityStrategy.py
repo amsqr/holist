@@ -38,8 +38,8 @@ class NamedEntityStrategy(ISemanticsStrategy):
 
         reactor.run()
 
-    def queueDocuments(self, returnTo, documents):
-        self.queue.put((returnTo, documents))
+    def queueDocuments(self, returnTo, documents, relabel):
+        self.queue.put((returnTo, documents, relabel))
 
     def update(self):
         if self.updating:
@@ -47,11 +47,11 @@ class NamedEntityStrategy(ISemanticsStrategy):
 
         self.updating = True
         if not self.queue.empty():
-            returnTo, docs = self.queue.get()
-            self._handleDocuments(returnTo, docs)
+            returnTo, docs, relabel = self.queue.get()
+            self._handleDocuments(returnTo, docs, relabel)
         self.updating = False
 
-    def _handleDocuments(self, returnTo, docs):
+    def _handleDocuments(self, returnTo, docs, relabel):
         ln.info("NER tasked with %s documents.", len(docs))
         documents = []
         for docDict in docs:

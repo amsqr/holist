@@ -60,7 +60,6 @@ class LSAStrategy(ISemanticsStrategy):
         #this dict keeps a dictionary for every source type 
         self.dictionaries = dict()
 
-
         self.queue = Queue()
         self.modelQueue = Queue()
         self.nodeCommunicator = NodeCommunicator(self, LISTEN_PORT)
@@ -86,8 +85,8 @@ class LSAStrategy(ISemanticsStrategy):
         self.models[sourceType] = model
         return model
 
-    def queueDocuments(self, returnTo, documents):
-        self.queue.put((returnTo, documents))
+    def queueDocuments(self, returnTo, documents, relabel):
+        self.queue.put((returnTo, documents, relabel))
 
     def update(self):
         if self.updating:
@@ -95,17 +94,18 @@ class LSAStrategy(ISemanticsStrategy):
 
         self.updating = True
         if not self.queue.empty():
-            returnTo, docs = self.queue.get()
-            self._handleDocuments(returnTo, docs)
+            returnTo, docs, relabel = self.queue.get()
+            self._handleDocuments(returnTo, docs, relabel)
         self.updating = False
 
 
 
-    def _handleDocuments(self, returnTo, docs):
+    def _handleDocuments(self, returnTo, docs, relabel=False):
         """
         Add documents to the model, and send back their vector representations.
         """
         ln.info("LSA tasked with %s documents.", len(docs))
+        self.load()
 
         documents = []
         for docDict in docs:
@@ -128,19 +128,21 @@ class LSAStrategy(ISemanticsStrategy):
             if model is None:
                 model = self.createModel(sourceType, dictionary)
 
+
             for doc in documents:
                 self.preprocessor.preprocess(doc, dictionary)
 
             prep = (doc.preprocessed for doc in documents)
 
-            model.add_documents(prep)
+            if not relabel:
+                model.add_documents(prep)
 
             # add the document vector space representations
             sourceTypeTag = self.NAME#+"_"+document.sourceType
 
             results += [{"_id": document._id, "strategy": sourceTypeTag, "vector": model[document.preprocessed]}
                         for document in documents]
-
+        self.save()
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
     def handleOne(self, text, sourceType="RSSFeed"):
@@ -161,14 +163,14 @@ class LSAStrategy(ISemanticsStrategy):
         ln.debug("saving models")
         for sourceType in self.models:
             model = self.models[sourceType]
-            model.save("model_" + sourceType + ".lsa")
+            model.save("persist/model_" + sourceType + ".lsa")
         ln.debug("done saving models")
 
     def load(self):
         ln.debug("Loading models..")
         import os
-        for filename in os.listdir(os.getcwd()):
-            if filename[-4:] == ".lsa":
+        for filename in os.listdir(os.getcwd()+"/persist"):
+            if filename.endswith(".lsa"):
                 model = models.lsimodel.LsiModel.load(filename)
                 sourceType = filename[6:-4]
                 self.models[sourceType] = model
