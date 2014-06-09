@@ -1,28 +1,39 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<script src="http://d3js.org/d3.v2.js?2.9.1"></script>
-<style>
+<html>
+<head>
+    <script type="text/javascript" src="http://d3js.org/d3.v2.js?2.9.1"></script>
+    <style type="text/css">
+        .link { stroke: #ccc; }
+        .nodetext { pointer-events: none; font: 10px sans-serif; }
+        body { width:100%; height:100%; margin:none; padding:none; }
+        #graph { width:500px;height:500px; }
 
-.link {
-  fill: none;
-  stroke: #666;
-  stroke-width: 1.5px;
-}
 
-.node circle {
-  fill: #ccc;
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
+        .link {
+          fill: none;
+          stroke: #666;
+          stroke-width: 1.5px;
+        }
+        
+        .node circle {
+          fill: #ccc;
+          stroke: #fff;
+          stroke-width: 1.5px;
+        }
+        
+        text {
+          font: 10px sans-serif;
+          pointer-events: none;
+        }
 
-text {
-  font: 10px sans-serif;
-  pointer-events: none;
-}
 
-</style>
+    </style>
+</head>
 <body>
-<script>
+<div id="graph"></div>
+</body>
+
+<script type="text/javascript"> 
 function httpGet(theUrl)
 {
     var xmlHttp = null;
@@ -33,82 +44,166 @@ function httpGet(theUrl)
     return xmlHttp.responseText;
 }
 
+
+function myGraph(el) {
+
+    // Add and remove elements on the graph object
+    this.addNode = function (node) {
+        nodes.push(node);
+        update();
+    }
+
+    this.removeNode = function (id) {
+        var i = 0;
+        var n = findNode(id);
+        while (i < links.length) {
+            if ((links[i]['source'] === n)||(links[i]['target'] == n)) links.splice(i,1);
+            else i++;
+        }
+        var index = findNodeIndex(id);
+        if(index !== undefined) {
+            nodes.splice(index, 1);
+            update();
+        }
+    }
+
+    this.addLink = function (sourceId, targetId) {
+        var sourceNode = findNode(sourceId);
+        var targetNode = findNode(targetId);
+
+        if((sourceNode !== undefined) && (targetNode !== undefined)) {
+            links.push({"source": sourceNode, "target": targetNode});
+            update();
+        }
+    }
+
+    var findNode = function (id) {
+        for (var i=0; i < nodes.length; i++) {
+            if (nodes[i].id === id)
+                return nodes[i]
+        };
+    }
+
+    var findNodeIndex = function (id) {
+        for (var i=0; i < nodes.length; i++) {
+            if (nodes[i].id === id)
+                return i
+        };
+    }
+
+    function mouseover() {
+      d3.select(this).select("circle").transition()
+          .duration(750)
+          .attr("r", 30);
+    }
+    
+    function expand(){
+      var clickedId = d3.select(this).select("id")[0][0].getAttribute("id");
+      var clickedNode = nodes[clickedId];
+      var docs = clickedNode.documents;
+      var argstring = "?";
+      docs.forEach(function (doc){
+        argstring = argstring + "document=" + doc.id + "&"
+      });
+      newNodes = JSON.parse(httpGet("/retrieve_documents"+argstring));
+    }
+    
+    function mouseout() {
+      d3.select(this).select("circle").transition()
+          .duration(750)
+          .attr("r", 15);
+    }
+
+    // set up the D3 visualisation in the specified element
+    var w = 1000,
+        h = 1000;
+
+    var vis = this.vis = d3.select(el).append("svg:svg")
+        .attr("width", w)
+        .attr("height", h);
+
+    var force = d3.layout.force()
+        .gravity(.05)
+        .distance(100)
+        .charge(-100)
+        .size([w, h]);
+
+    var nodes = force.nodes(),
+        links = force.links();
+
+    var update = function () {
+
+        var link = vis.selectAll("line.link")
+            .data(links, function(d) { return d.source.id + "-" + d.target.id; });
+
+        link.enter().insert("line")
+            .attr("class", "link");
+
+        link.exit().remove();
+
+        var node = vis.selectAll("g.node")
+            .data(nodes, function(d) { return d.id;});
+
+        var nodeEnter = node.enter().append("g")
+            .attr("class", "node")
+            .call(force.drag);
+
+        nodeEnter.append("circle")
+            .attr("r", 15);
+
+        nodeEnter.append("image")
+            .attr("class", "circle")
+            .attr("x", "-8px")
+            .attr("y", "-8px")
+            .attr("width", "16px")
+            .attr("height", "16px")
+            .on("mouseover", mouseover)
+            .on("click", expand)
+            .on("mouseout", mouseout);
+
+        nodeEnter.append("text")
+            .attr("class", "nodetext")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) {return d.title});
+
+        nodeEnter.append("id").attr("id", function(d) {return d.id;});
+        
+        node.exit().remove();
+
+        force.on("tick", function() {
+          link.attr("x1", function(d) { return d.source.x; })
+              .attr("y1", function(d) { return d.source.y; })
+              .attr("x2", function(d) { return d.target.x; })
+              .attr("y2", function(d) { return d.target.y; });
+
+          node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        });
+
+        // Restart the force layout.
+        force.start();
+    }
+
+    // Make it all go
+    update();
+};
+
+graph = new myGraph("#graph");
+
+console.log("hello");
 // http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
-var graph = JSON.parse(httpGet("/search_entity?entityName=Brazil"))
-var links = graph.links
+graphObj = JSON.parse(httpGet("/search_entity?entityName=Brazil"));
 
-var nodes = {};
+vlinks = graphObj.links;
+vnodes = graphObj.nodes;
 
-// Compute the distinct nodes from the links.
-links.forEach(function(link) {
-  link.source = nodes[link.source.name] || (nodes[link.source.name] = link.source);
-  link.target = nodes[link.target.name] || (nodes[link.target.name] = link.target);
-});
+for (var i = vnodes.length - 1; i >= 0; i--) {
+    graph.addNode(vnodes[i]);
+};
+for (var i = vlinks.length - 1; i >= 0; i--) {
+    graph.addLink(vlinks[i].source.id, vlinks[i].target.id);
+};
 
-var width = 960,
-    height = 500;
 
-var force = d3.layout.force()
-    .nodes(d3.values(nodes))
-    .links(links)
-    .size([width, height])
-    .linkDistance(100)
-    .charge(-600)
-    .on("tick", tick)
-    .start();
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-var link = svg.selectAll(".link")
-    .data(force.links())
-  .enter().append("line")
-    .attr("class", "link");
-
-var node = svg.selectAll(".node")
-    .data(force.nodes())
-  .enter().append("g")
-    .attr("class", "node")
-    .on("mouseover", mouseover)
-    .on("click", expand)
-    .on("mouseout", mouseout)
-    .call(force.drag);
-
-node.append("circle")
-    .attr("r", 15);
-
-node.append("text")
-    .attr("x", 12)
-    .attr("dy", ".35em")
-    .text(function(d) { return d.title; });
-
-function tick() {
-  link
-      .attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
-
-  node
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-}
-
-function mouseover() {
-  d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 30);
-}
-
-function expand(){
-  
-  d3.select(this).select("circle").fill("#ccc");
-}
-
-function mouseout() {
-  d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 15);
-}
-
+// You can do this from the console as much as you like...
 </script>
