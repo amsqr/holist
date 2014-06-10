@@ -11,6 +11,8 @@ import json
 import ast
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
 
+import datetime
+
 NUMBER_OF_LSH_INDEXES = 10
 NUMBER_OF_BITS_PER_HASH = 6
 
@@ -33,6 +35,9 @@ class LshManager(object):
         lsa_vector = document.vectors["LSA"]
 
         dense_vector = self._sparseToDenseConverter(lsa_vector)
+
+        if not hasattr(document, "timestamp"):
+            document.timestamp = str(datetime.datetime.now())
 
         extra = json.dumps({
             "id": document._id,
