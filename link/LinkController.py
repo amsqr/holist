@@ -34,7 +34,7 @@ def bsonToClientBson(bson):
     return clientDoc
 
 TESTING = True
-REBUILD = False
+REBUILD = True
 
 class LinkController(object):
 

@@ -66,7 +66,11 @@ class LshManager(object):
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
-            res = ast.literal_eval(result[0].replace("}\"", "}").replace("\"{", "{").replace("\\", ""))
+            try:
+                res = ast.literal_eval(result[0].replace("}\"", "}").replace("\"{", "{").replace("\\", ""))
+            except SyntaxError:
+                ln.debug("Couldn't literaleval: %s", result[0])
+                return []
 
             docJson = json.dumps(res[1])
             if not docJson in resultSet:
