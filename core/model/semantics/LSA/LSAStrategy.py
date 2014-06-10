@@ -134,7 +134,7 @@ class LSAStrategy(ISemanticsStrategy):
 
             prep = (doc.preprocessed for doc in documents)
 
-            if not relabel:
+            if not relabel or model.projection.u is None:
                 model.add_documents(prep)
 
             # add the document vector space representations
