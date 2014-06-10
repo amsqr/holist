@@ -171,7 +171,8 @@ class LSAStrategy(ISemanticsStrategy):
         import os
         for filename in os.listdir(os.getcwd()+"/persist"):
             if filename.endswith(".lsa"):
-                model = models.lsimodel.LsiModel.load(filename)
+                loadfilename = "persist/"+filename
+                model = models.lsimodel.LsiModel.load(loadfilename)
                 sourceType = filename[6:-4]
                 self.models[sourceType] = model
                 ln.info("loaded model %s for sourceType %s", filename, sourceType)

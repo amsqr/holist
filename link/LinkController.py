@@ -29,7 +29,8 @@ def bsonToClientBson(bson):
     clientDoc["id"] = str(bson["_id"])
     clientDoc["title"] = bson["title"]
     clientDoc["text"] = bson["text"]
-    clientDoc["timestamp"] = bson["timestamp"]
+    #TODO all documents MUST have timestamps
+    clientDoc["timestamp"] = bson.get("timestamp", str(datetime.datetime.now()))
     return clientDoc
 
 TESTING = True
