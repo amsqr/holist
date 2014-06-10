@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+
+    <link href="Assets/Template/main.holist.css" rel="stylesheet" type="text/css"/>
+    <link href="Vendor/Plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="Assets/holist.css" rel="stylesheet" type="text/css"/>
+
+
+</head>
+<body ng-app="App">
+
+<section ng-include  src=" 'App/Views/header.html' " id="header" class="top-header"></section>
+
+
+<div class="view-container">
+    <section  ui-view="" id="content" ></section>
+    <div class="clearfix"></div>
+
+    <footer class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-md-8">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                </div>
+                <div class="col-md-4">
+                    <p class="muted pull-right">&copy; 2014 holist. All rights reserved</p>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+
+</div>
+
+<!-- vendor JS -->
+<script src="Vendor/jquery/dist/jquery.js"></script>
+<script src="Vendor/angular/angular.js"></script>
+<script src="Vendor/angular-resource/angular-resource.min.js"></script>
+<script src="Vendor/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="Vendor/moment/moment.js"></script>
+<script src="Vendor/angular-moment/angular-moment.js"></script>
+<script src="Vendor/Plugins/angular-ui/angular.ui.0.10.tpl.js"></script>
+<script src="Vendor/angular-ui/build/angular-ui.min.js"></script>
+<script src="Vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+<!--<script src="http://d3js.org/d3.v2.js?2.9.1"></script>-->
+
+
+<!-- app -->
+<script src="App/App.js"></script>
+<script src="App/Config/development.js"></script>
+<script src="App/Services/GraphService.js"></script>
+
+
+
+<script src="App/Controller/HomeController.js"></script>
+<script src="App/Controller/LoginController.js"></script>
+<script src="App/Controller/ReadlistController.js"></script>
+
+
+
+
+
+
+</body>
+</html>

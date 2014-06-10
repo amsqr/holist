@@ -1,0 +1,40 @@
+
+<form class="col-sm-6" id="graphSearch" ng-submit="onSearch()" name="graphSearch">
+
+    <input type="text"
+           ng-model="searchKeyword"
+           typeahead="state for state in searchResults | filter:$viewValue | limitTo:8"
+           class="form-control"
+           placeholder="Search" ng-required="" ng-minlength="3">
+
+</form>
+
+
+
+<graph search="searchKeyword" id="graph"></graph>
+
+
+
+<div class="page-forgot">
+
+
+    <div class="info text-center">
+        <h2>Newsletter</h2>
+        <p class="text-small">Enter your email address to get newest information about holist.</p>
+    </div>
+
+    <div class="form-container">
+
+        <form class="form-horizontal" name="forgotPasswordForm">
+            <div class="form-group">
+                <input type="email"
+                       class="form-control input-lg"
+                       placeholder="Email">
+            </div>
+            <div class="form-group">
+                <a href="#/" class="btn btn-lg btn-block btn-primary" >Send</a>
+            </div>
+        </form>
+
+    </div>
+</div>

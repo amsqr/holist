@@ -57,7 +57,7 @@ class RetrieveDocuments(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
-        documentIds = cgi.escape(request.args["document"])
+        documentIds = [cgi.escape(d) for d in request.args["document"]]
 
         ln.info("Somebody is trying to retrieve documents: %s", documentIds)
         # TODO: create LinkController.retrieveDocuments(documentIds)

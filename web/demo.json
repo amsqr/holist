@@ -1,0 +1,391 @@
+{
+    "nodes": [
+        {
+            "title": "Brazil",
+            "id": "center",
+            "name": "center"
+        },
+        {
+            "documents": [
+                {
+                    "id": "5395af26a829198794f9aaa6",
+                    "title": "Inzaghi in for Seedorf at Milan"
+                },
+                {
+                    "id": "5395a4c3a829198794f9aa6a",
+                    "title": "This Week in Fiction: David Gilbert"
+                }
+            ],
+            "title": "Inzaghi in for Seedorf at Milan",
+            "id": "cluster_0",
+            "name": "cluster_0"
+        },
+        {
+            "documents": [
+                {
+                    "id": "53959479a8291975cdf3fb19",
+                    "title": "AUDIO: How fist fights shaped the human face"
+                },
+                {
+                    "id": "53959fcba8291975cdf3fb31",
+                    "title": "Strike Continues Ahead of World Cup"
+                }
+            ],
+            "title": "AUDIO: How fist fights shaped the human face",
+            "id": "cluster_1",
+            "name": "cluster_1"
+        },
+        {
+            "documents": [
+                {
+                    "id": "539581cca8291975cdf3fade",
+                    "title": "Stephen Lee pleads guilty to fraud"
+                }
+            ],
+            "title": "Stephen Lee pleads guilty to fraud",
+            "id": "cluster_2",
+            "name": "cluster_2"
+        },
+        {
+            "documents": [
+                {
+                    "id": "53923220a829196d7a1ab02c",
+                    "title": "This Week in Fiction: David Gilbert"
+                },
+                {
+                    "id": "53923220a829196d7a1ab00e",
+                    "title": "Activists: Where are they now?"
+                },
+                {
+                    "id": "53923220a829196d7a1aafaf",
+                    "title": "Big World Cup blow for France"
+                },
+                {
+                    "id": "53923220a829196d7a1aaf93",
+                    "title": "Day in pictures: 5 June 2014"
+                },
+                {
+                    "id": "53923220a829196d7a1aaf97",
+                    "title": "Day in pictures: 4 June 2014"
+                },
+                {
+                    "id": "53923220a829196d7a1ab0b4",
+                    "title": "Security to Be Tested at the 'Cup of Cups'"
+                },
+                {
+                    "id": "53923220a829196d7a1aafd3",
+                    "title": "Go inside Brazil's war on drugs"
+                },
+                {
+                    "id": "53923220a829196d7a1ab078",
+                    "title": "Uber CEO Travis Kalanick: We're Doubling Revenue Every Six Months"
+                }
+            ],
+            "title": "This Week in Fiction: David Gilbert",
+            "id": "cluster_3",
+            "name": "cluster_3"
+        },
+        {
+            "documents": [
+                {
+                    "id": "53948311a8291975cdf3fa3d",
+                    "title": "Cameroon settle World Cup pay dispute"
+                }
+            ],
+            "title": "Cameroon settle World Cup pay dispute",
+            "id": "cluster_4",
+            "name": "cluster_4"
+        },
+        {
+            "documents": [
+                {
+                    "id": "5394791ca8291975cdf3fa31",
+                    "title": "Gayle Talks of Ups and Downs Ahead of 100th Test"
+                }
+            ],
+            "title": "Gayle Talks of Ups and Downs Ahead of 100th Test",
+            "id": "cluster_5",
+            "name": "cluster_5"
+        },
+        {
+            "documents": [
+                {
+                    "id": "53944ee1a82919756a38df0a",
+                    "title": "32 players to watch during World Cup"
+                }
+            ],
+            "title": "32 players to watch during World Cup",
+            "id": "cluster_6",
+            "name": "cluster_6"
+        },
+        {
+            "documents": [
+                {
+                    "id": "53941054a829197176ed3862",
+                    "title": "Topless travel photos a hit"
+                }
+            ],
+            "title": "Topless travel photos a hit",
+            "id": "cluster_7",
+            "name": "cluster_7"
+        },
+        {
+            "documents": [
+                {
+                    "id": "5392e260a829197176ed383d",
+                    "title": "Big World Cup blow for France"
+                },
+                {
+                    "id": "5392dcfca829196d7a1ab167",
+                    "title": "Treasury 'Buzzfeed' drops Lego shots"
+                }
+            ],
+            "title": "Big World Cup blow for France",
+            "id": "cluster_8",
+            "name": "cluster_8"
+        },
+        {
+            "documents": [
+                {
+                    "id": "53924b00a829196d7a1ab0f1",
+                    "title": "Commentary: Uber's $18.2b Valuation is a Head Scratcher"
+                }
+            ],
+            "title": "Commentary: Uber's $18.2b Valuation is a Head Scratcher",
+            "id": "cluster_9",
+            "name": "cluster_9"
+        }
+    ],
+    "links": [
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "5395af26a829198794f9aaa6",
+                        "title": "Inzaghi in for Seedorf at Milan"
+                    },
+                    {
+                        "id": "5395a4c3a829198794f9aa6a",
+                        "title": "This Week in Fiction: David Gilbert"
+                    }
+                ],
+                "title": "Inzaghi in for Seedorf at Milan",
+                "id": "cluster_0",
+                "name": "cluster_0"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "53959479a8291975cdf3fb19",
+                        "title": "AUDIO: How fist fights shaped the human face"
+                    },
+                    {
+                        "id": "53959fcba8291975cdf3fb31",
+                        "title": "Strike Continues Ahead of World Cup"
+                    }
+                ],
+                "title": "AUDIO: How fist fights shaped the human face",
+                "id": "cluster_1",
+                "name": "cluster_1"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "539581cca8291975cdf3fade",
+                        "title": "Stephen Lee pleads guilty to fraud"
+                    }
+                ],
+                "title": "Stephen Lee pleads guilty to fraud",
+                "id": "cluster_2",
+                "name": "cluster_2"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "53923220a829196d7a1ab02c",
+                        "title": "This Week in Fiction: David Gilbert"
+                    },
+                    {
+                        "id": "53923220a829196d7a1ab00e",
+                        "title": "Activists: Where are they now?"
+                    },
+                    {
+                        "id": "53923220a829196d7a1aafaf",
+                        "title": "Big World Cup blow for France"
+                    },
+                    {
+                        "id": "53923220a829196d7a1aaf93",
+                        "title": "Day in pictures: 5 June 2014"
+                    },
+                    {
+                        "id": "53923220a829196d7a1aaf97",
+                        "title": "Day in pictures: 4 June 2014"
+                    },
+                    {
+                        "id": "53923220a829196d7a1ab0b4",
+                        "title": "Security to Be Tested at the 'Cup of Cups'"
+                    },
+                    {
+                        "id": "53923220a829196d7a1aafd3",
+                        "title": "Go inside Brazil's war on drugs"
+                    },
+                    {
+                        "id": "53923220a829196d7a1ab078",
+                        "title": "Uber CEO Travis Kalanick: We're Doubling Revenue Every Six Months"
+                    }
+                ],
+                "title": "This Week in Fiction: David Gilbert",
+                "id": "cluster_3",
+                "name": "cluster_3"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "53948311a8291975cdf3fa3d",
+                        "title": "Cameroon settle World Cup pay dispute"
+                    }
+                ],
+                "title": "Cameroon settle World Cup pay dispute",
+                "id": "cluster_4",
+                "name": "cluster_4"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "5394791ca8291975cdf3fa31",
+                        "title": "Gayle Talks of Ups and Downs Ahead of 100th Test"
+                    }
+                ],
+                "title": "Gayle Talks of Ups and Downs Ahead of 100th Test",
+                "id": "cluster_5",
+                "name": "cluster_5"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "53944ee1a82919756a38df0a",
+                        "title": "32 players to watch during World Cup"
+                    }
+                ],
+                "title": "32 players to watch during World Cup",
+                "id": "cluster_6",
+                "name": "cluster_6"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "53941054a829197176ed3862",
+                        "title": "Topless travel photos a hit"
+                    }
+                ],
+                "title": "Topless travel photos a hit",
+                "id": "cluster_7",
+                "name": "cluster_7"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "5392e260a829197176ed383d",
+                        "title": "Big World Cup blow for France"
+                    },
+                    {
+                        "id": "5392dcfca829196d7a1ab167",
+                        "title": "Treasury 'Buzzfeed' drops Lego shots"
+                    }
+                ],
+                "title": "Big World Cup blow for France",
+                "id": "cluster_8",
+                "name": "cluster_8"
+            },
+            "value": "1"
+        },
+        {
+            "source": {
+                "title": "Brazil",
+                "id": "center",
+                "name": "center"
+            },
+            "target": {
+                "documents": [
+                    {
+                        "id": "53924b00a829196d7a1ab0f1",
+                        "title": "Commentary: Uber's $18.2b Valuation is a Head Scratcher"
+                    }
+                ],
+                "title": "Commentary: Uber's $18.2b Valuation is a Head Scratcher",
+                "id": "cluster_9",
+                "name": "cluster_9"
+            },
+            "value": "1"
+        }
+    ]
+}
