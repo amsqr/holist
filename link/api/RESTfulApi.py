@@ -24,11 +24,7 @@ class RESTfulApi(object):
         retrieveApi = RetrieveDocuments(self.controller)
         searchSimilarApi = SearchSimilarDocuments(self.controller)
 
-        root.putChild("index.html", File("./web/index.html"))
-        root.putChild("App", File("./web/App"))
-        root.putChild("Assets", File("./web/Assets"))
-        root.putChild("Vendor", File("./web/Vendor"))
-        root.putChild("demo.json?entityName=demo", File("./web/demo.json"))
+        root.putChild("web", File("./web"))
         root.putChild("search_entity", searchApi)
         root.putChild("retrieve_documents", retrieveApi)
         root.putChild("search_similar", searchSimilarApi)
