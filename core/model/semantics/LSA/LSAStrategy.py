@@ -146,7 +146,10 @@ class LSAStrategy(ISemanticsStrategy):
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
     def handleOne(self, text, sourceType="RSSFeed"):
-        dictionary = self.dictionaries[sourceType]
+        dictionary = self.dictionaries.get(sourceType, None)
+        if dictionary is None:
+            dictionary = self.createDictionary(sourceType)
+
         text = self.preprocessor.preprocess(text, dictionary)
         res = {"vectors": []}
         for modelName in self.models:
