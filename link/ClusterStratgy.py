@@ -8,6 +8,8 @@ import datetime
 import requests
 from collections import defaultdict
 
+from dateutil import parser
+
 
 class SimpleClusterStrategy(object):  # just cluster document by date
     def __init__(self, namedEntityIndex, lshManager):
@@ -31,7 +33,10 @@ class SimpleClusterStrategy(object):  # just cluster document by date
         matches = self.lshManager.getSimilarDocuments(entityLSA)
         clusters = defaultdict(list)
         for document in matches:
-            date = datetime.datetime.strptime(document["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
+            try:
+                date = datetime.datetime.strptime(document["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+                date = parser.parse(document["timestamp"])
             bucket = str(date.date()) + " " + str(date.hour)
             clusters[bucket].append(document)
 
