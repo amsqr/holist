@@ -28,7 +28,7 @@ class RESTfulApi(object):
         root.putChild("App", File("./web/App"))
         root.putChild("Assets", File("./web/Assets"))
         root.putChild("Vendor", File("./web/Vendor"))
-        root.putChild("demo.json", File("./web/demo.json"))
+        root.putChild("demo.json?entityName=demo", File("./web/demo.json"))
         root.putChild("search_entity", searchApi)
         root.putChild("retrieve_documents", retrieveApi)
         root.putChild("search_similar", searchSimilarApi)
