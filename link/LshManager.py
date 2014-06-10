@@ -38,7 +38,6 @@ class LshManager(object):
 
         if not hasattr(document, "timestamp"):
             document.timestamp = str(datetime.datetime.now())
-        else
 
         extra = json.dumps({
             "id": document._id,
