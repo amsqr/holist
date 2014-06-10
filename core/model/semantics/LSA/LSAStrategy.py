@@ -146,6 +146,9 @@ class LSAStrategy(ISemanticsStrategy):
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
     def handleOne(self, text, sourceType="RSSFeed"):
+        if not self.models:
+            self.load()
+
         dictionary = self.dictionaries.get(sourceType, None)
         if dictionary is None:
             dictionary = self.createDictionary(sourceType)
