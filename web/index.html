@@ -1,216 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <script type="text/javascript" src="http://d3js.org/d3.v2.js?2.9.1"></script>
-    <style type="text/css">
-        .link { stroke: #ccc; }
-        .nodetext { pointer-events: none; font: 10px sans-serif; }
-        body { width:100%; height:100%; margin:none; padding:none; }
-        #graph { width:1500px;height:1500px; }
 
 
-        .link {
-          fill: none;
-          stroke: #666;
-          stroke-width: 1.5px;
-        }
-        
-        .node circle {
-          fill: #ccc;
-          stroke: #fff;
-          stroke-width: 1.5px;
-        }
-        
-        text {
-          font: 10px sans-serif;
-          pointer-events: none;
-        }
+    <link href="Assets/Template/main.holist.css" rel="stylesheet" type="text/css"/>
+    <link href="Vendor/Plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="Assets/holist.css" rel="stylesheet" type="text/css"/>
 
 
-    </style>
 </head>
-<body>
-<div id="graph"></div>
+<body ng-app="App">
+
+<section ng-include  src=" 'App/Views/header.html' " id="header" class="top-header"></section>
+
+
+<div class="view-container">
+    <section  ui-view="" id="content" ></section>
+    <div class="clearfix"></div>
+
+    <footer class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-md-8">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                </div>
+                <div class="col-md-4">
+                    <p class="muted pull-right">&copy; 2014 holist. All rights reserved</p>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+
+</div>
+
+
+<!-- vendor JS -->
+<script src="Vendor/jquery/dist/jquery.js"></script>
+<script src="Vendor/angular/angular.js"></script>
+<script src="Vendor/angular-resource/angular-resource.min.js"></script>
+<script src="Vendor/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="Vendor/moment/moment.js"></script>
+<script src="Vendor/angular-moment/angular-moment.js"></script>
+<script src="Vendor/Plugins/angular-ui/angular.ui.0.10.tpl.js"></script>
+<script src="Vendor/angular-ui/build/angular-ui.min.js"></script>
+<script src="Vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+<!--<script src="http://d3js.org/d3.v2.js?2.9.1"></script>-->
+
+
+<!-- app -->
+<script src="App/App.js"></script>
+<script src="App/Config/development.js"></script>
+<script src="App/Services/Graph.js"></script>
+<script src="App/Services/GraphService.js"></script>
+
+
+
+<script src="App/Controller/HomeController.js"></script>
+<script src="App/Controller/LoginController.js"></script>
+<script src="App/Controller/ReadlistController.js"></script>
+
+
+
+
+
+
 </body>
-
-<script type="text/javascript"> 
-function httpGet(theUrl)
-{
-    var xmlHttp = null;
-
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false );
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
-}
-
-
-function myGraph(el) {
-
-    // Add and remove elements on the graph object
-    this.addNode = function (node) {
-        nodes.push(node);
-        update();
-    }
-
-    this.removeNode = function (id) {
-        var i = 0;
-        var n = findNode(id);
-        while (i < links.length) {
-            if ((links[i]['source'] === n)||(links[i]['target'] == n)) links.splice(i,1);
-            else i++;
-        }
-        var index = findNodeIndex(id);
-        if(index !== undefined) {
-            nodes.splice(index, 1);
-            update();
-        }
-    }
-
-    this.addLink = function (sourceId, targetId) {
-        var sourceNode = findNode(sourceId);
-        var targetNode = findNode(targetId);
-
-        if((sourceNode !== undefined) && (targetNode !== undefined)) {
-            links.push({"source": sourceNode, "target": targetNode});
-            update();
-        }
-    }
-
-    var findNode = function (id) {
-        for (var i=0; i < nodes.length; i++) {
-            if (nodes[i].id === id)
-                return nodes[i]
-        };
-    }
-
-    var findNodeIndex = function (id) {
-        for (var i=0; i < nodes.length; i++) {
-            if (nodes[i].id === id)
-                return i
-        }
-        return -1;
-    }
-
-    function mouseover() {
-      d3.select(this).select("circle").transition()
-          .duration(750)
-          .attr("r", 30);
-    }
-    
-    function expand(){
-      var clickedId = d3.select(this)[0][0].getAttribute("id");
-      var clickedNode = findNode(clickedId);
-      try{
-        var docs = clickedNode.documents;
-        var argstring = "?";
-        docs.forEach(function (doc){
-            argstring = argstring + "document=" + doc.id + "&"
-        });
-        var newNodes = JSON.parse(httpGet("/retrieve_documents"+argstring));
-      }
-      catch(err){
-        newNodes =JSON.parse(httpGet("/search_similar?id="+clickedId));
-      }
-      newNodes.documents.forEach(function(doc){
-            var idx = findNodeIndex(doc.id);
-            if(  idx == -1){
-                graph.addNode(doc);
-            };
-            graph.addLink(clickedId, doc.id)
-        })
-    }
-    
-    function mouseout() {
-      d3.select(this).select("circle").transition()
-          .duration(750)
-          .attr("r", 15);
-    }
-
-    // set up the D3 visualisation in the specified element
-    var w = 1500,
-        h = 1500;
-
-    var vis = this.vis = d3.select(el).append("svg:svg")
-        .attr("width", w)
-        .attr("height", h);
-
-    var force = d3.layout.force()
-        .gravity(.04)
-        .distance(150)
-        .charge(-850)
-        .size([w, h]);
-
-    var nodes = force.nodes(),
-        links = force.links();
-
-    var update = function () {
-
-        var link = vis.selectAll("line.link")
-            .data(links, function(d) { return d.source.id + "-" + d.target.id; });
-
-        link.enter().insert("line")
-            .attr("class", "link");
-
-        link.exit().remove();
-
-        var node = vis.selectAll("g.node")
-            .data(nodes, function(d) { return d.id;});
-
-        var nodeEnter = node.enter().append("g")
-            .attr("class", "node")
-            .call(force.drag);
-
-        nodeEnter.append("circle")
-            .attr("r", 15)
-            .attr("id", function(d) {return d.id;})
-            .on("mouseover", mouseover)
-            .on("click", expand)
-            .on("mouseout", mouseout);
-
-        nodeEnter.append("text")
-            .attr("class", "nodetext")
-            .attr("dx", 12)
-            .attr("dy", ".35em")
-            .text(function(d) {return d.title});
-
-        
-
-        node.exit().remove();
-
-        force.on("tick", function() {
-          link.attr("x1", function(d) { return d.source.x; })
-              .attr("y1", function(d) { return d.source.y; })
-              .attr("x2", function(d) { return d.target.x; })
-              .attr("y2", function(d) { return d.target.y; });
-
-          node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-        });
-
-        // Restart the force layout.
-        force.start();
-    }
-
-    // Make it all go
-    update();
-};
-
-graph = new myGraph("#graph");
-
-console.log("hello");
-// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
-graphObj = JSON.parse(httpGet("/search_entity?entityName=Google"));
-
-vlinks = graphObj.links;
-vnodes = graphObj.nodes;
-
-for (var i = vnodes.length - 1; i >= 0; i--) {
-    graph.addNode(vnodes[i]);
-};
-for (var i = vlinks.length - 1; i >= 0; i--) {
-    graph.addLink(vlinks[i].source.id, vlinks[i].target.id);
-};
-
-
-// You can do this from the console as much as you like...
-</script>
+</html>
