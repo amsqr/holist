@@ -61,8 +61,8 @@ class RetrieveDocuments(Resource):
 
         ln.info("Somebody is trying to retrieve documents: %s", documentIds)
         # TODO: create LinkController.retrieveDocuments(documentIds)
-        self.controller.retrieveDocuments(documentIds)
-
+        return json.dumps(self.controller.retrieveDocuments(documentIds))
+"""
         return json.dumps({
             "documents": [
                 {
@@ -85,7 +85,7 @@ class RetrieveDocuments(Resource):
                 }
             ]
         })
-
+"""
 
 class SearchSimilarDocuments(Resource):
     def __init__(self, controller):
@@ -93,12 +93,12 @@ class SearchSimilarDocuments(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
-        docId = cgi.escape(request.args["document"][0])
+        docId = cgi.escape(request.args["id"][0])
 
         ln.info("Somebody just performed a search for similar documents: %s.", docId)
         # TODO: create LinkController.searchSimilar
-        self.controller.searchSimilar(docId)
-
+        return json.dumps(self.controller.searchSimilar(docId))
+"""
         return json.dumps({
             "documents":[
                 {
@@ -117,4 +117,4 @@ class SearchSimilarDocuments(Resource):
                     "text": "blah blah blah IPO"
                 }
             ]
-        })
+        })"""

@@ -20,7 +20,7 @@ lsa_strategy_port = 1159
 ner_strategy_port = 1160
 
 link_node_ip = "localhost"
-link_node_port = 8081
+link_node_port = 80
 
 
 

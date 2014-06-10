@@ -1,10 +1,12 @@
 angular.
     module('App')
     .controller('HomeController', function($scope,$stateParams,$state, GraphService) {
-        console.log('index Controller loaded');
+
 
         if ($stateParams.query) {
-            $scope.searchKeyword = $stateParams.query;
+            $scope.searchKeyword = $scope.currentSearch = $stateParams.query;
+        } else {
+            $scope.currentSearch = 'demo';
         }
         //
         // autocompletion with typeahead

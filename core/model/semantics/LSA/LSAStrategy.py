@@ -134,7 +134,7 @@ class LSAStrategy(ISemanticsStrategy):
 
             prep = (doc.preprocessed for doc in documents)
 
-            if not relabel:
+            if not relabel or model.projection.u is None:
                 model.add_documents(prep)
 
             # add the document vector space representations
@@ -146,7 +146,10 @@ class LSAStrategy(ISemanticsStrategy):
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
     def handleOne(self, text, sourceType="RSSFeed"):
-        dictionary = self.dictionaries[sourceType]
+        dictionary = self.dictionaries.get(sourceType, None)
+        if dictionary is None:
+            dictionary = self.createDictionary(sourceType)
+
         text = self.preprocessor.preprocess(text, dictionary)
         res = {"vectors": []}
         for modelName in self.models:
@@ -171,7 +174,8 @@ class LSAStrategy(ISemanticsStrategy):
         import os
         for filename in os.listdir(os.getcwd()+"/persist"):
             if filename.endswith(".lsa"):
-                model = models.lsimodel.LsiModel.load(filename)
+                loadfilename = "persist/"+filename
+                model = models.lsimodel.LsiModel.load(loadfilename)
                 sourceType = filename[6:-4]
                 self.models[sourceType] = model
                 ln.info("loaded model %s for sourceType %s", filename, sourceType)
