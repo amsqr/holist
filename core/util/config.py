@@ -22,7 +22,7 @@ ner_strategy_port = 1160
 
 link_node_ip = "localhost"
 link_node_port = 80
-link_node_control_port = 70112
+link_node_control_port = 60112
 
 
 
