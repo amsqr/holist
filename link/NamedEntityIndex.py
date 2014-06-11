@@ -28,10 +28,14 @@ class NamedEntityIndex(object):
 
     def save(self):
         with open("./persist/NERIndex.idx", "w") as f:
-            f.write(str(self.index))
+            f.write(str(dict(self.index)))
 
     def load(self):
         with open("./persist/NERIndex.idx", "r") as f:
-            self.index = ast.literal_eval(f.read())
+            index = ast.literal_eval(f.read())
+            self.index = defaultdict(list)
+            for entry in index:
+                self.index[entry] = index[entry]
+
 
 

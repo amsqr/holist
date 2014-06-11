@@ -20,6 +20,7 @@ class RESTfulApi(object):
     def setupResources(self):
         root = Resource()
 
+        complete = CompleteSearch(self.controller)
         searchApi = SearchEntity(self.controller)
         retrieveApi = RetrieveDocuments(self.controller)
         searchSimilarApi = SearchSimilarDocuments(self.controller)
@@ -30,6 +31,7 @@ class RESTfulApi(object):
 
         root.putChild("holist", holist)
         root.putChild("favorites", favorite)
+        root.putChild("complete_search", complete)
         root.putChild("search_entity", searchApi)
         root.putChild("retrieve_documents", retrieveApi)
         root.putChild("search_similar", searchSimilarApi)

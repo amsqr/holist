@@ -16,6 +16,8 @@ from link.LshManager import LshManager
 from link.NamedEntityIndex import NamedEntityIndex
 from link.ClusterStratgy import SimpleClusterStrategy
 
+from collections import defaultdict
+
 CORE_IP = "localhost"
 REGISTER_PORT = config.holistcoreport
 LISTEN_PORT = config.link_node_port + 1
@@ -64,7 +66,7 @@ class LinkController(object):
         lshcount, nercount, lshfailed, nerfailed = 0, 0, 0, 0
 
         self.lshManager.clearIndex()
-        self.namedEntityIndex.index = {}
+        self.namedEntityIndex.index = defaultdict(list)
 
         client = getDatabaseConnection()
         for articleBSON in client.holist.articles.find():
