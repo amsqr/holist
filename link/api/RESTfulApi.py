@@ -24,7 +24,7 @@ class RESTfulApi(object):
         searchApi = SearchEntity(self.controller)
         retrieveApi = RetrieveDocuments(self.controller)
         searchSimilarApi = SearchSimilarDocuments(self.controller)
-        favorite = Favorite()
+        favorite = Favorite(self.controller)
 
         holist = Resource()
         holist.putChild("web", File("./web"))
@@ -63,8 +63,9 @@ class LinkControlInterface(Resource):
 
 
 class Favorite(Resource):
-    def __init__(self):
+    def __init__(self, controller):
         self.favorites = []
+        self.controller = controller
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
