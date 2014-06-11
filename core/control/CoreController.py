@@ -59,12 +59,12 @@ class CoreController(object):
         self.updateLoop.start(10)
 
         if RELABEL:
-            reactor.callLater(15, self._relabelStrategy, "LSA")
+            reactor.callLater(15, self.relabelStrategy, "LSA")
 
         ln.info("running reactor.")
         reactor.run()
 
-    def _relabelStrategy(self, strategy):
+    def relabelStrategy(self, strategy):
         deferToThread(self.strategyManager.relabelStrategy, strategy)
 
     def connectToDataSupply(self):

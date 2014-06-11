@@ -1,5 +1,4 @@
 __author__ = 'dowling'
-__author__ = 'dowling'
 import requests
 from core.util import config
 print "requesting LSA relabel of all documents."
