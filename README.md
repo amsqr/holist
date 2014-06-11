@@ -6,6 +6,7 @@ To start core and data collection, from top level folder execute:
     # python NER_startup.py
 	# python coreStartup.py
 	# python collectStartup.py
+	# sudo python linkStartup.py
 
 in separate terminals. (The first two should eventually be merged into a bash script that just starts all available strategies.)
 
