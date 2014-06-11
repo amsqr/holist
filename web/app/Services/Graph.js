@@ -141,7 +141,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
         nodeEnter.append("circle")
             .attr("r", function(d) {
-                return 30 * Math.random(); // @todo: change to d.weight if it has sensible values
+                return 30 * Math.random() + 2; // @todo: change to d.weight if it has sensible values
             })
             .attr("id", function(d) {
                 return d.id
