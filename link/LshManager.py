@@ -66,7 +66,7 @@ class LshManager(object):
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
-            ln.debug("About to literal_eval: %s", result[0])
+            ln.debug("About to literal_eval: %s (type: %s)", result[0], type(result[0]))
             try:
                 res = ast.literal_eval(result[0].replace("}\"", "}").replace("\"{", "{").replace("\\", ""))
             except SyntaxError:
