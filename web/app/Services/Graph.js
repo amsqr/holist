@@ -25,9 +25,9 @@ function GraphFactory($http,AppSettings,$q,$log) {
         // get window dimensions
         fullScreenGraph();
         force = d3.layout.force()
-            .gravity(.05)
+            .gravity(.01)
             .distance(150)
-            .charge(-100)
+            .charge(-200)
             .size([w, h]);
         //    .tick(self.tick);
 
@@ -141,7 +141,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
         nodeEnter.append("circle")
             .attr("r", function(d) {
-                return 30 * Math.random(); // @todo: change to d.weight if it has sensible values
+                return 30 * Math.random() + 2; // @todo: change to d.weight if it has sensible values
             })
             .attr("id", function(d) {
                 return d.id
