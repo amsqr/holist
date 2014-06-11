@@ -3,8 +3,6 @@
 
 - Core: don't send documents to link without both named entities and LSA vector
 
-- Link: persist the known named entities
-- Link: implement article retrieval, named entity auto completion, similar document search
 - Link: add more clustering methods
 - Link: think about different "seeds" than just the search term in LSA space
 - Link: find a way to retrieve linked entities
