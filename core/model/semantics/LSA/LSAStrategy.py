@@ -131,7 +131,6 @@ class LSAStrategy(ISemanticsStrategy):
             if model is None:
                 model = self.createModel(sourceType, dictionary)
 
-
             for doc in documents:
                 self.preprocessor.preprocess(doc, dictionary)
 
