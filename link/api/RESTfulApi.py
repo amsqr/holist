@@ -23,11 +23,13 @@ class RESTfulApi(object):
         searchApi = SearchEntity(self.controller)
         retrieveApi = RetrieveDocuments(self.controller)
         searchSimilarApi = SearchSimilarDocuments(self.controller)
+        favorite = Favorite()
 
         holist = Resource()
         holist.putChild("web", File("./web"))
 
         root.putChild("holist", holist)
+        root.putChild("favorites", favorite)
         root.putChild("search_entity", searchApi)
         root.putChild("retrieve_documents", retrieveApi)
         root.putChild("search_similar", searchSimilarApi)
@@ -56,6 +58,33 @@ class LinkControlInterface(Resource):
 
         request.setResponseCode(400)
         return "Unknown command."
+
+
+class Favorite(Resource):
+    def __init__(self):
+        self.favorites = []
+
+    def render_GET(self, request):
+        request.setHeader("content-type", "application/json")
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
+
+        ln.info("Favorites: %s", self.favorites)
+        return json.dumps(self.controller.retrieveDocuments(self.favorites))
+
+    def render_POST(self, request):
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
+
+        ids = [cgi.escape(docid) for docid in request.args["document_id"]]
+        if not ids:
+            request.setResponseCode(400)
+            return "No document_id found."
+
+        self.favorites += ids
+
+        return "Ok."
+
 
 # this API returns a graph for a given entity string
 class SearchEntity(Resource):
