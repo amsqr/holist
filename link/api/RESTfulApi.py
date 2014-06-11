@@ -156,6 +156,8 @@ class CompleteSearch(Resource):
         self.controller = controller
 
     def render_GET(self, request):
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
         try:
             searchString = cgi.escape(request.args["entityName"][0])
         except KeyError:
