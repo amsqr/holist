@@ -17,9 +17,9 @@ function Graph(d3, el) {
         // get window dimensions
         fullScreenGraph();
         force = d3.layout.force()
-            .gravity(.05)
+            .gravity(.01)
             .distance(150)
-            .charge(-100)
+            .charge(-200)
             .size([w, h]);
         //    .tick(self.tick);
 
