@@ -44,6 +44,8 @@ class SearchEntity(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
         try:
             entityName = cgi.escape(request.args["entityName"][0])
         except KeyError:
@@ -60,6 +62,8 @@ class RetrieveDocuments(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
         documentIds = [cgi.escape(d) for d in request.args["document"]]
 
         ln.info("Somebody is trying to retrieve documents: %s", documentIds)
@@ -96,6 +100,9 @@ class SearchSimilarDocuments(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
+
         docId = cgi.escape(request.args["id"][0])
 
         ln.info("Somebody just performed a search for similar documents: %s.", docId)

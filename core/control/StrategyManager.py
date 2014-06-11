@@ -92,6 +92,7 @@ class StrategyManager(object):
             except:
                 ln.debug(documentBSON)
         results = self.handle(alldocuments, [strategyName])  # all documents with updated vectors
+        ln.debug("Updating labels in database.")
         for document in results:
             count += 1
             client.holist.articles.update({"_id": document._id}, document.__dict__)
@@ -150,6 +151,7 @@ class StrategyManager(object):
 
                 document = docIndex[docId]
                 document.vectors[strategy] = vector
+        ln.debug("done merging.")
 
         allResults = docIndex.values()
 
