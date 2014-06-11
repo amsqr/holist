@@ -143,6 +143,15 @@ class RetrieveDocuments(Resource):
         })
 """
 
+class CompleteSearch(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+
+    def render_GET(self, request):
+        searchString = cgi.escape(request.args["entityName"][0])
+        return json.dumps(self.controller.completeSearch(searchString))
+
+
 class SearchSimilarDocuments(Resource):
     def __init__(self, controller):
         self.controller = controller
