@@ -6,7 +6,8 @@ angular
         'ngSanitize',
         'ui.bootstrap',
         'ui.router',
-        'angularMoment'
+        'angularMoment',
+        'ngRetina'
     ])
 
 .config(function($sceDelegateProvider) {
@@ -23,10 +24,12 @@ angular
             .state('about', {
                 url: '/about',
                 templateUrl: 'App/Views/about.html',
+                controller: 'AboutController'
             })
             .state('services', {
                 url: '/services',
                 templateUrl: 'App/Views/services.html',
+                controller: 'ServicesController'
             })
             .state('pricing', {
                 url: '/pricing',

@@ -28,20 +28,11 @@
 
         </div>
         <div class="col-md-6">
-            <div class="flexslider">
-                <ul class="slides">
-                    <li>
-                        <img src="assets/img/about/introduction/about0.jpg" class="img-responsive" alt="">
-                    </li>
-                    <li>
-                        <img src="assets/img/about/introduction/about1.jpg" class="img-responsive" alt="">
-                    </li>
-                    <li>
-                        <img src="assets/img/about/introduction/about2.jpg" class="img-responsive" alt="">
-                    </li>
-                </ul>
-            </div>
-            <!--flex slider-->
+            <carousel interval="3000">
+                <slide ng-repeat="imageSource in AboutSlides" active="slide.active">
+                    <img ng-src="{{imageSource}}" style="margin:auto;">
+                </slide>
+            </carousel>
         </div>
     </div>
     <!--about company row end-->
