@@ -1,13 +1,12 @@
 angular.
 module('App')
-    .factory('GraphService', function($http, $q, AppSettings, d3Service, $log, $window) {
+    .factory('GraphService', function($http, $controller, AppSettings, d3Service, $log, $window) {
 
         // var url = "/search_entity?entityName=Brazil";
-        //var defaultUrl = "/holist/web/demo.json?entityName=";
-        var defaultUrl = "http://holist.pcdowling.com/search_entity?entityName=";
+        // var defaultUrl = "/holist/web/demo.json?entityName=";
 
         var self = this;
-
+        var graphFactory = $controller(GraphFactory);
 
 
 
@@ -17,13 +16,13 @@ module('App')
         this.inject = function(scope, element, attrs) {
             var initializeGraph = function(d3) {
 
-                var graph = Graph(d3, element[0]);
+                var graph = graphFactory.initGraph(d3, element[0]);
                 scope.render = graph.render;
                 window.onresize = function() {
                     scope.$apply();
                 };
                 scope.$watch('search', function(newKeyword, oldVals) {
-                    return self.fetchData(newKeyword, graph);
+                    return graph.fetchData(newKeyword, graph);
                 }, true);
 
                 scope.$watch(function() {
@@ -39,56 +38,10 @@ module('App')
         }
 
 
-        this.fetchData = function(keyword, targetGraph) {
-
-            console.log('[graph] fetching keyword', keyword);
-            httpGet(defaultUrl + keyword)
-                .then(function(graphObj, status) {
-                    var vlinks = graphObj.links;
-                    var vnodes = graphObj.nodes;
-
-                    targetGraph.clearNodes();
-
-                    for (var i = vnodes.length - 1; i >= 0; i--) {
-                        targetGraph.addNode(vnodes[i]);
-
-                    }
-                    for (var i = vlinks.length - 1; i >= 0; i--) {
-                        targetGraph.addLink(vlinks[i].source.id, vlinks[i].target.id);
-                    }
-                    targetGraph.update();
-
-                });
-
-
-        }
 
 
 
 
-        function httpGet(requestUrl) {
-            var d = $q.defer();
-            $http({
-                method: 'GET',
-                url: requestUrl
-            })
-                .success(function(data, status, headers, config) {
-                    console.log('[GRAPH] Get Data successful', data, status);
-                    d.resolve(data, status);
-                })
-                .error(function(data, status, headers, config) {
-                    d.reject(data, status);
-                });
-
-            return d.promise;
-
-            /*    var xmlHttp = null;
-
-            xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", theUrl, false );
-            xmlHttp.send( null );
-            return xmlHttp.responseText;*/
-        }
 
         return this;
 

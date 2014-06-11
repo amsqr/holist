@@ -39,6 +39,10 @@ text {
   font: 10px sans-serif;
   pointer-events: none; }
 
+#graphPopover {
+  position: absolute;
+  left: -10000px; }
+
 #graphSearch {
   float: none;
   margin-left: auto;
