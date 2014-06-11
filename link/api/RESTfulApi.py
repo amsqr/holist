@@ -36,6 +36,26 @@ class RESTfulApi(object):
         factory = Site(root)
         reactor.listenTCP(config.link_node_port, factory)
 
+        commandRoot = Resource()
+        command = LinkControlInterface(self.controller)
+        commandRoot.putChild("command", command)
+        commandFactory = Site(commandRoot)
+        reactor.listenTCP(config.link_node_control_port, commandFactory)
+
+
+class LinkControlInterface(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+
+    def render_GET(self, request):
+        command = cgi.escape(request.args["command"][0])
+        if command == "rebuild":
+            reactor.callLater(5, self.controller.rebuildIndex)
+            request.setResponseCode(200)
+            return "Triggered index rebuild."
+
+        request.setResponseCode(400)
+        return "Unknown command."
 
 # this API returns a graph for a given entity string
 class SearchEntity(Resource):
