@@ -1,55 +1,52 @@
-<header class="header-main">
-    <div class="top-bar">
+<div class="top-bar">
 
-        <div class="container">
-            <div class="pull-right">
-                <ul class="info list-inline hidden-xs">
-                    <li><a href="signup.html" class="hover-color">Signup</a>
-                    </li>
-                    <li><a href="login.html" class="hover-color"><i class="ion-man"></i>Login</a>
-                    </li>
-                </ul>
-            </div>
+    <div class="container">
+        <div class="pull-right">
+            <ul class="info list-inline hidden-xs">
+                <li><a ui-sref="signup" class="hover-color">Signup</a>
+                </li>
+                <li><a ui-sref="login" class="hover-color"><i class="ion-man"></i>Login</a>
+                </li>
+            </ul>
         </div>
-        <!--container end-->
     </div>
-    <!--topbar end-->
-    <div class="navbar navbar-default sticky-nav" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">
-                    <img src="assets/img/logo/logo-main.png" class="img-responsive" alt="">
-                </a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active">
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li class="">
-                        <a href="about.html">About</a>
-                    </li>
-                    <li class="">
-                        <a href="services.html">Services</a>
-                    </li>
-                    <li class="">
-                        <a href="pricing.html">Pricing</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href=".html">Contact</a>
-                    </li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
+    <!--container end-->
+</div>
+<!--topbar end-->
+<div class="navbar navbar-default sticky-nav" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/img/logo/logo-main.png" class="img-responsive" alt="">
+            </a>
         </div>
-        <!--/.container-->
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active dropdown">
+                    <a ui-sref="index">Home</a>
+                </li>
+                <li class="dropdown">
+                    <a ui-sref="about">About</a>
+                </li>
+                <li class="dropdown">
+                    <a ui-sref="services">Services</a>
+                </li>
+                <li class="dropdown">
+                    <a ui-sref="pricing">Pricing</a>
+                </li>
+                <li class="dropdown">
+                    <a ui-sref="contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
     </div>
-    <!--navigation end-->
-</header>
-<!--header main end-->
+    <!--/.container-->
+</div>
+<!--navigation end-->
