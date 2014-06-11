@@ -16,6 +16,8 @@ from link.LshManager import LshManager
 from link.NamedEntityIndex import NamedEntityIndex
 from link.ClusterStratgy import SimpleClusterStrategy
 
+from collections import defaultdict
+
 CORE_IP = "localhost"
 REGISTER_PORT = config.holistcoreport
 LISTEN_PORT = config.link_node_port + 1
@@ -61,18 +63,29 @@ class LinkController(object):
 
     def rebuildIndex(self):
         ln.info("Triggered complete index rebuild.")
-        count, failed = 0, 0
+        lshcount, nercount, lshfailed, nerfailed = 0, 0, 0, 0
+
         self.lshManager.clearIndex()
+        self.namedEntityIndex.index = defaultdict(list)
+
         client = getDatabaseConnection()
         for articleBSON in client.holist.articles.find():
             doc = convertToDocument(articleBSON)
             try:
                 self.lshManager.addDocument(doc)
-                count += 1
-            except KeyError as e:
-                ln.debug("Document doesn't have LSA vector: %s", articleBSON["_id"])
-                failed += 1
-        ln.info("Rebuild complete. Added %s documents, failed on %s.", count, failed)
+                lshcount += 1
+            except KeyError:
+                #ln.debug("Document doesn't have LSA vector: %s", articleBSON["_id"])
+                lshfailed += 1
+            try:
+                self.namedEntityIndex.addDocument(doc)
+                nercount += 1
+            except KeyError:
+                #ln.debug("Document doesn't have NER annotations: %s", articleBSON["_id"])
+                nerfailed += 1
+        ln.info("Rebuild complete. Added %s LSH and %s NER documents, failed on %s LSA and %s NER.",
+                lshcount, nercount, lshfailed, nerfailed)
+        self.namedEntityIndex.save()
 
     def handleNewDocuments(self, newDocuments):
         documents = []
@@ -85,6 +98,11 @@ class LinkController(object):
         for document in documents:
             self.lshManager.addDocument(document)
             self.namedEntityIndex.addDocument(document)
+        # TODO: better load/save of namedEntityIndex
+        self.namedEntityIndex.save()
+
+    def completeSearch(self, searchString):
+        return [namedEntity for namedEntity in self.namedEntityIndex.index if namedEntity.startswith(searchString)]
 
     def performEntitySearch(self, entityName):
         # check that we know this entity

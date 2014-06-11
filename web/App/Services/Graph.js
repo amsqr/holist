@@ -29,7 +29,7 @@ function Graph(d3, el) {
         self.vis = d3.select(el).append("svg:svg");
         //resize
         fullScreenGraph();
-        jQuery( window ).resize(fullScreenGraph);
+        jQuery(window).resize(fullScreenGraph);
 
 
         // addons
@@ -56,46 +56,49 @@ function Graph(d3, el) {
 
     }
     // Add and remove elements on the graph object
-    this.addNode = function (node) {
+    this.addNode = function(node) {
         nodes.push(node);
     }
 
-    var findNode = function (id) {
-        for (var i=0; i < nodes.length; i++) {
+    var findNode = function(id) {
+        for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id)
                 return nodes[i]
         };
     }
 
-    var findNodeIndex = function (id) {
-        for (var i=0; i < nodes.length; i++) {
+    var findNodeIndex = function(id) {
+        for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id)
                 return i
         };
     }
 
 
-    this.removeNode = function (id) {
+    this.removeNode = function(id) {
         var i = 0;
         var n = findNode(id);
         while (i < links.length) {
-            if ((links[i]['source'] === n)||(links[i]['target'] == n))
-                links.splice(i,1);
+            if ((links[i]['source'] === n) || (links[i]['target'] == n))
+                links.splice(i, 1);
             else i++;
         }
         var index = findNodeIndex(id);
-        if(index !== undefined) {
+        if (index !== undefined) {
             nodes.splice(index, 1);
             self.update();
         }
     }
 
-    this.addLink = function (sourceId, targetId) {
+    this.addLink = function(sourceId, targetId) {
         var sourceNode = findNode(sourceId);
         var targetNode = findNode(targetId);
 
-        if((sourceNode !== undefined) && (targetNode !== undefined)) {
-            links.push({"source": sourceNode, "target": targetNode});
+        if ((sourceNode !== undefined) && (targetNode !== undefined)) {
+            links.push({
+                "source": sourceNode,
+                "target": targetNode
+            });
             //self.update();
         }
     }
@@ -104,10 +107,12 @@ function Graph(d3, el) {
 
 
 
-    self.update = function () {
+    self.update = function() {
 
         var link = self.vis.selectAll("line.link")
-            .data(links, function(d) { return d.source.id + "-" + d.target.id; });
+            .data(links, function(d) {
+                return d.source.id + "-" + d.target.id;
+            });
 
         link.enter().insert("line")
             .attr("class", "link");
@@ -115,7 +120,9 @@ function Graph(d3, el) {
         link.exit().remove();
 
         var node = self.vis.selectAll("g.node")
-            .data(nodes, function(d) { return d.id;});
+            .data(nodes, function(d) {
+                return d.id;
+            });
 
         var nodeEnter = node.enter()
             .append("g")
@@ -124,10 +131,12 @@ function Graph(d3, el) {
 
         nodeEnter.append("circle")
             .attr("r", function(d) {
-                return  30 * Math.random(); // @todo: change to d.weight if it has sensible values
+                return 30 * Math.random(); // @todo: change to d.weight if it has sensible values
             })
-            .attr("id", function(d) { return d.id })
-            .style('cursor','pointer')
+            .attr("id", function(d) {
+                return d.id
+            })
+            .style('cursor', 'pointer')
             .on("mouseover", mouseover)
             .on("mouseout", mouseout)
             .on("click", expand);
@@ -150,19 +159,33 @@ function Graph(d3, el) {
             .attr("class", "nodetext")
             .attr("dx", 12)
             .attr("dy", ".35em")
-            .text(function(d) {return d.title});
+            .text(function(d) {
+                return d.title
+            });
 
-        nodeEnter.append("id").attr("id", function(d) {return d.id;});
+        nodeEnter.append("id").attr("id", function(d) {
+            return d.id;
+        });
 
         node.exit().remove();
 
         force.on("tick", function() {
-            link.attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
+            link.attr("x1", function(d) {
+                return d.source.x;
+            })
+                .attr("y1", function(d) {
+                    return d.source.y;
+                })
+                .attr("x2", function(d) {
+                    return d.target.x;
+                })
+                .attr("y2", function(d) {
+                    return d.target.y;
+                });
 
-            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            node.attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
         });
 
         // Restart the force layout.
@@ -176,10 +199,10 @@ function Graph(d3, el) {
     // =====================================
 
 
-    var expand = function(){
+    var expand = function() {
         var clickedObject = d3.select(this).select("id")[0][0]
         if (!clickedObject)
-            return console.log('could not find clicked object',d3.select(this).select("id"));
+            return console.log('could not find clicked object', d3.select(this).select("id"));
 
 
         var clickedId = clickedObject.getAttribute("id");
@@ -187,10 +210,10 @@ function Graph(d3, el) {
         var clickedNode = nodes[clickedId];
         var docs = clickedNode.documents;
         var argstring = "?";
-        docs.forEach(function (doc){
+        docs.forEach(function(doc) {
             argstring = argstring + "document=" + doc.id + "&"
         });
-        newNodes = JSON.parse(httpGet("/retrieve_documents"+argstring));
+        newNodes = JSON.parse(httpGet("/retrieve_documents" + argstring));
     }
     var mouseout = function() {
 
@@ -206,8 +229,8 @@ function Graph(d3, el) {
 
         popover
             .css('visibility', "visible")
-            .css('left', d3.event.pageX+10+"px")
-            .css('top', d3.event.pageY-10+"px");
+            .css('left', d3.event.pageX + 10 + "px")
+            .css('top', d3.event.pageY - 10 + "px");
         var targetNode = findNode(targetId);
 
         popover.find('p').html(targetNode.title);
@@ -237,7 +260,7 @@ function Graph(d3, el) {
     }
     ///
     //
-    self.tick = function () {
+    self.tick = function() {
         console.log('[GRAPH] tick')
 
     }
@@ -252,7 +275,9 @@ function Graph(d3, el) {
 
     function plugins() {
         d3.selection.prototype.moveToFront = function() {
-            return this.each(function() { this.parentNode.appendChild(this);});
+            return this.each(function() {
+                this.parentNode.appendChild(this);
+            });
         };
 
     }
@@ -261,4 +286,3 @@ function Graph(d3, el) {
     initGraph();
     return this;
 };
-

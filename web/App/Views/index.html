@@ -1,0 +1,16 @@
+<form class="col-sm-6" id="graphSearch" ng-submit="onSearch()" name="graphSearch">
+
+    <input type="text" ng-model="searchKeyword" typeahead="state for state in searchResults | filter:$viewValue | limitTo:8" typeahead-on-select="onSearch()" class="form-control" placeholder="Search" ng-required="" ng-minlength="3">
+
+</form>
+
+<graph search="currentSearch" id="graph"></graph>
+<div id="graphPopover" class="popover right fade in" placement="right" style="display: block;">
+    <div class="arrow"></div>
+
+    <div class="popover-inner">
+        <div class="popover-content ng-binding">
+            <p>On the Right!</p>
+        </div>
+    </div>
+</div>
