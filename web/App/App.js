@@ -18,88 +18,88 @@ angular
         $stateProvider
             .state('index', {
                 url: '/index',
-                templateUrl: 'App/Views/index.html',
+                templateUrl: 'app/Views/index.html',
                 controller: 'HomeController'
             })
             .state('about', {
                 url: '/about',
-                templateUrl: 'App/Views/about.html',
+                templateUrl: 'app/Views/about.html',
                 controller: 'AboutController'
             })
             .state('services', {
                 url: '/services',
-                templateUrl: 'App/Views/services.html',
+                templateUrl: 'app/Views/services.html',
                 controller: 'ServicesController'
             })
             .state('pricing', {
                 url: '/pricing',
-                templateUrl: 'App/Views/pricing.html',
+                templateUrl: 'app/Views/pricing.html',
             })
             .state('contact', {
                 url: '/contact',
-                templateUrl: 'App/Views/contact.html',
+                templateUrl: 'app/Views/contact.html',
             })
             .state('signup', {
                 url: '/signup',
-                templateUrl: 'App/Views/signup.html',
+                templateUrl: 'app/Views/signup.html',
             })
             .state('login', {
                 url: '/login',
-                templateUrl: 'App/Views/login.html',
+                templateUrl: 'app/Views/login.html',
                 controller: "LoginController"
             })
             .state('blog', {
                 url: '/blog',
-                templateUrl: 'App/Views/blog.html',
+                templateUrl: 'app/Views/blog.html',
             })
             .state('careers', {
                 url: '/careers',
-                templateUrl: 'App/Views/careers.html',
+                templateUrl: 'app/Views/careers.html',
             })
             .state('events', {
                 url: '/events',
-                templateUrl: 'App/Views/events.html',
+                templateUrl: 'app/Views/events.html',
             })
             .state('faqs', {
                 url: '/faqs',
-                templateUrl: 'App/Views/faqs.html',
+                templateUrl: 'app/Views/faqs.html',
             })
             .state('partners', {
                 url: '/partners',
-                templateUrl: 'App/Views/partners.html',
+                templateUrl: 'app/Views/partners.html',
             })
             .state('team', {
                 url: '/team',
-                templateUrl: 'App/Views/team.html',
+                templateUrl: 'app/Views/team.html',
             })
             .state('privacy', {
                 url: '/privacy',
-                templateUrl: 'App/Views/privacy.html',
+                templateUrl: 'app/Views/privacy.html',
             })
             .state('sitemap', {
                 url: '/sitemap',
-                templateUrl: 'App/Views/sitemap.html',
+                templateUrl: 'app/Views/sitemap.html',
             })
             .state('terms', {
                 url: '/terms',
-                templateUrl: 'App/Views/terms.html',
+                templateUrl: 'app/Views/terms.html',
             })
             .state('imprint', {
                 url: '/imprint',
-                templateUrl: 'App/Views/imprint.html',
+                templateUrl: 'app/Views/imprint.html',
             })
             .state('search', {
                 url: '/query/:query',
-                templateUrl: 'App/Views/index.html',
+                templateUrl: 'app/Views/index.html',
                 controller: 'HomeController'
             })
             .state('readlist', {
                 url: '/readlist',
-                templateUrl: 'App/Views/readlist.html',
+                templateUrl: 'app/Views/readlist.html',
                 controller: 'ReadlistController'
             })
             .state('otherwise', {
-                url: 'App/Views/404.html'
+                url: 'app/Views/404.html'
             });
     })
     .config(function($urlRouterProvider) {
