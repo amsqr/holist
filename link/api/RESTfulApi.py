@@ -24,7 +24,10 @@ class RESTfulApi(object):
         retrieveApi = RetrieveDocuments(self.controller)
         searchSimilarApi = SearchSimilarDocuments(self.controller)
 
-        root.putChild("graph", File("./web/index.html"))
+        holist = Resource()
+        holist.putChild("web", File("./web"))
+
+        root.putChild("holist", holist)
         root.putChild("search_entity", searchApi)
         root.putChild("retrieve_documents", retrieveApi)
         root.putChild("search_similar", searchSimilarApi)
@@ -33,6 +36,26 @@ class RESTfulApi(object):
         factory = Site(root)
         reactor.listenTCP(config.link_node_port, factory)
 
+        commandRoot = Resource()
+        command = LinkControlInterface(self.controller)
+        commandRoot.putChild("command", command)
+        commandFactory = Site(commandRoot)
+        reactor.listenTCP(config.link_node_control_port, commandFactory)
+
+
+class LinkControlInterface(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+
+    def render_GET(self, request):
+        command = cgi.escape(request.args["command"][0])
+        if command == "rebuild":
+            reactor.callLater(5, self.controller.rebuildIndex)
+            request.setResponseCode(200)
+            return "Triggered index rebuild."
+
+        request.setResponseCode(400)
+        return "Unknown command."
 
 # this API returns a graph for a given entity string
 class SearchEntity(Resource):
@@ -41,6 +64,8 @@ class SearchEntity(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
         try:
             entityName = cgi.escape(request.args["entityName"][0])
         except KeyError:
@@ -57,6 +82,8 @@ class RetrieveDocuments(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
         documentIds = [cgi.escape(d) for d in request.args["document"]]
 
         ln.info("Somebody is trying to retrieve documents: %s", documentIds)
@@ -93,6 +120,9 @@ class SearchSimilarDocuments(Resource):
 
     def render_GET(self, request):
         request.setHeader("content-type", "application/json")
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
+
         docId = cgi.escape(request.args["id"][0])
 
         ln.info("Somebody just performed a search for similar documents: %s.", docId)

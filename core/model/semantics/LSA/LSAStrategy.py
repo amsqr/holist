@@ -89,6 +89,9 @@ class LSAStrategy(ISemanticsStrategy):
         self.queue.put((returnTo, documents, relabel))
 
     def update(self):
+        deferToThread(self.__update)
+
+    def __update(self):
         if self.updating:
             return
 
@@ -128,7 +131,6 @@ class LSAStrategy(ISemanticsStrategy):
             if model is None:
                 model = self.createModel(sourceType, dictionary)
 
-
             for doc in documents:
                 self.preprocessor.preprocess(doc, dictionary)
 
@@ -146,6 +148,9 @@ class LSAStrategy(ISemanticsStrategy):
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
     def handleOne(self, text, sourceType="RSSFeed"):
+        if not self.models:
+            self.load()
+
         dictionary = self.dictionaries.get(sourceType, None)
         if dictionary is None:
             dictionary = self.createDictionary(sourceType)

@@ -6,6 +6,7 @@ from core.util import config
 from twisted.web.resource import Resource
 from twisted.web.server import Site
 from twisted.internet import reactor
+from twisted.internet.threads import deferToThread
 import cgi
 import json
 
@@ -29,6 +30,26 @@ class RESTfulFrontend(object):
         ln.info("listening on port %s", config.holistcoreport)
         reactor.listenTCP(config.holistcoreport, factory)
 
+        commandRoot = Resource()
+        command = CoreControlInterface(self.controller)
+        commandRoot.putChild("command", command)
+        commandFactory = Site(commandRoot)
+        reactor.listenTCP(config.core_control_port, commandFactory)
+
+
+class CoreControlInterface(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+
+    def render_GET(self, request):
+        command = cgi.escape(request.args["command"][0])
+        if command == "relabelLSA":
+            request.setResponseCode(200)
+            deferToThread(self.controller.relabelStrategy, "LSA")
+            return "Relabel of LSA triggered."
+
+        request.setResponseCode(400)
+        return "I don't know this command."
 
 class RegisterListener(Resource):
     def __init__(self, controller):

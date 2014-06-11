@@ -84,6 +84,7 @@ class StrategyManager(object):
     def relabelStrategy(self, strategyName):
         ln.info("Triggered complete relabel of strategy %s.", strategyName)
         count = 0
+        ln.info("Gathering documents..")
         alldocuments = []
         client = getDatabaseConnection()
         for documentBSON in client.holist.articles.find():
@@ -91,7 +92,9 @@ class StrategyManager(object):
                 alldocuments.append(convertToDocument(documentBSON))
             except:
                 ln.debug(documentBSON)
+        ln.info("About to task %s node with %s documents for relabelling.", strategyName, len(alldocuments))
         results = self.handle(alldocuments, [strategyName])  # all documents with updated vectors
+        ln.debug("Updating labels in database.")
         for document in results:
             count += 1
             client.holist.articles.update({"_id": document._id}, document.__dict__)
@@ -150,6 +153,7 @@ class StrategyManager(object):
 
                 document = docIndex[docId]
                 document.vectors[strategy] = vector
+        ln.debug("done merging.")
 
         allResults = docIndex.values()
 

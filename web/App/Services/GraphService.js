@@ -6,6 +6,7 @@ angular.
         // var url = "/search_entity?entityName=Brazil";
         var defaultUrl = "/holist/web/demo.json?entityName=";
        // var defaultUrl = "http://holist.pcdowling.com/search_entity?entityName=";
+
         var self = this;
 
 

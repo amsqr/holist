@@ -69,7 +69,8 @@ class LinkController(object):
             try:
                 self.lshManager.addDocument(doc)
                 count += 1
-            except KeyError:
+            except KeyError as e:
+                ln.debug("Document doesn't have LSA vector: %s", articleBSON["_id"])
                 failed += 1
         ln.info("Rebuild complete. Added %s documents, failed on %s.", count, failed)
 
