@@ -21,7 +21,7 @@ from shared.Heartbeat.HeartbeatClient import HearbeatClient
 MINIMUM_QUEUE_SIZE = 20
 MINIMUM_WAIT_TIME = 60 * 3
 
-RELABEL = True
+RELABEL = False
 
 def convertDocumentsToDicts(documents):
     dicts = [document.__dict__ for document in documents]

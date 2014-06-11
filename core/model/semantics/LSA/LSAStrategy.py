@@ -136,8 +136,14 @@ class LSAStrategy(ISemanticsStrategy):
 
             prep = (doc.preprocessed for doc in documents)
 
-            if not relabel or model.projection.u is None:
+            if not relabel:
                 model.add_documents(prep)
+            else:
+                try:
+                    assert model.projection.u is not None
+                except:
+                    model.add_documents(prep)
+
 
             # add the document vector space representations
             sourceTypeTag = self.NAME  # +"_"+document.sourceType
