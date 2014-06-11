@@ -1,49 +1,20 @@
 <section id="slider-sec" class="slider-reg">
-    <div class="main-flex-slider">
-        <ul class="slides">
-            <li>
-                <figure>
-                    <img src="assets/img/about/slider/newyork.png" class="img-responsive" alt="slider-img-1">
-                    <figcaption class="slider-overlay">
-                        <div class="slider-text">
-                            <h1>Don't Listen On Your Gut Feeling!</h1>
-                            <p>
-                                holist is a Big Data, Computer Linguistic and Visual Analytics company
-                                <br/>providing insights from global science, patents, press, web, and social media for your strategy.
-                            </p>
-                        </div>
-                    </figcaption>
-                </figure>
-            </li>
-            <li>
-                <figure>
-
-                    <img src="assets/img/about/slider/servers.png" class="img-responsive" alt="slider-img-1">
-                    <figcaption class="slider-overlay ">
-                        <div class="slider-text animated fadeInDown">
-                            <h1>Reliable and High-Efficient Server Infrastructure</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            </p>
-                        </div>
-                    </figcaption>
-                </figure>
-            </li>
-            <li>
-                <figure>
-                    <img src="assets/img/about/slider/world.png" class="img-responsive" alt="slider-img-1">
-                    <figcaption class="slider-overlay">
-                        <div class="slider-text">
-                            <h1>Linguistic Models Runnin On World New</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            </p>
-                        </div>
-                    </figcaption>
-                </figure>
-            </li>
-        </ul>
-    </div>
+    <carousel interval="5000">
+        <slide ng-repeat="source in ServicesSlides" active="slide.active">
+            <figure>
+                <img ng-src="{{source.image}}" style="margin:auto;">
+                <figcaption class="slider-overlay">
+                    <div class="slider-text">
+                        <h1>{{source.title}}</h1>
+                        <p>{{source.caption}}
+                            holist is a Big Data, Computer Linguistic and Visual Analytics company
+                            <br/>providing insights from global science, patents, press, web, and social media for your strategy.
+                        </p>
+                    </div>
+                </figcaption>
+            </figure>
+        </slide>
+    </carousel>
 </section>
 <!--main flex slider end-->
 
