@@ -221,12 +221,13 @@ function GraphFactory($http,AppSettings,$q,$log) {
         if (!targetNode || !targetNode.documents) {
             return;
         }
-        var docs = targetNode.documents;
+
+
         var argstring = "?";
-        docs.forEach(function(doc) {
+        targetNode.documents.forEach(function(doc) {
             argstring = argstring + "document=" + doc.id + "&"
         });
-
+        console.log(argstring);
         self.fetchAdditionalNodes(additionalNodesUrl + argstring,targetId);
 
 
@@ -252,12 +253,14 @@ function GraphFactory($http,AppSettings,$q,$log) {
             .css('top', d3.event.pageY - 10 + "px");
 
 
-        popover.find('p').html(targetNode.title);
+        var subdocs = (targetNode.documents?targetNode.documents.length:0);
+        var info = targetNode.title;
+        if (subdocs > 0) {
+            info += ' <br/><i>related documents: '  + subdocs + '</i>';
+        }
+        popover.find('p').html( info);
 
-        // @does not work.
-        /*target.select("circle").transition()
-            .duration(750)
-            .attr("r", 30);*/
+
         return;
     }
 
