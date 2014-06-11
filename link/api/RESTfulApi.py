@@ -26,7 +26,7 @@ class RESTfulApi(object):
         searchSimilarApi = SearchSimilarDocuments(self.controller)
         favorite = Favorite(self.controller)
 
-        holist = Resource()
+        holist = Holist()
         holist.putChild("web", File("./web"))
 
         root.putChild("holist", holist)
@@ -46,6 +46,11 @@ class RESTfulApi(object):
         commandFactory = Site(commandRoot)
         reactor.listenTCP(config.link_node_control_port, commandFactory)
 
+
+class Holist(Resource):
+    def getChild(self, path, request):
+        ln.debug("incoming request for path %s", path)
+        return Resource.getChild(self, path, request)
 
 class LinkControlInterface(Resource):
     def __init__(self, controller):
