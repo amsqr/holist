@@ -142,6 +142,8 @@ class LSAStrategy(ISemanticsStrategy):
                 try:
                     assert model.projection.u is not None
                 except:
+                    ln.debug("LSA was not properly initialized. Reinitializing, adding all documents for model.")
+                    model = self.createModel(sourceType, dictionary)
                     model.add_documents(prep)
 
 
