@@ -26,7 +26,7 @@ body {
   stroke-width: 1.5px; }
 #graph .node circle {
   cursor: pointer;
-  fill: #0179a0;
+  fill: #006699;
   stroke: #fff;
   stroke-width: 1.5px; }
 #graph .node circle:hover {

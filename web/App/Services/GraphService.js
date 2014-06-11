@@ -1,11 +1,11 @@
 
 angular.
     module('App')
-        .factory('GraphService', function($http,AppSettings,d3Service,$log,$window) {
+        .factory('GraphService', function($http,$q,AppSettings,d3Service,$log,$window) {
 
         // var url = "/search_entity?entityName=Brazil";
         var defaultUrl = "/holist/web/demo.json?entityName=";
-        //var defaultUrl = "http://holist.pcdowling.com/search_entity?entityName=";
+       // var defaultUrl = "http://holist.pcdowling.com/search_entity?entityName=";
         var self = this;
 
 
@@ -15,8 +15,6 @@ angular.
         // public interface, inject(scope, element)
         //
         this.inject = function(scope, element, attrs) {
-
-
             var initializeGraph = function(d3) {
 
                 var graph = Graph(d3, element[0]);
@@ -44,33 +42,50 @@ angular.
         this.fetchData = function(keyword, targetGraph) {
 
             console.log('[graph] fetching keyword',keyword);
-            var graphObj = JSON.parse(httpGet(defaultUrl + keyword));
-            var vlinks = graphObj.links;
-            var vnodes = graphObj.nodes;
+            httpGet(defaultUrl + keyword)
+                .then(function(graphObj,status){
+                    var vlinks = graphObj.links;
+                    var vnodes = graphObj.nodes;
 
-            targetGraph.clearNodes();
+                    targetGraph.clearNodes();
 
-            for (var i = vnodes.length - 1; i >= 0; i--) {
-                targetGraph.addNode(vnodes[i]);
+                    for (var i = vnodes.length - 1; i >= 0; i--) {
+                        targetGraph.addNode(vnodes[i]);
 
-            }
-            for (var i = vlinks.length - 1; i >= 0; i--) {
-                targetGraph.addLink(vlinks[i].source.id, vlinks[i].target.id);
-            }
-            targetGraph.update();
+                    }
+                    for (var i = vlinks.length - 1; i >= 0; i--) {
+                        targetGraph.addLink(vlinks[i].source.id, vlinks[i].target.id);
+                    }
+                    targetGraph.update();
+
+                });
+
+
         }
 
 
 
 
-        function httpGet(theUrl)
+        function httpGet(requestUrl)
         {
-            var xmlHttp = null;
+            var d = $q.defer();
+            $http({method: 'GET', url:requestUrl })
+                .success(function(data, status, headers, config) {
+                    console.log('[GRAPH] Get Data successful',data,status);
+                    d.resolve(data,status);
+                })
+                .error(function(data, status, headers, config) {
+                    d.reject(data,status);
+                });
+
+            return d.promise;
+
+            /*    var xmlHttp = null;
 
             xmlHttp = new XMLHttpRequest();
             xmlHttp.open( "GET", theUrl, false );
             xmlHttp.send( null );
-            return xmlHttp.responseText;
+            return xmlHttp.responseText;*/
         }
 
         return this;
