@@ -75,13 +75,13 @@ class LinkController(object):
                 self.lshManager.addDocument(doc)
                 lshcount += 1
             except KeyError:
-                ln.debug("Document doesn't have LSA vector: %s", articleBSON["_id"])
+                #ln.debug("Document doesn't have LSA vector: %s", articleBSON["_id"])
                 lshfailed += 1
             try:
                 self.namedEntityIndex.addDocument(doc)
                 nercount += 1
             except KeyError:
-                ln.debug("Document doesn't have NER annotations: %s", articleBSON["_id"])
+                #ln.debug("Document doesn't have NER annotations: %s", articleBSON["_id"])
                 nerfailed += 1
         ln.info("Rebuild complete. Added %s LSH and %s NER documents, failed on %s LSA and %s NER.",
                 lshcount, nercount, lshfailed, nerfailed)

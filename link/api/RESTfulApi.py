@@ -151,7 +151,11 @@ class CompleteSearch(Resource):
         self.controller = controller
 
     def render_GET(self, request):
-        searchString = cgi.escape(request.args["entityName"][0])
+        try:
+            searchString = cgi.escape(request.args["entityName"][0])
+        except KeyError:
+            request.setResponseCode(400)
+            return "no entity name requested"
         return json.dumps(self.controller.completeSearch(searchString))
 
 
