@@ -1,0 +1,82 @@
+$primary-color: #006699;
+
+
+
+// =======
+// Layout
+// =======
+body {
+  background:#fff;
+}
+.top-header {
+  .logo a {
+    display: block;
+    width:220px;
+    height:50px;
+    cursor:pointer;
+
+    span { display:none; }
+    background:url(img/holist-logo-220.png) no-repeat;
+    text-indent: -10000px;
+  }
+}
+
+.top-header .top-nav .nav-right > li > a {
+  width:auto;
+}
+#content {
+  left:0;
+  margin-top:50px;
+  top:0;
+  position: inherit;
+}
+
+//======
+//Graph
+//======
+
+#graph{
+
+  .link {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.5px;
+  }
+
+  .node {
+
+    circle {
+      cursor:pointer;
+      fill: $primary-color;
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+    circle:hover {
+      fill:#ccc;
+    }
+
+  }
+  .nodetext { pointer-events: none; font: 10px sans-serif; }
+
+}
+
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+// ============
+// Home page
+// ============
+#graphSearch {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  top:75px;
+  .dropdown-menu {
+    width:96%;
+  }
+
+}
