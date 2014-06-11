@@ -1,4 +1,8 @@
-function Graph(d3, el) {
+
+
+function GraphFactory($http,AppSettings,$q,$log) {
+
+
     var self = this;
     var force; // forces
     this.vis = null; // svg canvas
@@ -8,12 +12,16 @@ function Graph(d3, el) {
     var w = 100;
     var tooltip;
     var popover = jQuery('#graphPopover');
+    var d3;
 
-
-
+    var defaultUrl = AppSettings.apiUrl + 'search_entity?entityName=';
+    var additionalNodesUrl = AppSettings.apiUrl + "retrieve_documents"
 
     // init
-    function initGraph() {
+    self.initGraph = function(_d3, el) {
+        d3 = _d3;
+        plugins();
+
         // get window dimensions
         fullScreenGraph();
         force = d3.layout.force()
@@ -37,6 +45,8 @@ function Graph(d3, el) {
 
         // Make it all go
         self.update();
+        return self;
+
     }
 
 
@@ -197,23 +207,30 @@ function Graph(d3, el) {
     // =====================================
     // User interaction
     // =====================================
-
+    // getNodeByEvent(d3.select(this))
+    var getNodeIdByEvent = function(target) {
+        var targetId = target[0][0].getAttribute('id');
+        if (!targetId)
+            return console.log('could not find id of targe object', target);
+        return (targetId);
+    }
 
     var expand = function() {
-        var clickedObject = d3.select(this).select("id")[0][0]
-        if (!clickedObject)
-            return console.log('could not find clicked object', d3.select(this).select("id"));
-
-
-        var clickedId = clickedObject.getAttribute("id");
-
-        var clickedNode = nodes[clickedId];
-        var docs = clickedNode.documents;
+        var targetId = getNodeIdByEvent(d3.select(this));
+        var targetNode =  findNode(targetId);
+        if (!targetNode || !targetNode.documents) {
+            return;
+        }
+        var docs = targetNode.documents;
         var argstring = "?";
         docs.forEach(function(doc) {
             argstring = argstring + "document=" + doc.id + "&"
         });
-        newNodes = JSON.parse(httpGet("/retrieve_documents" + argstring));
+
+        self.fetchAdditionalNodes(additionalNodesUrl + argstring,targetId);
+
+
+
     }
     var mouseout = function() {
 
@@ -224,14 +241,16 @@ function Graph(d3, el) {
             .attr("r", 15);
     }
     var mouseover = function() {
-        var target = d3.select(this);
-        var targetId = target[0][0].getAttribute('id');
+
+        var targetId = getNodeIdByEvent(d3.select(this));
+        var targetNode =  findNode(targetId);
+
 
         popover
             .css('visibility', "visible")
             .css('left', d3.event.pageX + 10 + "px")
             .css('top', d3.event.pageY - 10 + "px");
-        var targetNode = findNode(targetId);
+
 
         popover.find('p').html(targetNode.title);
 
@@ -240,6 +259,80 @@ function Graph(d3, el) {
             .duration(750)
             .attr("r", 30);*/
         return;
+    }
+
+
+
+    // =====================================
+    // fetchData
+    // =====================================
+    // fetches enite new keyword
+    this.fetchData = function(keyword) {
+
+        console.log('[graph] fetching keyword', keyword);
+        httpGet(defaultUrl + keyword)
+            .then(function(graphObj, status) {
+                var vlinks = graphObj.links;
+                var vnodes = graphObj.nodes;
+
+                self.clearNodes();
+
+                for (var i = vnodes.length - 1; i >= 0; i--) {
+                    self.addNode(vnodes[i]);
+
+                }
+                for (var i = vlinks.length - 1; i >= 0; i--) {
+                    self.addLink(vlinks[i].source.id, vlinks[i].target.id);
+                }
+                self.update();
+
+            });
+
+
+    }
+    this.fetchAdditionalNodes = function(url, parentNodeId) {
+
+        httpGet(url).then(function(results,status){
+            if (!results.documents){
+                $log.warn('additional nodes does not have documents',results);
+            }
+            var newNodes = results.documents;
+
+           console.log('[additional nodes]',newNodes);
+            for (i in newNodes){
+                self.addNode(newNodes[i]);
+                self.addLink(newNodes[i].id,parentNodeId)
+            }
+
+
+            self.update();
+        });
+        //newNodes = JSON.parse();
+
+    };
+
+    function httpGet(requestUrl) {
+        var d = $q.defer();
+        $http({
+            method: 'GET',
+            url: requestUrl
+        })
+            .success(function(data, status, headers, config) {
+                console.log('[GRAPH] Get Data successful', data, status);
+                d.resolve(data, status);
+            })
+            .error(function(data, status, headers, config) {
+                d.reject(data, status);
+            });
+
+        return d.promise;
+
+        /*    var xmlHttp = null;
+
+         xmlHttp = new XMLHttpRequest();
+         xmlHttp.open( "GET", theUrl, false );
+         xmlHttp.send( null );
+         return xmlHttp.responseText;*/
     }
 
 
@@ -282,7 +375,6 @@ function Graph(d3, el) {
 
     }
 
-    plugins();
-    initGraph();
-    return this;
+
+    return self;
 };

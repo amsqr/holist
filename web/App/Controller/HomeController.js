@@ -9,16 +9,20 @@ module('App')
         //
         // autocompletion with typeahead
         //
-        $scope.searchResults = ["LinkedIn", "google", "Microsoft", "Holist", "Uber", "Sunil Jagani - Person President and Chief Technology Officer @ AllianceTek", "Smartface Inc.", "Facebook", "Vuclip", "Roundforest LTD", "TransferWise"];
+        $scope.searchResults = [];
 
-        $scope.updateAutocomplete = function(text){
+
+
+        $scope.updateAutocomplete = function(){
             //if (text.length < 4) return;
             var deferred = $.Deferred();
+            if (!$scope.searchKeyword)
+                return deferred.reject();
 
-            var url = AppSettings.apiUrl +  'complete_search?entityName=' + text
+            var url = AppSettings.apiUrl +  'complete_search?entityName=' + $scope.searchKeyword
             $http({method: 'GET', url: url})
                 .success(function(results) {
-                    console.log(results);
+                    if (!results) { return deferred.reject(); }
                     $scope.searchResults = results;
                     deferred.resolve($scope.searchResults);
                 })
