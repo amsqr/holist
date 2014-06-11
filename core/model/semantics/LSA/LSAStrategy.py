@@ -89,6 +89,9 @@ class LSAStrategy(ISemanticsStrategy):
         self.queue.put((returnTo, documents, relabel))
 
     def update(self):
+        deferToThread(self.__update())
+
+    def __update(self):
         if self.updating:
             return
 
