@@ -15,7 +15,8 @@ function GraphFactory($http,AppSettings,$q,$log) {
     var d3;
 
     var defaultUrl = AppSettings.apiUrl + 'search_entity?entityName=';
-    var additionalNodesUrl = AppSettings.apiUrl + "retrieve_documents"
+    var additionalNodesUrlCluster = AppSettings.apiUrl + "retrieve_documents"
+    var additionalNodesUrlDocument = AppSettings.apiUrl + "search_similar"
 
     // init
     self.initGraph = function(_d3, el) {
@@ -218,17 +219,21 @@ function GraphFactory($http,AppSettings,$q,$log) {
     var expand = function() {
         var targetId = getNodeIdByEvent(d3.select(this));
         var targetNode =  findNode(targetId);
-        if (!targetNode || !targetNode.documents) {
+        if (!targetNode) {
             return;
         }
 
-
-        var argstring = "?";
-        targetNode.documents.forEach(function(doc) {
-            argstring = argstring + "document=" + doc.id + "&"
-        });
-        console.log(argstring);
-        self.fetchAdditionalNodes(additionalNodesUrl + argstring,targetId);
+        if(!targetNode.documents){
+            var argstring = "?id=" + targetId;
+            self.fetchAdditionalNodes(additionalNodesUrlDocuments + argstring, targetId);
+        } else{
+            var argstring = "?";
+            targetNode.documents.forEach(function(doc) {
+                argstring = argstring + "document=" + doc.id + "&"
+            });
+            console.log(argstring);
+            self.fetchAdditionalNodes(additionalNodesUrlCluster + argstring, targetId);
+        }
 
 
 
