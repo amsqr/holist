@@ -185,17 +185,17 @@ class LSAStrategy(ISemanticsStrategy):
         ln.debug("saving models")
         for sourceType in self.models:
             model = self.models[sourceType]
-            model.save("persist/model_" + sourceType + ".lsa")
+            model.save("persist/LSA_model_" + sourceType)
         ln.debug("done saving models")
 
     def load(self):
         ln.debug("Loading models..")
         import os
         for filename in os.listdir(os.getcwd()+"/persist"):
-            if filename.endswith(".lsa"):
+            if filename == "LSA_model_RSSFeed":
                 loadfilename = "persist/"+filename
                 model = models.lsimodel.LsiModel.load(loadfilename)
-                sourceType = filename[6:-4]
+                sourceType = "RSSFeed"
                 self.models[sourceType] = model
                 ln.info("loaded model %s for sourceType %s", filename, sourceType)
         ln.debug("Done loading models.")
