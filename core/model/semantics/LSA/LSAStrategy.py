@@ -108,7 +108,10 @@ class LSAStrategy(ISemanticsStrategy):
         Add documents to the model, and send back their vector representations.
         """
         ln.info("LSA tasked with %s documents.", len(docs))
-        self.load()
+        if not self.models:
+            self.load()
+
+        updatedModel = not relabel
 
         documents = []
         for docDict in docs:
@@ -145,6 +148,7 @@ class LSAStrategy(ISemanticsStrategy):
                     ln.debug("LSA was not properly initialized. Reinitializing, adding all documents for model.")
                     model = self.createModel(sourceType, dictionary)
                     model.add_documents(prep)
+                    updatedModel = True
 
 
             # add the document vector space representations
@@ -152,7 +156,9 @@ class LSAStrategy(ISemanticsStrategy):
 
             results += [{"_id": document._id, "strategy": sourceTypeTag, "vector": model[document.preprocessed]}
                         for document in documents]
-        self.save()
+        if updatedModel:
+            self.save()
+
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
     def handleOne(self, text, sourceType="RSSFeed"):
