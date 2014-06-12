@@ -233,7 +233,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
             self.fetchAdditionalNodes(additionalNodesUrlDocument + argstring, targetId);
         } else{
             if(targetNode.documents.length ==1){
-                var argstring = "?id=" + targetId;
+                var argstring = "?id=" + targetNode.documents[0].id;
                 self.fetchAdditionalNodes(additionalNodesUrlDocument + argstring, targetId);
             }else{
                 var argstring = "?";
