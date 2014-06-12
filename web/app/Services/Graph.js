@@ -68,6 +68,11 @@ function GraphFactory($http,AppSettings,$q,$log) {
     }
     // Add and remove elements on the graph object
     this.addNode = function(node) {
+        for (var i = nodes.length - 1; i >= 0; i--) {
+            if(nodes[i].id == node.id){
+                return;
+            }
+        };
         nodes.push(node);
     }
 
@@ -225,7 +230,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
         if(!targetNode.documents){
             var argstring = "?id=" + targetId;
-            self.fetchAdditionalNodes(additionalNodesUrlDocuments + argstring, targetId);
+            self.fetchAdditionalNodes(additionalNodesUrlDocument + argstring, targetId);
         } else{
             var argstring = "?";
             targetNode.documents.forEach(function(doc) {
