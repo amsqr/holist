@@ -65,7 +65,12 @@ class CoreController(object):
         reactor.run()
 
     def relabelStrategy(self, strategy):
-        deferToThread(self.strategyManager.relabelStrategy, strategy)
+        self.updating = True
+        d = deferToThread(self.strategyManager.relabelStrategy, strategy)
+        d.addCallback(self.setUpdatingFalse)
+
+    def setUpdatingFalse(self):
+        self.updating = False
 
     def connectToDataSupply(self):
 
