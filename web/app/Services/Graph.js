@@ -232,17 +232,13 @@ function GraphFactory($http,AppSettings,$q,$log) {
             var argstring = "?id=" + targetId;
             self.fetchAdditionalNodes(additionalNodesUrlDocument + argstring, targetId);
         } else{
-            if(targetNode.documents.length ==1){
-                var argstring = "?id=" + targetNode.documents[0].id;
-                self.fetchAdditionalNodes(additionalNodesUrlDocument + argstring, targetId);
-            }else{
                 var argstring = "?";
                 targetNode.documents.forEach(function(doc) {
                     argstring = argstring + "document=" + doc.id + "&"
                 });
                 console.log(argstring);
                 self.fetchAdditionalNodes(additionalNodesUrlCluster + argstring, targetId);
-            }
+
         }
 
 
