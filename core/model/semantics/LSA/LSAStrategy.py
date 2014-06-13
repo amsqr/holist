@@ -25,7 +25,7 @@ LISTEN_PORT = config.lsa_strategy_port
 # SETTINGS
 NUM_TOPICS = 200
 CHUNK_SIZE = 1000
-DECAY = 0.8
+DECAY = 0.97
 DISTRIBUTED = False
 ONE_PASS = True
 
