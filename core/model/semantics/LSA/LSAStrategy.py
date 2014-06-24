@@ -25,7 +25,7 @@ LISTEN_PORT = config.lsa_strategy_port
 # SETTINGS
 NUM_TOPICS = 200
 CHUNK_SIZE = 1000
-DECAY = 0.8
+DECAY = 0.97
 DISTRIBUTED = False
 ONE_PASS = True
 
@@ -108,7 +108,10 @@ class LSAStrategy(ISemanticsStrategy):
         Add documents to the model, and send back their vector representations.
         """
         ln.info("LSA tasked with %s documents.", len(docs))
-        self.load()
+        if not self.models:
+            self.load()
+
+        updatedModel = not relabel
 
         documents = []
         for docDict in docs:
@@ -136,15 +139,26 @@ class LSAStrategy(ISemanticsStrategy):
 
             prep = (doc.preprocessed for doc in documents)
 
-            if not relabel or model.projection.u is None:
+            if not relabel:
                 model.add_documents(prep)
+            else:
+                try:
+                    assert model.projection.u is not None
+                except:
+                    ln.debug("LSA was not properly initialized. Reinitializing, adding all documents for model.")
+                    model = self.createModel(sourceType, dictionary)
+                    model.add_documents(prep)
+                    updatedModel = True
+
 
             # add the document vector space representations
             sourceTypeTag = self.NAME  # +"_"+document.sourceType
 
             results += [{"_id": document._id, "strategy": sourceTypeTag, "vector": model[document.preprocessed]}
                         for document in documents]
-        self.save()
+        if updatedModel:
+            self.save()
+
         self.nodeCommunicator.respond(returnTo, {"vectors": results})
 
     def handleOne(self, text, sourceType="RSSFeed"):
@@ -171,17 +185,17 @@ class LSAStrategy(ISemanticsStrategy):
         ln.debug("saving models")
         for sourceType in self.models:
             model = self.models[sourceType]
-            model.save("persist/model_" + sourceType + ".lsa")
+            model.save("persist/LSA_model_" + sourceType)
         ln.debug("done saving models")
 
     def load(self):
         ln.debug("Loading models..")
         import os
         for filename in os.listdir(os.getcwd()+"/persist"):
-            if filename.endswith(".lsa"):
+            if filename == "LSA_model_RSSFeed":
                 loadfilename = "persist/"+filename
                 model = models.lsimodel.LsiModel.load(loadfilename)
-                sourceType = filename[6:-4]
+                sourceType = "RSSFeed"
                 self.models[sourceType] = model
                 ln.info("loaded model %s for sourceType %s", filename, sourceType)
         ln.debug("Done loading models.")

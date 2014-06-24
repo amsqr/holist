@@ -37,7 +37,8 @@ class SimpleClusterStrategy(object):  # just cluster document by date
                 date = datetime.datetime.strptime(document["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
             except ValueError:
                 date = parser.parse(document["timestamp"])
-            bucket = str(date.date()) + " " + str(date.hour)
+            hour = (date.hour if date.hour % 2 == 1 else date.hour - 1)
+            bucket = str(date.date()) + " " + str(hour)
             clusters[bucket].append(document)
 
         nodes = [{"id": "center", "name": "center", "title": entityName}]

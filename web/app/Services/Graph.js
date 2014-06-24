@@ -15,7 +15,8 @@ function GraphFactory($http,AppSettings,$q,$log) {
     var d3;
 
     var defaultUrl = AppSettings.apiUrl + 'search_entity?entityName=';
-    var additionalNodesUrl = AppSettings.apiUrl + "retrieve_documents"
+    var additionalNodesUrlCluster = AppSettings.apiUrl + "retrieve_documents"
+    var additionalNodesUrlDocument = AppSettings.apiUrl + "search_similar"
 
     if (AppSettings.mockhttp){
         defaultUrl = '/holist/web/demo.json?entityName='
@@ -72,6 +73,11 @@ function GraphFactory($http,AppSettings,$q,$log) {
     }
     // Add and remove elements on the graph object
     this.addNode = function(node) {
+        for (var i = nodes.length - 1; i >= 0; i--) {
+            if(nodes[i].id == node.id){
+                return;
+            }
+        };
         nodes.push(node);
     }
 
@@ -146,7 +152,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
         nodeEnter.append("circle")
             .attr("r", function(d) {
-                return 30 * Math.random() + 2; // @todo: change to d.weight if it has sensible values
+                return 30 * Math.random() + 3; // @todo: change to d.weight if it has sensible values
             })
             .attr("id", function(d) {
                 return d.id
@@ -223,17 +229,22 @@ function GraphFactory($http,AppSettings,$q,$log) {
     var expand = function() {
         var targetId = getNodeIdByEvent(d3.select(this));
         var targetNode =  findNode(targetId);
-        if (!targetNode || !targetNode.documents) {
+        if (!targetNode) {
             return;
         }
 
+        if(!targetNode.documents){
+            var argstring = "?id=" + targetId;
+            self.fetchAdditionalNodes(additionalNodesUrlDocument + argstring, targetId);
+        } else{
+                var argstring = "?";
+                targetNode.documents.forEach(function(doc) {
+                    argstring = argstring + "document=" + doc.id + "&"
+                });
+                console.log(argstring);
+                self.fetchAdditionalNodes(additionalNodesUrlCluster + argstring, targetId);
 
-        var argstring = "?";
-        targetNode.documents.forEach(function(doc) {
-            argstring = argstring + "document=" + doc.id + "&"
-        });
-        console.log(argstring);
-        self.fetchAdditionalNodes(additionalNodesUrl + argstring,targetId);
+        }
 
 
 
