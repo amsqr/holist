@@ -18,9 +18,11 @@ function GraphFactory($http,AppSettings,$q,$log) {
     var additionalNodesUrlCluster = AppSettings.apiUrl + "retrieve_documents"
     var additionalNodesUrlDocument = AppSettings.apiUrl + "search_similar"
 
+    // use local files instead of server
     if (AppSettings.mockhttp){
         defaultUrl = '/holist/web/demo.json?entityName='
-        additionalNodesUrl = '/holist/web/demo.json?retrieve_documents"
+        additionalNodesUrlCluster = '/holist/web/demo.json?retrieve_documents"
+        additionalNodesUrlDocument = '/holist/web/demo.json?retrieve_documents"
     }
 
     // init
