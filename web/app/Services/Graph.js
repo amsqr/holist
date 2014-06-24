@@ -17,6 +17,11 @@ function GraphFactory($http,AppSettings,$q,$log) {
     var defaultUrl = AppSettings.apiUrl + 'search_entity?entityName=';
     var additionalNodesUrl = AppSettings.apiUrl + "retrieve_documents"
 
+    if (AppSettings.mockhttp){
+        defaultUrl = '/holist/web/demo.json?entityName='
+        additionalNodesUrl = '/holist/web/demo.json?retrieve_documents"
+    }
+
     // init
     self.initGraph = function(_d3, el) {
         d3 = _d3;
