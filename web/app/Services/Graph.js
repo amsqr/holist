@@ -15,8 +15,8 @@ function GraphFactory($http,AppSettings,$q,$log) {
     var d3;
 
     var defaultUrl = AppSettings.apiUrl + 'search_entity?entityName=';
-    var additionalNodesUrlCluster = AppSettings.apiUrl + "retrieve_documents"
-    var additionalNodesUrlDocument = AppSettings.apiUrl + "search_similar"
+    var additionalNodesUrlCluster = AppSettings.apiUrl + "retrieve_documents";
+    var additionalNodesUrlDocument = AppSettings.apiUrl + "search_similar";
 
     // use local files instead of server
     if (AppSettings.mockhttp){
