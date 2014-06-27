@@ -4,7 +4,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
 
     var self = this;
-    var debug = true;
+    var debug = false;
     var force; // forces
     this.vis = null; // svg canvas
     var nodes;
