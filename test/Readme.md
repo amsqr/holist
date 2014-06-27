@@ -2,10 +2,20 @@ Run test cases
 ==============
 Use the following command
 
+> mocha
+
+Please see the test/test.js for the unit test source code.
+Since we use nodejs/python/mongodb as a backend technology, 
+the fitting testframework is Mocha/Chai, which we will use
+for our functional tests.
+
+Please see the attached documentation for details.
 
 
 Prepare installation
 ===================
+Do install the necessary dependencies we use the npm package manager,
+which installs the libs described in the package.json .
 
 npm install
 npm install mocha -g

@@ -18,17 +18,17 @@ class RESTfulFrontend(object):
         self.setupResources()
 
     def setupResources(self):
-        root = Resource()
+        #root = Resource()
 
-        registerPage = RegisterListener(self.controller)
-        notifyPage = Notify(self.controller)
+        #registerPage = RegisterListener(self.controller)
+        #notifyPage = Notify(self.controller)
         
-        root.putChild("register_listener", registerPage)
-        root.putChild("notify", notifyPage)
+        #root.putChild("register_listener", registerPage)
+        #root.putChild("notify", notifyPage)
 
-        factory = Site(root)
-        ln.info("listening on port %s", config.holistcoreport)
-        reactor.listenTCP(config.holistcoreport, factory)
+        #factory = Site(root)
+        #ln.info("listening on port %s", config.holistcoreport)
+        #reactor.listenTCP(config.holistcoreport, factory)
 
         commandRoot = Resource()
         command = CoreControlInterface(self.controller)

@@ -10,6 +10,7 @@ from core.model.server.Listener import Listener
 import time
 import json
 
+from core.model.server.NodeCommunicator import NodeCommunicator
 from core.control.StrategyManager import StrategyManager
 from core.datasupply.DataSupply import MongoDataSupply
 from core.model.corpus.mongodb.MongoDBCorpus import MongoDBCorpus
@@ -35,7 +36,10 @@ class CoreController(object):
     def __init__(self):
         self.listeners = []
 
-        heartbeatThread = HearbeatClient(self.listeners)
+        self.nodeCommunicator = NodeCommunicator(self, config.holistcoreport, strategy=False)
+        self.nodeCommunicator.registerWithNode(config.collectNodeIP, config.collectNodePort)
+
+        heartbeatThread = HearbeatClient(self.listeners, config.holistcoreport)
         heartbeatThread.start()
 
         self.dataSupply = MongoDataSupply()  # for retrieving new documents
@@ -44,9 +48,9 @@ class CoreController(object):
 
         self.frontend = RESTfulFrontend(self)
 
-        ln.info("Connecting to data collect node.")
-        self.connectLoop = None
-        self.connectToDataSupply()
+        #ln.info("Connecting to data collect node.")
+        #self.connectLoop = None
+        #self.connectToDataSupply()
 
         self.lastUpdated = time.time()
 
@@ -133,3 +137,6 @@ class CoreController(object):
 
         listener = Listener(ip, port)
         self.listeners.append(listener)
+
+    def handleNewDocuments(self, newDocuments):
+        ln.info("Queue size is %s.", self.dataSupply.countNewDocuments())
