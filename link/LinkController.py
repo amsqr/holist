@@ -26,6 +26,7 @@ LISTEN_PORT = config.link_node_port + 1
 class Document:
     pass
 
+
 def bsonToClientBson(bson):
     clientDoc = {}
     clientDoc["id"] = str(bson["_id"])
@@ -37,6 +38,7 @@ def bsonToClientBson(bson):
 
 TESTING = True
 REBUILD = False
+
 
 class LinkController(object):
 

@@ -1,8 +1,9 @@
 from gensim.corpora.hashdictionary import HashDictionary as HashDict
 
+
 class HashDictionary(HashDict):
-	def __init__(self):
-		super(HashDictionary, self).__init__(id_range=224327)
+    def __init__(self):
+        super(HashDictionary, self).__init__(id_range=443243)  # 224327
 
 """
 some SAFE PRIMES above 200k:

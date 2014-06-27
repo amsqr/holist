@@ -24,8 +24,8 @@ LISTEN_PORT = config.lsa_strategy_port
 
 # SETTINGS
 NUM_TOPICS = 200
-CHUNK_SIZE = 1000
-DECAY = 0.97
+CHUNK_SIZE = 2000
+DECAY = 0.98
 DISTRIBUTED = False
 ONE_PASS = True
 
@@ -68,7 +68,7 @@ class LSAStrategy(ISemanticsStrategy):
         ln.info("LSA Initialized")
         self.updating = False
         loop = LoopingCall(self.update)
-        loop.start(10)
+        loop.start(5)
 
         reactor.run()
 
@@ -100,8 +100,6 @@ class LSAStrategy(ISemanticsStrategy):
             returnTo, docs, relabel = self.queue.get()
             self._handleDocuments(returnTo, docs, relabel)
         self.updating = False
-
-
 
     def _handleDocuments(self, returnTo, docs, relabel=False):
         """
@@ -150,7 +148,6 @@ class LSAStrategy(ISemanticsStrategy):
                     model.add_documents(prep)
                     updatedModel = True
 
-
             # add the document vector space representations
             sourceTypeTag = self.NAME  # +"_"+document.sourceType
 
@@ -193,7 +190,7 @@ class LSAStrategy(ISemanticsStrategy):
         import os
         for filename in os.listdir(os.getcwd()+"/persist"):
             if filename == "LSA_model_RSSFeed":
-                loadfilename = "persist/"+filename
+                loadfilename = "persist/" + filename
                 model = models.lsimodel.LsiModel.load(loadfilename)
                 sourceType = "RSSFeed"
                 self.models[sourceType] = model

@@ -16,12 +16,11 @@ import datetime
 NUMBER_OF_LSH_INDEXES = 10
 NUMBER_OF_BITS_PER_HASH = 6
 
+
 class LshManager(object):
 
     def __init__(self):
-
         self.lshIndexList = []
-
 
         # create a list of lsh indexes
         self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES,
@@ -83,7 +82,6 @@ class LshManager(object):
 
     # converts a vector in sparse format to a vector in dense format
     def _sparseToDenseConverter(self, sparseVector):
-
         dense = {}
         for x in range(NUM_TOPICS):
             dense[x] = 0

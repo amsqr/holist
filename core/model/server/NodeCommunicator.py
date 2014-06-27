@@ -41,6 +41,7 @@ class Task(Resource):
 
         return json.dumps({"result": "ok"})
 
+
 class SmallTask(Resource):
     def __init__(self, controller):
         self.controller = controller
@@ -49,6 +50,7 @@ class SmallTask(Resource):
         request.setHeader("content-type", "application/json")
         document = cgi.escape(request.args["document"][0])
         return json.dumps(self.controller.handleOne(document))
+
 
 class NodeCommunicator(object):
 
