@@ -21,6 +21,6 @@ class HearbeatClient(threading.Thread):
 
             for listener in self.listeners:
                 hbSocket.sendto('PyHB-' + str(self.port), (listener.ip, int(listener.port)))
-                ln.debug("Heartbeat sent to %s:%s", listener.ip, listener.port)
+                #ln.debug("Heartbeat sent to %s:%s", listener.ip, listener.port)
 
             time.sleep(BEAT_PERIOD)
