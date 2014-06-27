@@ -20,7 +20,8 @@ REGISTER_PORT = config.strategyregisterport
 LISTEN_PORT = config.ner_strategy_port
 
 
-class Document: pass
+class Document:
+    pass
 
 
 class NamedEntityStrategy(ISemanticsStrategy):
@@ -34,7 +35,7 @@ class NamedEntityStrategy(ISemanticsStrategy):
 
         self.updating = False
         loop = LoopingCall(self.update)
-        loop.start(10)
+        loop.start(5)
 
         reactor.run()
 

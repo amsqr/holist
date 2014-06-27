@@ -10,7 +10,7 @@ module('App')
         // autocompletion with typeahead
         //
         $scope.searchResults = [];
-
+        $scope.activitylog = [];
 
 
         $scope.updateAutocomplete = function(){
@@ -36,6 +36,8 @@ module('App')
         // perform search
         //
         $scope.onSearch = function() {
+            $('#graphSearch').animate({ top: "-20"}, 1000);
+
             $state.go('search', {
                 query: $scope.searchKeyword
             });

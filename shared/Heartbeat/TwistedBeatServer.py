@@ -25,7 +25,7 @@ class Receiver(protocol.DatagramProtocol):
 
     def datagramReceived(self, data, (ip, port)):
         if data.startswith('PyHB'):
-            ln.debug("Heartbeat received from %s:%s Data: %s", ip, port, data)
+            #ln.debug("Heartbeat received from %s:%s Data: %s", ip, port, data)
             self.callback(ip, data.split('-')[1])
 
 class DetectorService(internet.TimerService):

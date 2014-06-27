@@ -16,7 +16,7 @@ class SimpleDictionary(IDictionary):
     def __getitem__(self, tokenid):
         return self.id2token[tokenid]
 
-    def getTokenID(self,token):
+    def getTokenID(self, token):
         return self.token2id[token]
 
     def __len__(self):

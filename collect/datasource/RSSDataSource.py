@@ -5,6 +5,9 @@ from twisted.internet.threads import deferToThread
 from twisted.internet import reactor
 from pymongo import MongoClient
 from collections import OrderedDict
+import datetime
+from goose import Goose
+import urllib2
 
 
 import feedparser
@@ -65,7 +68,7 @@ class RSSFeed(object):
             self.etag = None
             self.modified = None
 
-        #self.goose = Goose()
+        self.goose = Goose()
         self.updating = False
 
         self.newDocuments = []
@@ -150,22 +153,32 @@ class RSSFeed(object):
             # save the modified date. if it's not available, just save the id (won't support updates for this link!)
             self.idUpdateMemory[item.id] = item.get("modified", item.id)
 
-            # this is also where we could extract the full text if we want it
-            text = item.description
-            #if EXTRACT_FULL_TEXTS:
-                
-            #    text = self.goose.extract(url=url)
-
-            document = Document(text)
-            document.id = item.id
-            document.link = item.id
-            document.title = item.title
             try:
-                document.timestamp = item.published
+                link = item.link
             except AttributeError:
-                pass
+                ln.warn("article '%s' from source %s doesn't have a link attribute!", item.title, self.url)
+                link = item.id
 
+            # tell Goose to download and extract the full article
+            try:
+                article = self.goose.extract(link)
+            except:
+                ln.exception("For link %s: ", link)
 
+            document = Document(article.cleaned_text)
+            document.id = item.id
+            document.link = link
+            document.title = article.title
+            try:
+                assert bool(article.meta_description)
+                document.description = article.meta_description
+            except AttributeError:
+                document.description = item.description
+            except AssertionError:
+                ln.warn("Empty meta description for article %s from %s.", link, self.url)
+                document.description = item.description
+
+            document.timestamp = datetime.datetime.now().isoformat()
             document.sourceType = self.__class__.__name__
             
             listToAppendTo.append(document)

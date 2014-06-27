@@ -20,8 +20,9 @@ class TokenizingPorter2Stemmer():
         else:
             text = doc.text[:]
         text = text.encode("ascii", "ignore").lower()
-        text = self.removePunctuation(text)
         text = text.split()
+        text = self.removeHTML(text)
+        text = self.removePunctuation(text)
         text = self.stemWords(text)
         text = self.removeNonsense(text)
         text = self.removeStopWords(set(text))
@@ -31,6 +32,13 @@ class TokenizingPorter2Stemmer():
             return text
         else:
             doc.preprocessed = text
+
+    def removeHTML(self, text):
+        for term in text[:]:
+            if term.startswith("<") and term.endswith(">"):
+                text.remove(term)
+        return text
+
     def removeNonsense(self, text):
         def isNonsense(term):
             if term[:4] == "http" or term[:4] == "href" or term[:7] == "srchttp":
@@ -41,10 +49,11 @@ class TokenizingPorter2Stemmer():
                     return True
             return False
         return [term for term in text if not isNonsense(term)]
-    def removePunctuation(self,text):
-        return text.translate(string.maketrans("",""), string.punctuation)
+
+    def removePunctuation(self, text):
+        return [term.translate(string.maketrans("",""), string.punctuation) for term in text]
     
-    def removeStopWords(self,textSet):
+    def removeStopWords(self, textSet):
         return textSet - self.stopWords
     
     def stemWords(self, text):

@@ -4,7 +4,7 @@ module('App')
         $scope.ServicesSlides = [
             {
                 "image":'assets/img/about/slider/newyork.png',
-                "title":"Don't Listen On Your Gut Feeling!",
+                "title":"Don't Listen to Your Gut Feeling!",
                 "caption":"holist is a Big Data, Computer Linguistic and Visual Analytics company<br/>providing insights from global science, patents, press, web, and social media for your strategy."
             },
             {
