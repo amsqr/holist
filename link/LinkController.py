@@ -101,7 +101,9 @@ class LinkController(object):
         self.namedEntityIndex.save()
 
     def completeSearch(self, searchString):
-        return [namedEntity for namedEntity in self.namedEntityIndex.index if namedEntity.startswith(searchString)]
+        return sorted([namedEntity for namedEntity in self.namedEntityIndex.index
+                      if namedEntity.startswith(searchString)],
+                      key=lambda s: len(s))
 
     def performEntitySearch(self, entityName):
         # check that we know this entity
