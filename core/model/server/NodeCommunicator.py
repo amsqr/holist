@@ -100,7 +100,7 @@ class NodeCommunicator(object):
 
     def _registerWithNode(self, nodeIp, registerPort, maxRetries):
         for x in range(maxRetries):
-            ln.debug("attempting to register with core on %s:%s", nodeIp, registerPort)
+            ln.debug("attempting to register with node on %s:%s", nodeIp, registerPort)
             try:
                 if self.isStrategy:
                     r = requests.post("http://" + nodeIp + ":"+str(registerPort)+"/register_strategy",
@@ -114,7 +114,7 @@ class NodeCommunicator(object):
                 time.sleep(2)
                 continue
             if r.status_code == 200:
-                ln.info("registered with core.")
+                ln.info("registered with node.")
                 if self.heartbeatServer is None:
                     self.heartbeatServer = TwistedBeatServer(self.handleServerDown, self.listenPort)
                 return True
