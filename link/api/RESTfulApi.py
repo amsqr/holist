@@ -82,7 +82,7 @@ class Favorite(Resource):
 
     def render_POST(self, request):
         request.setHeader('Access-Control-Allow-Origin', '*')
-        request.setHeader('Access-Control-Allow-Methods', 'GET')
+        request.setHeader('Access-Control-Allow-Methods', 'POST')
         try:
             ids = [cgi.escape(docid) for docid in request.args["document_id"]]
         except KeyError:
