@@ -25,9 +25,8 @@ class Receiver(protocol.DatagramProtocol):
 
     def datagramReceived(self, data, (ip, port)):
         if data.startswith('PyHB'):
-            #ln.debug("Heartbeat received from %s:%s", ip, port)
-            #todo extract port from data
-            self.callback(ip, port)
+            ln.debug("Heartbeat received from %s:%s Data: %s", ip, port, data)
+            self.callback(ip, data.split('-')[1])
 
 class DetectorService(internet.TimerService):
 
@@ -44,9 +43,8 @@ class DetectorService(internet.TimerService):
         limit = time.time() - CHECK_TIMEOUT
         silent = [(ip, port) for (ip, (ipTime, port)) in self.beats.items() if ipTime < limit]
 
-        for ip in silent:
+        for (ip, port) in silent:
             del self.beats[ip]
 
         if(silent):
-            ln.error("Silent clients: %s", silent)
             self.callback(silent)

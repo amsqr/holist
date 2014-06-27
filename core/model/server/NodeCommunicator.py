@@ -41,6 +41,21 @@ class Task(Resource):
 
         return json.dumps({"result": "ok"})
 
+class RegisterListener(Resource):
+    def __init__(self, controller):
+        self.controller = controller
+
+    def render_POST(self, request):
+        request.setHeader("content-type", "application/json")
+        ln.debug("received registration request: %s", request.args)
+        ip = cgi.escape(request.args["ip"][0])
+        port = cgi.escape(request.args["port"][0])
+        if None not in (ip, port):
+            self.controller.registerListener(ip, port)
+            return json.dumps({"result": "success"})
+        else:
+            return json.dumps({"result": "failure"})
+
 class SmallTask(Resource):
     def __init__(self, controller):
         self.controller = controller
@@ -62,12 +77,15 @@ class NodeCommunicator(object):
 
     def setupResources(self):
         root = Resource()
+        self.heartbeatServer = None;
         taskPage = Task(self.controller, self.isStrategy)
+        registerPage = RegisterListener(self.controller)
         if self.isStrategy:
             root.putChild("small_task", SmallTask(self.controller))
             root.putChild("task", taskPage)
         else:
             root.putChild("notify", taskPage)
+            root.putChild("register_listener", registerPage)
         factory = Site(root)
         reactor.listenTCP(self.listenPort, factory)
 
@@ -92,13 +110,16 @@ class NodeCommunicator(object):
                                       {"ip": "localhost", "port": self.listenPort})
 
             except Exception as e:
-                ln.error("Couldn't connect to core on localhost:%s", registerPort)
+                ln.error("Couldn't connect to node on localhost:%s", registerPort)
                 time.sleep(2)
                 continue
             if r.status_code == 200:
                 ln.info("registered with core.")
-                self.heartbeatServer = TwistedBeatServer(self.handleServerDown, self.listenPort)
+                if self.heartbeatServer is None:
+                    self.heartbeatServer = TwistedBeatServer(self.handleServerDown, self.listenPort)
                 return True
         return False
 
-    def handleServerDown(self, clients): pass
+    def handleServerDown(self, clients):
+        for (ip, port) in clients:
+            self.registerWithNode(ip, port)

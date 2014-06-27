@@ -13,6 +13,7 @@ from twisted.internet import reactor
 from collect.api.RESTfulFrontend import RESTfulFrontend
 from collect.db.DatabaseInterface import DatabaseInterface
 from core.model.server.Listener import Listener
+from shared.Heartbeat.HeartbeatClient import HearbeatClient
 
 import datetime
 
@@ -22,6 +23,10 @@ from collect.datasource.RSSDataSource import RSSDataSource
 class DataCollector(object):
     def __init__(self):
         self.listeners = []
+
+        heartbeatThread = HearbeatClient(self.listeners, holistConfig.collectNodePort)
+        heartbeatThread.start()
+
         self.frontend = RESTfulFrontend(self)
         self.databaseInterface = DatabaseInterface()
         self.sources = [RSSDataSource()] #Reuters21578DataSource()]

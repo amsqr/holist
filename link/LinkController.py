@@ -54,10 +54,6 @@ class LinkController(object):
         if REBUILD:
             self.rebuildIndex()
 
-        # PUT THIS LINES WHEN CONNECTION TO CORE IS ESTABLISHED
-        #heartbeatThread = HearbeatClient(CORE_IP, 43278)
-        #heartbeatThread.start()
-
         ln.info("running reactor.")
         reactor.run()
 
