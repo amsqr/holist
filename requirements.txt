@@ -8,3 +8,5 @@ BeautifulSoup4
 feedparser
 twisted
 goose-extractor
+redis
+scikit-learn

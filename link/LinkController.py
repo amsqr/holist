@@ -15,6 +15,7 @@ from core.model.server.NodeCommunicator import NodeCommunicator
 from link.LshManager import LshManager
 from link.NamedEntityIndex import NamedEntityIndex
 from link.ClusterStratgy import SimpleClusterStrategy
+from link.ClusterStratgy import DBSCANClusterStrategy
 
 from collections import defaultdict
 
@@ -32,6 +33,7 @@ def bsonToClientBson(bson):
     clientDoc["id"] = str(bson["_id"])
     clientDoc["title"] = bson["title"]
     clientDoc["text"] = bson["text"]
+    clientDoc["link"] = bson["link"]
     #TODO all documents MUST have timestamps
     clientDoc["timestamp"] = bson.get("timestamp", str(datetime.datetime.now()))
     return clientDoc
@@ -49,6 +51,7 @@ class LinkController(object):
         self.lshManager = LshManager()
         self.namedEntityIndex = NamedEntityIndex()
 
+        #self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
         self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
 
         self.frontend = RESTfulApi(self)
@@ -100,7 +103,9 @@ class LinkController(object):
         self.namedEntityIndex.save()
 
     def completeSearch(self, searchString):
-        return [namedEntity for namedEntity in self.namedEntityIndex.index if namedEntity.startswith(searchString)]
+        return sorted([namedEntity for namedEntity in self.namedEntityIndex.index
+                      if namedEntity.startswith(searchString)],
+                      key=lambda s: len(s))
 
     def performEntitySearch(self, entityName):
         # check that we know this entity
