@@ -50,7 +50,8 @@ class LinkController(object):
         self.lshManager = LshManager()
         self.namedEntityIndex = NamedEntityIndex()
 
-        self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
+        #self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
+        self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
 
         self.frontend = RESTfulApi(self)
 
