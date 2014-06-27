@@ -7,3 +7,4 @@ nltk
 BeautifulSoup4
 feedparser
 twisted
+goose-extractor
