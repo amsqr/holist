@@ -5,17 +5,38 @@
 
 - Link: add more clustering methods
 - Link: think about different "seeds" than just the search term in LSA space
+
 - Link: find a way to retrieve linked entities
 
+- NERStrategy: add TF-IDF vector *for entities only*
 - LSAStrategy: refactor such that one node handles conversion, and sends samples to a second node to update the model
-
-- Shared: fix heartbeat and registration setup such that all nodes can be plugged in and out at will
-
-
-- add retroactive analysis when a node is restarted
-   - StrategyManager, Link Controller need to save the _id of the last document they processed
-   - StrategyManager: when a new strategy comes online, reprocess all the documents that were added in the mean time
 
 - Collect: create Twitter data source
 - Collect: Find more RSS feeds
+
+
+
+IDEAS AND OUTLOOK (ordered roughly by when we should implement each feature)
+    - use entity tf-idf to find important entities in a document
+        - use this to do awesome NE overlap queries (to discover more instances when important actors appear together)
+
+    - add more user interactivity:
+        - manually editing the graph
+            - means: right click to expand
+                - expand has options: NE overlap, similarity search, maybe things like specific sentence search
+            - everything should be deliberate
+            - don't just mess with the graph automatically when a node is clicked by accident!
+        - taking notes
+        - saving, loading the graph
+        - sharing and collaborating on a graph
+
+    - find a way to organize articles by broader topics (market sectors, if you will)
+
+    - add MORE VISUALIZATIONS
+       - graph is cool, but we need more
+       - timeline, map
+       - some sort of statistics about some articles or individual entities
+
+    - automatically discover insights and anomalies
+        - this is really the final goal: holist should highlight information that you don't even know is important
 
