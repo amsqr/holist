@@ -33,6 +33,7 @@ def bsonToClientBson(bson):
     clientDoc["id"] = str(bson["_id"])
     clientDoc["title"] = bson["title"]
     clientDoc["text"] = bson["text"]
+    clientDoc["link"] = bson["link"]
     #TODO all documents MUST have timestamps
     clientDoc["timestamp"] = bson.get("timestamp", str(datetime.datetime.now()))
     return clientDoc
