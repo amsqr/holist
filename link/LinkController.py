@@ -15,6 +15,7 @@ from core.model.server.NodeCommunicator import NodeCommunicator
 from link.LshManager import LshManager
 from link.NamedEntityIndex import NamedEntityIndex
 from link.ClusterStratgy import SimpleClusterStrategy
+from link.ClusterStratgy import DBSCANClusterStrategy
 
 from collections import defaultdict
 
@@ -47,7 +48,7 @@ class LinkController(object):
         self.lshManager = LshManager()
         self.namedEntityIndex = NamedEntityIndex()
 
-        self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
+        self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
 
         self.frontend = RESTfulApi(self)
 
