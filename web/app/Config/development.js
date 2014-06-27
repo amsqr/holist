@@ -2,7 +2,7 @@
 angular.module('App')
     .constant('AppSettings', {
         debug: true,
-        mockhttp: true,
+        mockhttp: false,
         apiUrl: 'http://holist.pcdowling.com/', //api
         websiteUri: 'http://localhost:4000',
         appUri: 'http://localhost:9000'

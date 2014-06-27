@@ -1,17 +1,42 @@
 <form class="col-sm-6" id="graphSearch" ng-submit="onSearch()" name="graphSearch">
+    <div class="input-group transparent">
+        <input type="text" ng-model="searchKeyword"
+               typeahead="state for state in updateAutocomplete(searchKeyword) | filter:$viewValue | limitTo:8"
+               typeahead-on-select="onSearch()"
+               class="form-control"
+               placeholder="Search" ng-required=""
 
-    <input type="text" ng-model="searchKeyword"
-           typeahead="state for state in updateAutocomplete(searchKeyword) | filter:$viewValue | limitTo:8"
-           typeahead-on-select="onSearch()"
-           class="form-control"
-           placeholder="Search" ng-required=""
-
-            >
-
-    <i ng-show="loadingLabels" class="glyphicon glyphicon-refresh"></i>
+                >
+        <span ng-show="searchKeyword.length > 0" class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="searchKeyword='';onSearch();"><i class="fa fa-times-circle"></i></button>
+        </span>
+        <i ng-show="loadingLabels" class="glyphicon glyphicon-refresh"></i>
+    </div>
 
 
 </form>
+
+<div id="recentLinks" ng-if=" (activitylog && activitylog.length > 0) || (favorites && favoritelog.length > 0)">
+    <tabset>
+        <tab>
+            <tab-heading><i class='fa fa-align-justify'></i> Activity</tab-heading>
+            {{activitylog | json}}
+            <table class="table">
+
+                <tr><td ng-repeat="row in activitylog">{{row | json }}</td></tr>
+            </table>
+        </tab>
+
+        <tab>
+            <tab-heading><i class='fa fa-star'></i>  Favorites</tab-heading>
+            <table class="table">
+
+            </table>
+        </tab>
+
+    </tabset>
+
+</div>
 
 <graph search="currentSearch" id="graph"></graph>
 

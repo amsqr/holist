@@ -21,6 +21,7 @@ module('App')
                 window.onresize = function() {
                     scope.$apply();
                 };
+
                 scope.$watch('search', function(newKeyword, oldVals) {
                     return graph.fetchData(newKeyword, graph);
                 }, true);
@@ -30,6 +31,14 @@ module('App')
                 }, function() {
                     graph.render(scope.data);
                 });
+
+                graphFactory.onElementsRender = function(parentNode, newResults) {
+                     console.log('[onElementsRender] parentNode',parentNode);
+                    if (!parentNode.title) return;
+
+                    scope.$parent.activitylog.push([{id:parentNode.id, title:parentNode.title}]);
+
+                }
 
             }
 

@@ -4,10 +4,16 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
 
     var self = this;
+    var debug = true;
     var force; // forces
     this.vis = null; // svg canvas
     var nodes;
     var links;
+    /*
+     holds a hash map: {node:  [relatedNode, relatedNode,... ] }
+
+     */
+    var graphStructureCache = {};
     var h = 100;
     var w = 100;
     var tooltip;
@@ -63,14 +69,12 @@ function GraphFactory($http,AppSettings,$q,$log) {
     // Add and remove Data interface
     // =====================================
 
-
+    // clears all nodes
     this.clearNodes = function() {
 
         nodes = force.nodes();
         links = force.links();
 
-        //nodes = [];
-        //links = [];
 
     }
     // Add and remove elements on the graph object
@@ -80,9 +84,11 @@ function GraphFactory($http,AppSettings,$q,$log) {
                 return;
             }
         };
+        console.log('[graph] adding node', node);
         nodes.push(node);
     }
 
+    // find node by id
     var findNode = function(id) {
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id)
@@ -90,6 +96,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
         };
     }
 
+    // find index of node by id
     var findNodeIndex = function(id) {
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id)
@@ -97,26 +104,45 @@ function GraphFactory($http,AppSettings,$q,$log) {
         };
     }
 
+    /**
+     * pass the node and remove its links
+     * to other nodes.
+     * @param id
+     */
+    this.removeLinksOfNode = function(node) {
 
-    this.removeNode = function(id) {
         var i = 0;
-        var n = findNode(id);
         while (i < links.length) {
-            if ((links[i]['source'] === n) || (links[i]['target'] == n))
+            if ((links[i]['source'].id == node.id) || (links[i]['target'].id == node.id)) {
                 links.splice(i, 1);
-            else i++;
+            } else {
+                i++;
+            }
         }
-        var index = findNodeIndex(id);
+    }
+    /***
+     * pass node or nodeid to remove the node;
+     * @param id
+     */
+    this.removeNode = function(id) {
+
+        var i = 0;
+        var n = (typeof(id) == 'object' ? id : findNode(id) );
+
+        self.removeLinksOfNode(n);
+        var index = findNodeIndex(n.id);
         if (index !== undefined) {
             nodes.splice(index, 1);
             self.update();
+        }else {
+            console.log('[graph] error: remove node, not found!',id);
         }
     }
 
+    // add connection between 2nodes (by id)
     this.addLink = function(sourceId, targetId) {
         var sourceNode = findNode(sourceId);
         var targetNode = findNode(targetId);
-
         if ((sourceNode !== undefined) && (targetNode !== undefined)) {
             links.push({
                 "source": sourceNode,
@@ -125,11 +151,99 @@ function GraphFactory($http,AppSettings,$q,$log) {
             //self.update();
         }
     }
+    /**
+     *
+     */
+    var buildLinkStructure = function() {
+        graphStructureCache = {};
+
+        var addLink = function(node,targetNode) {
+
+            if (!graphStructureCache[node.id])
+                graphStructureCache[node.id] = [];
+            graphStructureCache[node.id].push(targetNode);
+
+        }
+        console.log(links);
+        for (var i in links) {
+            //console.log(links[i]['target'].id + '<====>' + links[i]['source'].id);
+            addLink(links[i]['target'], links[i]['source']);
+            addLink(links[i]['source'], links[i]['target']);
+        }
+
+        console.log('final graph structure: ',graphStructureCache );
+    }
+    /**
+     * find all related links
+     * @param skipNode
+     * @param node
+     * @returns {*}
+     */
+    this.findLinkedNodes = function(node) {
+        if (node == null) return [];
+        return graphStructureCache[node.id];
+
+    }
+
+    //
+    // reduces Opacity of all nodes, except the "skip" one
+    // skip is a node id
+    //
+    this.reduceNodes = function(currentNode){
+        buildLinkStructure();
+        var reduceNodesRecursive = function(parentNode, node, level) {
+            var nodes = self.findLinkedNodes(node);
+            for (var i in nodes) {
+                if (parentNode && parentNode.id == nodes[i].id) continue;
+                reduceNodesRecursive(node, nodes[i], level + 1 );
+            }
+            console.log(node.id + ' = ' + level);
+            if (level > 2) {
+                return self.removeNode(node);
+            }
+            if (level > 1) {
+                var opacity = 1 - (0.25 * level);
+
+            }
+
+
+        }
+        reduceNodesRecursive(null, currentNode, 0);
+
+    };
+    this.reduceAllNodes = function(skip) {
+
+
+        return;
+        for (var i in nodes) {
+
+            console.log('new opacity',i, nodes[i].opacity);
+            // skip single node, e.g. parent
+            if (skip && skip === nodes[i].id) {
+                continue;
+            }
+            nodes[i].opacity = (nodes[i].opacity ? nodes[i].opacity - 0.3: 0.8);
+
+            if (nodes[i].opacity < 0.1) {
+                this.removeNode(nodes[i].id);
+                return;
+            }
+            if (!nodes[i].jqCircle) nodes[i].jqCircle = $(nodes[i].circle);
+
+            nodes[i].jqCircle.fadeTo(500, nodes[i].opacity);
+
+        }
+        // console.log(nodes);
+    }
+    this.reduceNodeOpacity = function(node) {
+        if (!node.opacity) {
+            node.opacity = 0.5;
+        }
 
 
 
-
-
+    }
+    // update method; updates the graph
     self.update = function() {
 
         var link = self.vis.selectAll("line.link")
@@ -150,14 +264,20 @@ function GraphFactory($http,AppSettings,$q,$log) {
         var nodeEnter = node.enter()
             .append("g")
             .attr("class", "node")
+            .attr("id", function(d) {
+                return d.id
+            })
             .call(force.drag);
 
         nodeEnter.append("circle")
             .attr("r", function(d) {
+                if (d.id == 'center') return 30;
+
                 return 30 * Math.random() + 3; // @todo: change to d.weight if it has sensible values
             })
             .attr("id", function(d) {
-                return d.id
+                d.circle = this;
+                return "circle_"+d.id
             })
             .style('cursor', 'pointer')
             .on("mouseover", mouseover)
@@ -183,11 +303,11 @@ function GraphFactory($http,AppSettings,$q,$log) {
             .attr("dx", 12)
             .attr("dy", ".35em")
             .text(function(d) {
-                return d.title
+                return (debug? d.id : d.title)
             });
 
         nodeEnter.append("id").attr("id", function(d) {
-            return d.id;
+            return "id"+d.id;
         });
 
         node.exit().remove();
@@ -221,19 +341,36 @@ function GraphFactory($http,AppSettings,$q,$log) {
     // User interaction
     // =====================================
     // getNodeByEvent(d3.select(this))
+    // deprecated see next method
     var getNodeIdByEvent = function(target) {
         var targetId = target[0][0].getAttribute('id');
         if (!targetId)
             return console.log('could not find id of targe object', target);
+        //
+        // a little sloppy
+        // gets event ID from circle instead of the node(?)
+        // this.id should contain the id, but it does not.
+        //
+
+
         return (targetId);
+    }
+    // gets id from (this) (event sender) and removes the prefix
+    var getNodeIdFromEventObject = function(obj) {
+
+        var targetId = obj.id;
+        return targetId.replace(/circle_/,'').replace(/node_/,'');
+
     }
 
     var expand = function() {
-        var targetId = getNodeIdByEvent(d3.select(this));
+        var targetId = getNodeIdFromEventObject(this);
         var targetNode =  findNode(targetId);
         if (!targetNode) {
             return;
         }
+
+
 
         if(!targetNode.documents){
             var argstring = "?id=" + targetId;
@@ -243,9 +380,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
                 targetNode.documents.forEach(function(doc) {
                     argstring = argstring + "document=" + doc.id + "&"
                 });
-                console.log(argstring);
                 self.fetchAdditionalNodes(additionalNodesUrlCluster + argstring, targetId);
-
         }
 
 
@@ -260,11 +395,8 @@ function GraphFactory($http,AppSettings,$q,$log) {
             .attr("r", 15);
     }
     var mouseover = function() {
-
-        var targetId = getNodeIdByEvent(d3.select(this));
+        var targetId = getNodeIdFromEventObject(this);
         var targetNode =  findNode(targetId);
-
-
         popover
             .css('visibility', "visible")
             .css('left', d3.event.pageX + 10 + "px")
@@ -306,27 +438,30 @@ function GraphFactory($http,AppSettings,$q,$log) {
                     self.addLink(vlinks[i].source.id, vlinks[i].target.id);
                 }
                 self.update();
+                //debug
+                self.reduceAllNodes('center');
 
             });
 
 
     }
     this.fetchAdditionalNodes = function(url, parentNodeId) {
+        var parentNode = findNode(parentNodeId);
 
         httpGet(url).then(function(results,status){
             if (!results.documents){
                 $log.warn('additional nodes does not have documents',results);
             }
             var newNodes = results.documents;
-
-           console.log('[additional nodes]',newNodes);
             for (i in newNodes){
                 self.addNode(newNodes[i]);
                 self.addLink(newNodes[i].id,parentNodeId)
             }
-
-
             self.update();
+            self.reduceNodes(parentNode);
+            if (self.onElementsRender){
+                self.onElementsRender(parentNode, results);
+            }
         });
         //newNodes = JSON.parse();
 
@@ -381,6 +516,8 @@ function GraphFactory($http,AppSettings,$q,$log) {
     self.render = function(data) {
         self.update(); //?
     }
+    self.onElementsRender = null;
+
 
 
     // =====================================

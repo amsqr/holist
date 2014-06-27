@@ -6,7 +6,6 @@ body {
   width: 220px;
   height: 50px;
   cursor: pointer;
-  background: url(img/holist-logo-220.png) no-repeat;
   text-indent: -10000px; }
   .top-header .logo a span {
     display: none; }
@@ -29,11 +28,21 @@ body {
   fill: #006699;
   stroke: #fff;
   stroke-width: 1.5px; }
+#graph .node #circle_center {
+  fill: black; }
 #graph .node circle:hover {
   fill: #ccc; }
 #graph .nodetext {
   pointer-events: none;
   font: 10px sans-serif; }
+
+#graphSearch .btn {
+  height: 40px; }
+
+#recentLinks {
+  width: 300px;
+  position: absolute;
+  right: 0; }
 
 text {
   font: 10px sans-serif;
