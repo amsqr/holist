@@ -59,7 +59,7 @@ body {
     }
 
   }
-  .nodetext { pointer-events: none; font: 10px sans-serif; }
+  .nodetext { pointer-events: none; font: 14px sans-serif; }
 
 }
 #graphSearch {
@@ -70,7 +70,12 @@ body {
 #recentLinks {
   width:300px;
   position: absolute;
-  right:0;
+  right:15px;
+  .tab-content {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
 }
 
 text {

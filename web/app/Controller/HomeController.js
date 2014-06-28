@@ -4,7 +4,7 @@ module('App')
         if ($stateParams.query) {
             $scope.searchKeyword = $scope.currentSearch = $stateParams.query;
         } else {
-            $scope.currentSearch = 'demo';
+            $scope.currentSearch = 'World Cup';
         }
         //
         // autocompletion with typeahead
@@ -42,4 +42,35 @@ module('App')
                 query: $scope.searchKeyword
             });
         }
+        $scope.updateSearch = function(term) {
+            $scope.searchKeyword = term;
+        }
+
+        //
+        // FAvorites
+        //
+        $scope.favorites = [];
+        var favoritesUrl = AppSettings.apiUrl +  'favorites'
+        var getFavorites = function(){
+
+            $http({method: 'GET', url: favoritesUrl}).then(function(results){
+                console.log('favorites result', results);
+                $scope.favorites = results.data.documents;
+            });
+
+        }
+
+        $scope.isFavorite = function(id) {
+
+        }
+        $scope.addFavorite = function(documentId) {
+
+            $http.post( favoritesUrl, {document_id: documentId}).then(function(results){
+                console.log('save favorite results', results);
+                getFavorites();
+                // $scope.favorites = results.documents;
+            });
+
+        }
+        getFavorites();
     });

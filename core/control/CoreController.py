@@ -73,7 +73,7 @@ class CoreController(object):
         d = deferToThread(self.strategyManager.relabelStrategy, strategy)
         d.addCallback(self.setUpdatingFalse)
 
-    def setUpdatingFalse(self):
+    def setUpdatingFalse(self, result):
         self.updating = False
 
     def connectToDataSupply(self):

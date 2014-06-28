@@ -36,7 +36,7 @@ module('App')
                      console.log('[onElementsRender] parentNode',parentNode);
                     if (!parentNode.title) return;
 
-                    scope.$parent.activitylog.push([{id:parentNode.id, title:parentNode.title}]);
+                    scope.$parent.activitylog.push({id:parentNode.id, title:parentNode.title});
 
                 }
 

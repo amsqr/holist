@@ -10,7 +10,7 @@ import redis
 import json
 import ast
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
-
+from link.LinkController import bsonToClientBson
 import datetime
 
 NUMBER_OF_LSH_INDEXES = 10
@@ -21,6 +21,7 @@ class LshManager(object):
 
     def __init__(self):
         self.lshIndexList = []
+
 
         # create a list of lsh indexes
         self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES,
@@ -38,11 +39,7 @@ class LshManager(object):
         if not hasattr(document, "timestamp"):
             document.timestamp = str(datetime.datetime.now())
 
-        extra = json.dumps({
-            "id": document._id,
-            "timestamp": document.timestamp,
-            "title": document.title
-        })
+        extra = json.dumps(str(document._id))
 
         self.lsh.index(dense_vector, extra_data=extra)  # extra MUST be hashable
 
@@ -56,33 +53,27 @@ class LshManager(object):
 
         dense_vector = self._sparseToDenseConverter(lsa_vector)
 
+        client = getDatabaseConnection()
+
         resultSet = set()
         results = []
 
-        for result in self.lsh.query(dense_vector, num_results=6, distance_func="cosine"):
+        for result in self.lsh.query(dense_vector, num_results=10, distance_func="cosine"):
             # example:
             # [
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
+            extra = ast.literal_eval(ast.literal_eval(result[0])[1])
 
+            clientDoc = bsonToClientBson(client.holist.articles.find({"_id": extra}).next())
+            jsonstr = json.dumps(clientDoc)
 
-            try:
-                res = ast.literal_eval(result[0].replace("}\"", "}").replace("\"{", "{").replace("\\", ""))
-            except SyntaxError:
-                ln.debug("literal_eval failed on %s (type: %s)", result[0], type(result[0]))
-                continue
+            if not jsonstr in resultSet:
+                resultSet.add(jsonstr)
+                results.append(clientDoc)
 
-
-            # add key (lsa vector) to the dict
-            res[1]['lsa'] = res[0]
-
-            docJson = json.dumps(res[1])
-            if not docJson in resultSet:
-                ln.debug("json: %s", docJson)
-                resultSet.add(docJson)
-                results.append(res[1])
-
+        ln.debug("retrieved %s documents.", len(results))
         return results
 
     # converts a vector in sparse format to a vector in dense format

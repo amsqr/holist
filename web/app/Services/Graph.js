@@ -4,7 +4,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
 
     var self = this;
-    var debug = true;
+    var debug = false;
     var force; // forces
     this.vis = null; // svg canvas
     var nodes;
@@ -39,9 +39,9 @@ function GraphFactory($http,AppSettings,$q,$log) {
         // get window dimensions
         fullScreenGraph();
         force = d3.layout.force()
-            .gravity(.01)
-            .distance(150)
-            .charge(-200)
+            .gravity(.07)
+            .distance(120)
+            .charge(-1000)
             .size([w, h]);
         //    .tick(self.tick);
 
@@ -300,7 +300,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
 
         nodeEnter.append("text")
             .attr("class", "nodetext")
-            .attr("dx", 12)
+            .attr("dx", 30)
             .attr("dy", ".35em")
             .text(function(d) {
                 return (debug? d.id : d.title)

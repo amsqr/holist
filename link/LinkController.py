@@ -12,7 +12,7 @@ from twisted.internet import reactor
 
 from link.api.RESTfulApi import RESTfulApi
 from core.model.server.NodeCommunicator import NodeCommunicator
-from link.LshManager import LshManager
+
 from link.NamedEntityIndex import NamedEntityIndex
 from link.ClusterStratgy import SimpleClusterStrategy
 from link.ClusterStratgy import DBSCANClusterStrategy
@@ -32,10 +32,13 @@ def bsonToClientBson(bson):
     clientDoc = {}
     clientDoc["id"] = str(bson["_id"])
     clientDoc["title"] = bson["title"]
+    clientDoc["description"] = bson["description"]
     clientDoc["text"] = bson["text"]
-    #TODO all documents MUST have timestamps
-    clientDoc["timestamp"] = bson.get("timestamp", str(datetime.datetime.now()))
+    clientDoc["link"] = bson["link"]
+    clientDoc["timestamp"] = bson["timestamp"]
     return clientDoc
+
+from link.LshManager import LshManager
 
 TESTING = True
 REBUILD = False
@@ -50,7 +53,8 @@ class LinkController(object):
         self.lshManager = LshManager()
         self.namedEntityIndex = NamedEntityIndex()
 
-        self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
+        #self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
+        self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
 
         self.frontend = RESTfulApi(self)
 
@@ -101,7 +105,9 @@ class LinkController(object):
         self.namedEntityIndex.save()
 
     def completeSearch(self, searchString):
-        return [namedEntity for namedEntity in self.namedEntityIndex.index if namedEntity.startswith(searchString)]
+        return sorted([namedEntity for namedEntity in self.namedEntityIndex.index
+                      if namedEntity.startswith(searchString)],
+                      key=lambda s: len(s))
 
     def performEntitySearch(self, entityName):
         # check that we know this entity
