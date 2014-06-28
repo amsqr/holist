@@ -50,7 +50,7 @@ class SimpleClusterStrategy(object):  # just cluster document by date
                 "id": "cluster_" + str(idx),
                 "name": "cluster_" + str(idx),
                 "title": cluster[0]["title"],
-                "documents": [{"id": d["_id"], "title": d["title"]} for d in cluster],
+                "documents": [{"id": d["id"], "title": d["title"]} for d in cluster],
                 "weight": len(cluster)
             }
             nodes.append(node)
