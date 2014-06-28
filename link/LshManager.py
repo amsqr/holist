@@ -61,7 +61,7 @@ class LshManager(object):
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
-            extra = result[1]
+            extra = result
             ln.debug(extra)
 
 
