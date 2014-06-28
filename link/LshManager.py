@@ -63,7 +63,7 @@ class LshManager(object):
             # ]
 
             try:
-                jsonstr = result[0][result[0].find("]") + 2:].strip()
+                jsonstr = result[0][result[0].find("]") + 2:].strip()[:-2]
 
                 res = ast.literal_eval(jsonstr)
             except SyntaxError:
