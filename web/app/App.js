@@ -48,6 +48,12 @@ angular
                 templateUrl: 'app/Views/login.html',
                 controller: "LoginController"
             })
+            .state('logout', {
+                url: '/logout',
+                templateUrl: 'app/Views/login.html',
+                controller: "LoginController"
+            })
+
             .state('blog', {
                 url: '/blog',
                 templateUrl: 'app/Views/blog.html',
