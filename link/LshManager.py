@@ -10,7 +10,7 @@ import redis
 import json
 import ast
 from core.model.semantics.LSA.LSAStrategy import NUM_TOPICS
-
+from link.LinkController import bsonToClientBson
 import datetime
 
 NUMBER_OF_LSH_INDEXES = 10
@@ -38,11 +38,7 @@ class LshManager(object):
         if not hasattr(document, "timestamp"):
             document.timestamp = str(datetime.datetime.now())
 
-        extra = json.dumps({
-            "id": document._id,
-            "timestamp": document.timestamp,
-            "title": document.title
-        })
+        extra = json.dumps(bsonToClientBson(document.__dict__))
 
         self.lsh.index(dense_vector, extra_data=extra)  # extra MUST be hashable
 
