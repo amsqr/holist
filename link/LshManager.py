@@ -61,7 +61,7 @@ class LshManager(object):
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
-            extra = result
+            extra = ast.literal_eval(ast.literal_eval(result[0])[1])
             ln.debug(extra)
 
 
