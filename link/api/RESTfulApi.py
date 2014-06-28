@@ -4,6 +4,7 @@ from core.util.util import *
 ln = getModuleLogger(__name__)
 
 from twisted.web.resource import Resource
+
 from twisted.web.server import Site
 from twisted.web.static import File
 from twisted.internet import reactor
@@ -81,6 +82,7 @@ class Favorite(Resource):
         return json.dumps(self.controller.retrieveDocuments(self.favorites))
 
     def render_POST(self, request):
+        request.setHeader("content-type", "application/json")
         request.setHeader('Access-Control-Allow-Origin', '*')
         request.setHeader('Access-Control-Allow-Methods', 'POST')
         try:

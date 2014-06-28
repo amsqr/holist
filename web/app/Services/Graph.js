@@ -39,9 +39,9 @@ function GraphFactory($http,AppSettings,$q,$log) {
         // get window dimensions
         fullScreenGraph();
         force = d3.layout.force()
-            .gravity(.01)
-            .distance(150)
-            .charge(-200)
+            .gravity(.05)
+            .distance(170)
+            .charge(-220)
             .size([w, h]);
         //    .tick(self.tick);
 
