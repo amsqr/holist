@@ -7,7 +7,7 @@ from core.util.util import *
 count = 0
 client = getDatabaseConnection()
 for article in client.holist.articles.find():
-    print article
+    print article["vectors"]
     break
 
     if not "NamedEntities" in article["vectors"] or not "LSA" in article["vectors"]:
