@@ -8,6 +8,7 @@ import datetime
 import requests
 from collections import defaultdict
 from sklearn.cluster import DBSCAN
+from sklearn.datasets.samples_generator import make_blobs
 
 from dateutil import parser
 
@@ -85,13 +86,23 @@ class DBSCANClusterStrategy(object):
         matches = self.lshManager.getSimilarDocuments(entityLSA)
 
         X = []
-        #for match in matches:
-         #   X.append(match.vectors["LSA"])
+        for match in matches:
+            X.append(match['lsa'])
+
+        centers = [[1, 1], [-1, -1], [1, -1]]
+        Y, labels_true = make_blobs(n_samples=750, centers=centers, cluster_std=0.4,
+                            random_state=0)
+
+        #dist = numpy.linalg.norm(a-b)
 
         #ln.debug(X)
+        #ln.debug(Y)
+        #ln.debug(type(X[0][0]))
         #db = DBSCAN(eps=0.3, min_samples=1).fit(X)
         #core_samples = db.core_sample_indices_
         #labels = db.labels_
+        #n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+        #ln.debug('Estimated number of clusters: %d' % n_clusters_)
 
         clusters = defaultdict(list)
         for document in matches:

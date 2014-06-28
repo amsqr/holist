@@ -66,11 +66,16 @@ class LshManager(object):
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
 
+
             try:
                 res = ast.literal_eval(result[0].replace("}\"", "}").replace("\"{", "{").replace("\\", ""))
             except SyntaxError:
                 ln.debug("literal_eval failed on %s (type: %s)", result[0], type(result[0]))
                 continue
+
+
+            # add key (lsa vector) to the dict
+            res[1]['lsa'] = res[0]
 
             docJson = json.dumps(res[1])
             if not docJson in resultSet:
