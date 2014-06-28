@@ -1,13 +1,23 @@
-<div class="top-bar">
+<div class="top-bar" ng-controller="HeaderController">
 
     <div class="container">
         <div class="pull-right">
-            <ul class="info list-inline hidden-xs">
+
+            <ul class="info list-inline hidden-xs" ng-show="!user_logged_in">
                 <li><a ui-sref="signup" class="hover-color">Signup</a>
                 </li>
                 <li><a ui-sref="login" class="hover-color"><i class="ion-man"></i>Login</a>
                 </li>
             </ul>
+            <ul class="info list-inline hidden-xs" ng-show="user_logged_in">
+                <li><a ui-sref="favorites" class="hover-color"><i class="fa fa-star"></i> Favorites</a>
+                </li>
+                <li><i class="ion-man"></i> {{user.username}} </li>
+                <li><i ng-click="logout()" tooltip="Logout" class="fa fa-lock"></i> </li>
+
+
+            </ul>
+
         </div>
     </div>
     <!--container end-->
