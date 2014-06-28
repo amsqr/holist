@@ -12,7 +12,7 @@ from twisted.internet import reactor
 
 from link.api.RESTfulApi import RESTfulApi
 from core.model.server.NodeCommunicator import NodeCommunicator
-from link.LshManager import LshManager
+
 from link.NamedEntityIndex import NamedEntityIndex
 from link.ClusterStratgy import SimpleClusterStrategy
 from link.ClusterStratgy import DBSCANClusterStrategy
@@ -37,6 +37,8 @@ def bsonToClientBson(bson):
     clientDoc["link"] = bson["link"]
     clientDoc["timestamp"] = bson["timestamp"]
     return clientDoc
+
+from link.LshManager import LshManager
 
 TESTING = True
 REBUILD = False
