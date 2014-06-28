@@ -38,7 +38,7 @@ class LshManager(object):
         if not hasattr(document, "timestamp"):
             document.timestamp = str(datetime.datetime.now())
 
-        extra = json.dumps(bsonToClientBson(document.__dict__))
+        extra = json.dumps(str(document._id))
 
         self.lsh.index(dense_vector, extra_data=extra)  # extra MUST be hashable
 
@@ -61,22 +61,15 @@ class LshManager(object):
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
+            extra = result[1]
+            ln.debug(extra)
 
-            try:
-                jsonstr = "\"\"\"" + result[0][result[0].find("]") + 2:].strip()[1:-2] + "\"\"\""
 
-                res = ast.literal_eval(ast.literal_eval(jsonstr))
-            except SyntaxError:
-                ln.exception("literal_eval failed")
-                ln.debug(result)
-                ln.debug(jsonstr)
-                continue
-
-            docJson = json.dumps(res)
-            if not docJson in resultSet:
-                ln.debug("json: %s", docJson)
-                resultSet.add(docJson)
-                results.append(res)
+            #docJson = json.dumps(res)
+            #if not docJson in resultSet:
+            #    ln.debug("json: %s", docJson)
+            #    resultSet.add(docJson)
+            #    results.append(res)
 
         return results
 
