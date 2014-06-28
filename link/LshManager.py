@@ -19,8 +19,9 @@ NUMBER_OF_BITS_PER_HASH = 6
 
 class LshManager(object):
 
-    def __init__(self):
+    def __init__(self, controller):
         self.lshIndexList = []
+        self.controller = controller
 
         # create a list of lsh indexes
         self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES,
@@ -52,6 +53,8 @@ class LshManager(object):
 
         dense_vector = self._sparseToDenseConverter(lsa_vector)
 
+        client = getDatabaseConnection()
+
         resultSet = set()
         results = []
 
@@ -62,14 +65,16 @@ class LshManager(object):
             #   (((1, 1, 3), "{'extra':'data'}"), 1)
             # ]
             extra = ast.literal_eval(ast.literal_eval(result[0])[1])
-            ln.debug(extra)
 
+            bson = client.holist.articles.find({"_id": extra}).next()
+            bson = bsonToClientBson(bson)
 
-            #docJson = json.dumps(res)
-            #if not docJson in resultSet:
-            #    ln.debug("json: %s", docJson)
-            #    resultSet.add(docJson)
-            #    results.append(res)
+            doc = convertToDocument(bson)
+
+            if not bson in resultSet:
+                ln.debug("json: %s", bson)
+                resultSet.add(bson)
+                results.append(doc)
 
         return results
 
