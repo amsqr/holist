@@ -58,7 +58,7 @@ class LshManager(object):
         resultSet = set()
         results = []
 
-        for result in self.lsh.query(dense_vector, num_results=6, distance_func="cosine"):
+        for result in self.lsh.query(dense_vector, num_results=10, distance_func="cosine"):
             # example:
             # [
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
@@ -70,10 +70,10 @@ class LshManager(object):
             jsonstr = json.dumps(bsonToClientBson(clientDoc))
 
             if not jsonstr in resultSet:
-                ln.debug("json: %s", jsonstr)
                 resultSet.add(jsonstr)
                 results.append(clientDoc)
 
+        ln.debug("retrieved %s documents.", len(results))
         return results
 
     # converts a vector in sparse format to a vector in dense format
