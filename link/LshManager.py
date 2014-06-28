@@ -66,8 +66,8 @@ class LshManager(object):
             # ]
             extra = ast.literal_eval(ast.literal_eval(result[0])[1])
 
-            clientDoc = client.holist.articles.find({"_id": extra}).next()
-            jsonstr = json.dumps(bsonToClientBson(clientDoc))
+            clientDoc = bsonToClientBson(client.holist.articles.find({"_id": extra}).next())
+            jsonstr = json.dumps(clientDoc)
 
             if not jsonstr in resultSet:
                 resultSet.add(jsonstr)
