@@ -41,7 +41,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
         force = d3.layout.force()
             .gravity(.05)
             .distance(170)
-            .charge(-220)
+            .charge(-520)
             .size([w, h]);
         //    .tick(self.tick);
 

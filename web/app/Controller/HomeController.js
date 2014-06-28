@@ -4,7 +4,7 @@ module('App')
         if ($stateParams.query) {
             $scope.searchKeyword = $scope.currentSearch = $stateParams.query;
         } else {
-            $scope.currentSearch = 'demo';
+            $scope.currentSearch = 'World Cup';
         }
         //
         // autocompletion with typeahead
