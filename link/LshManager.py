@@ -65,7 +65,7 @@ class LshManager(object):
             try:
                 jsonstr = "\"\"\"" + result[0][result[0].find("]") + 2:].strip()[1:-2] + "\"\"\""
 
-                res = ast.literal_eval(jsonstr)
+                res = ast.literal_eval(ast.literal_eval(jsonstr))
             except SyntaxError:
                 ln.exception("literal_eval failed")
                 ln.debug(result)
