@@ -16,7 +16,7 @@
 
 
 
-IDEAS AND OUTLOOK (ordered roughly by when we should implement each feature)
+VISION, IDEAS AND OUTLOOK (ordered roughly by when we should implement each feature)
     - use entity tf-idf to find important entities in a document
         - use this to do awesome NE overlap queries (to discover more instances when important actors appear together)
 
@@ -36,6 +36,8 @@ IDEAS AND OUTLOOK (ordered roughly by when we should implement each feature)
        - graph is cool, but we need more
        - timeline, map
        - some sort of statistics about some articles or individual entities
+
+    - display stories that may interest a user on their landing page (think facebook wall but useful and organized)
 
     - automatically discover insights and anomalies
         - this is really the final goal: holist should highlight information that you don't even know is important
