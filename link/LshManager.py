@@ -19,9 +19,9 @@ NUMBER_OF_BITS_PER_HASH = 6
 
 class LshManager(object):
 
-    def __init__(self, controller):
+    def __init__(self):
         self.lshIndexList = []
-        self.controller = controller
+
 
         # create a list of lsh indexes
         self.lsh = LSHash(NUMBER_OF_BITS_PER_HASH, NUM_TOPICS, num_hashtables=NUMBER_OF_LSH_INDEXES,
