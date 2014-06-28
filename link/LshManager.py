@@ -64,9 +64,12 @@ class LshManager(object):
 
             try:
                 jsonstr = result[0][result[0].find("]") + 2:].strip()
+
                 res = ast.literal_eval(jsonstr)
             except SyntaxError:
-                ln.debug("literal_eval failed on %s (type: %s)", result[0], type(result[0]))
+                ln.exception("literal_eval failed")
+                ln.debug(result)
+                ln.debug(jsonstr)
                 continue
 
             docJson = json.dumps(res)
