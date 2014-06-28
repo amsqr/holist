@@ -63,16 +63,17 @@ class LshManager(object):
             # ]
 
             try:
-                res = ast.literal_eval(result[0].replace("}\"", "}").replace("\"{", "{").replace("\\", ""))
+                jsonstr = result[0][result[0].find("]") + 1:]
+                res = ast.literal_eval(jsonstr)
             except SyntaxError:
                 ln.debug("literal_eval failed on %s (type: %s)", result[0], type(result[0]))
                 continue
 
-            docJson = json.dumps(res[1])
+            docJson = json.dumps(res)
             if not docJson in resultSet:
                 ln.debug("json: %s", docJson)
                 resultSet.add(docJson)
-                results.append(res[1])
+                results.append(res)
 
         return results
 
