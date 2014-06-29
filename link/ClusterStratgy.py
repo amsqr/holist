@@ -94,7 +94,7 @@ class DBSCANClusterStrategy(object):
         lsaNumpy = np.vstack(lsaMatrix)
 
         # put the lsa vector matrix into the dbscan clustering algorithm
-        db = DBSCAN(eps=5.0, min_samples=1).fit(lsaNumpy)
+        db = DBSCAN(eps=5.0, metric="cosine", min_samples=1).fit(lsaNumpy)
 
         # cluster labels for each lsa vector
         # labels are numbered from 0 on, -1 is for no cluster / outlier
