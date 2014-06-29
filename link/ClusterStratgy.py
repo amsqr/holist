@@ -96,6 +96,8 @@ class DBSCANClusterStrategy(object):
             for x in range(200):
                 lsa[x] = 0
 
+            print match["lsa"]
+
             for dim, val in match["lsa"]:
                 lsa[dim] = val
 
