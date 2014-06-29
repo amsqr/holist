@@ -273,7 +273,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
             .attr("r", function(d) {
                 if (d.id == 'center') return 30;
 
-                var subdocs = (targetNode.documents?targetNode.documents.length:0);
+                var subdocs = (d.documents?d.documents.length:1);
                 return 20 + subdocs * 2; // @todo: change to d.weight if it has sensible values
             })
             .attr("id", function(d) {
