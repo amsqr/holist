@@ -9,7 +9,6 @@ from twisted.internet import reactor
 from core.model.server.NodeCommunicator import NodeCommunicator
 from link.api.RESTfulApi import RESTfulApi
 from link.NamedEntityIndex import NamedEntityIndex
-from link.LshManager import LshManager
 from link.ClusterStratgy import SimpleClusterStrategy
 from link.ClusterStratgy import DBSCANClusterStrategy
 from collections import defaultdict
@@ -28,6 +27,7 @@ class Document:
 def bsonToClientBson(bson):
     clientDoc = {}
     clientDoc["id"] = str(bson["_id"])
+    clientDoc["lsa"] = bson["vectors"]["LSA"]
     clientDoc["title"] = bson["title"]
     clientDoc["description"] = bson["description"]
     clientDoc["text"] = bson["text"]
@@ -35,6 +35,7 @@ def bsonToClientBson(bson):
     clientDoc["timestamp"] = bson["timestamp"]
     return clientDoc
 
+from link.LshManager import LshManager
 
 class LinkController(object):
 
@@ -50,8 +51,8 @@ class LinkController(object):
         self.namedEntityIndex = NamedEntityIndex()
 
         # init clustering strategy to cluster search results (combine them into nodes)
-        #self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
-        self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
+        self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
+        #self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
 
         # init rest apis
         self.frontend = RESTfulApi(self)
