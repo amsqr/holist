@@ -6,6 +6,7 @@ ln = getModuleLogger(__name__)
 import json
 import datetime
 import requests
+import numpy as np
 from collections import defaultdict
 from sklearn.cluster import DBSCAN
 from sklearn.datasets.samples_generator import make_blobs
@@ -85,35 +86,26 @@ class DBSCANClusterStrategy(object):
 
         matches = self.lshManager.getSimilarDocuments(entityLSA)
 
-        X = []
+        lsaMatrix = []
         for match in matches:
-            ln.debug(match)
-            #X.append(match['lsa'])
+            lsaMatrix.append(np.array(match['lsa']))
+        lsaNumpy = np.vstack(lsaMatrix)
 
-        centers = [[1, 1], [-1, -1], [1, -1]]
-        Y, labels_true = make_blobs(n_samples=750, centers=centers, cluster_std=0.4,
-                            random_state=0)
+        ln.debug(lsaNumpy)
 
-        #dist = numpy.linalg.norm(a-b)
+        db = DBSCAN(eps=5.0, min_samples=1).fit(lsaNumpy)
 
-        #ln.debug(X)
-        #ln.debug(Y)
-        #ln.debug(type(X[0][0]))
-        #db = DBSCAN(eps=0.3, min_samples=1).fit(X)
-        #core_samples = db.core_sample_indices_
-        #labels = db.labels_
-        #n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
-        #ln.debug('Estimated number of clusters: %d' % n_clusters_)
+        core_samples = db.core_sample_indices_
+        labels = db.labels_
+        ln.debug("Core sample indices: %s", core_samples)
+        ln.debug("Labels: %s", labels)
+        n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+        ln.debug('Estimated number of clusters: %d' % n_clusters_)
 
         clusters = defaultdict(list)
-        for document in matches:
-            try:
-                date = datetime.datetime.strptime(document["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
-            except ValueError:
-                date = parser.parse(document["timestamp"])
-            hour = (date.hour if date.hour % 2 == 1 else date.hour - 1)
-            bucket = str(date.date()) + " " + str(hour)
-            clusters[bucket].append(document)
+        for x in range(0, len(labels)):
+            bucket = labels[x]
+            clusters[bucket].append(matches[x])
 
         nodes = [{"id": "center", "name": "center", "title": entityName}]
         adj = []

@@ -58,7 +58,7 @@ class LshManager(object):
         resultSet = set()
         results = []
 
-        for result in self.lsh.query(dense_vector, num_results=10, distance_func="cosine"):
+        for result in self.lsh.query(dense_vector, num_results=20, distance_func="cosine"):
             # example:
             # [
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),
@@ -67,6 +67,7 @@ class LshManager(object):
             extra = ast.literal_eval(ast.literal_eval(result[0])[1])
 
             clientDoc = bsonToClientBson(client.holist.articles.find({"_id": extra}).next())
+            clientDoc['lsa'] = self._sparseToDenseConverter(clientDoc['lsa'])
             jsonstr = json.dumps(clientDoc)
 
             if not jsonstr in resultSet:
