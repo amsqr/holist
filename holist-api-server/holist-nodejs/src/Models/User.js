@@ -125,7 +125,10 @@ UserSchema.statics.createUser = function(email, password, firstName, lastName, c
 					});
 
 					// Create an access token.
-					user.accessTokens.push(Validation.strongSecurityToken());
+                    // @simon fakir; limited security token to 64, because of
+                    //               max http get request length.
+                    //
+					user.accessTokens.push(Validation.strongSecurityToken(64));
 
 					// Save and return the user.
 					user.save(function(err, event) {

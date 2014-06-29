@@ -101,3 +101,10 @@ text {
   }
 
 }
+
+
+body input.ng-invalid.ng-dirty {
+  // background:lighten(#EE5757, 80%);
+  background: lighten(#EE5757,30%);
+
+}

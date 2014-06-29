@@ -33,15 +33,16 @@ angular
             })
             .state('pricing', {
                 url: '/pricing',
-                templateUrl: 'app/Views/pricing.html',
+                templateUrl: 'app/Views/pricing.html'
             })
             .state('contact', {
                 url: '/contact',
-                templateUrl: 'app/Views/contact.html',
+                templateUrl: 'app/Views/contact.html'
             })
             .state('signup', {
                 url: '/signup',
                 templateUrl: 'app/Views/signup.html',
+                controller: 'SignupController'
             })
             .state('login', {
                 url: '/login',
@@ -50,23 +51,23 @@ angular
             })
             .state('blog', {
                 url: '/blog',
-                templateUrl: 'app/Views/blog.html',
+                templateUrl: 'app/Views/blog.html'
             })
             .state('careers', {
                 url: '/careers',
-                templateUrl: 'app/Views/careers.html',
+                templateUrl: 'app/Views/careers.html'
             })
             .state('events', {
                 url: '/events',
-                templateUrl: 'app/Views/events.html',
+                templateUrl: 'app/Views/events.html'
             })
             .state('faqs', {
                 url: '/faqs',
-                templateUrl: 'app/Views/faqs.html',
+                templateUrl: 'app/Views/faqs.html'
             })
             .state('partners', {
                 url: '/partners',
-                templateUrl: 'app/Views/partners.html',
+                templateUrl: 'app/Views/partners.html'
             })
             .state('team', {
                 url: '/team',
@@ -93,10 +94,10 @@ angular
                 templateUrl: 'app/Views/index.html',
                 controller: 'HomeController'
             })
-            .state('readlist', {
-                url: '/readlist',
-                templateUrl: 'app/Views/readlist.html',
-                controller: 'ReadlistController'
+            .state('favorites', {
+                url: '/favorites',
+                templateUrl: 'app/Views/favorites.html',
+                controller: 'FavoritesController'
             })
             .state('otherwise', {
                 url: 'app/Views/404.html'
@@ -105,7 +106,11 @@ angular
     .config(function($urlRouterProvider) {
         // when there is an empty route, redirect to /index
         $urlRouterProvider.when('', '/index');
-    });
+    })
+    .run(function(AuthenticationService) {
+        AuthenticationService.init();
+
+    })
 
 
 

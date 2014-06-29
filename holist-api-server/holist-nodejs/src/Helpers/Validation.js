@@ -79,12 +79,12 @@ var simpleSecurityToken = function()
 /**
 *	Create a strong security token.
 */
-var strongSecurityToken = function()
+var strongSecurityToken = function(length)
 {
 	var text = "";
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
 
-	for( var i=0; i < 255; i++ )
+	for( var i=0; i < length; i++ )
 	{
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 	}

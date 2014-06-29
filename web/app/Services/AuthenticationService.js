@@ -5,9 +5,10 @@ angular.module('App')
 
 
         this.user = null;
+        this.userid = null;
         this.token = null;
         var self = this;
-        var mockServer = true;
+        var mockServer = false;
 
 
         var redirect_login_page = function() {
@@ -16,57 +17,62 @@ angular.module('App')
         }
 
         this.init = function() {
-
             var token = localStorage.getItem('accessToken');
+            this.userid = localStorage.getItem('userid');
+            console.log('stored token: ', token, this.userid);
             if (token == 'null') {
                 token = null;
             }
             this.updateToken(token);
-            if ($location.path().indexOf('/login') == -1) { //do not redirect on login
-                window.setTimeout(function() { self.ensureAuthentication(); }, 1500);
-            }
+            this.fetchCurrentUser();
+
         };
 
         this.logout = function () {
-            this.updateToken(null);
-            this.user = null;
+            this.updateToken(null, null);
+            this.userid = null;
             $rootScope.$broadcast('user_auth_status_changed');
             notifyObservers();
 
         };
 
-        this.updateToken = function(token) {
+        this.updateToken = function(userid, token) {
             if (!token){
                 delete $http.defaults.headers.common['X-Token'];
                 delete $http.defaults.headers.common['access_token'];
                 localStorage.removeItem('userToken');
+                localStorage.removeItem('userid');
                 this.token = null;
                 return;
             }
-            this.token = token;
-            $http.defaults.headers.common['X-Token'] = token;
-            $http.defaults.headers.common['access_token'] = token;
+            if (token != this.token) {
+                console.log('updating token',token);
+                this.token = token;
+                this.userid = userid;
+            }
+           // $http.defaults.headers.common['X-Token'] = token;
+           // $http.defaults.headers.common['access_token'] = token;
+
+            localStorage.setItem('userid', userid);
             localStorage.setItem('accessToken', token);
         }
-
-        /**
-         * Get user data
+        /***
+         * fetch the userdata of the current
+         * logged in user
          */
-        this.fetchCurrentUser = function() {
-            UserFactory.getMe()
-                .success(function(response) {
-
-                    var data = response.data
-                    self.user = data;
-
-                    $rootScope.$broadcast('user_auth_status_changed');
-                    notifyObservers();
-
-                }).error(function(response) {
-                    self.logout();
-                    redirect_login_page();
+        this.fetchCurrentUser = function(){
+            // '/users/' + user._id
+            if (!this.userid) {
+                return false;
+            }
+            $http({
+                method: "GET",
+                url: AppSettings.nodeApi + 'users/' + this.userid
+            })
+                .success(function(data) {
+                       this.user = data;
+                        // console.log('[userdata]', data)
                 });
-
         }
         this.getUser = function() {
             return this.user;
@@ -83,12 +89,15 @@ angular.module('App')
             }
 
         }
-
-        this.requestPassword = function(callback, email) {
-
+        /**
+         * Request a new password for given email
+         * @param callback
+         * @param email
+         */
+        this.requestPassword = function(email,callback) {
             $http({
                 method: "POST",
-                url: AppSettings.serverURI + '/user/reset_password',
+                url: AppSettings.nodeApi + 'login/basic/reset_password',
                 data: {email:email}
             }).success(function(data) {
                     callback(data);
@@ -100,15 +109,15 @@ angular.module('App')
 
             $http({
                 method: "POST",
-                url: AppSettings.serverURI + '/user/signUp',
-                data: {'username':user.username,
-                    'password':user.password,
-                    'email':user.email,
-                    'address':user.address,
-                    'firstName':user.firstName,
-                    'lastName':user.lastName}}).success(function(data) {
+                url: AppSettings.nodeApi + 'user',
+                data: user} )
+                .success(function(data) {
                     callback(data);
+                })
+                .error(function(err){
+                    callback(err,null);
                 });
+
         };
         /**
          * Mock SignIn for development
@@ -119,37 +128,65 @@ angular.module('App')
                 id: "as223asdasegkemwpck4232",
                 username:"Max Mustermann"
             }
-            self.updateToken('abcdefghiklmnopqurst');
-            callback(self.user);
+            self.updateToken(1, 'abcdefghiklmnopqurst');
+            callback(null, self.user);
             $rootScope.$broadcast('user_auth_status_changed');
             $log.warn('[Authentication] Mocking login in');
         }
 
+        /**
+         * external sign in method
+         * @param user
+         * @param callback
+         * @returns {}
+         */
         this.signIn = function(user, callback){
 
             if (mockServer) {
                 return mockSignIn(callback);
             }
             this.signInCustom({
-                'username':user.username,
+                'email':user.email,
                 'password':user.password
             }, callback);
 
         }
+        /**
+         * sign in with custom attributes
+         *
+         * @param params
+         * @param callback
+         */
         this.signInCustom = function(params, callback) {
+            var then = function(response, statusCode) {
+                console.log('[login response]', response.user.accessTokens[0]);
+
+                switch (statusCode) {
+                    case 200:
+                        self.updateToken(response.user._id,response.user.accessTokens[0]);
+                        self.user = response.user;
+                        $rootScope.$broadcast('user_auth_status_changed');
+                        callback(null, response);
+                        break;
+                    case 404:
+                        callback('not_found');
+                        break;
+                    case 400:
+                        callback('bad_request');
+                        break;
+                    default:
+                        callback(response);
+                        break;
+                }
+
+            };
 
             $http({
-                method: "POST",
-                url: AppSettings.serverURI + '/connect',
-                data: params
-            }).success(function(response) {
-                    if (response.status == 200) {
-                        self.updateToken(response.data.api_access_token);
-                        self.fetchCurrentUser();
-                        $location.path('/dashboard');
-                    }
-                    callback(response);
-                });
+                method: "GET",
+                url: AppSettings.nodeApi + 'login/basic/authorize?' + $.param(params),
+            })
+             .success(then)
+             .error(then);
 
         };
 

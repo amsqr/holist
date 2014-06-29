@@ -34,7 +34,7 @@ body {
   fill: #ccc; }
 #graph .nodetext {
   pointer-events: none;
-  font: 10px sans-serif; }
+  font: 14px sans-serif; }
 
 #graphSearch .btn {
   height: 40px; }
@@ -42,7 +42,11 @@ body {
 #recentLinks {
   width: 300px;
   position: absolute;
-  right: 0; }
+  right: 15px; }
+  #recentLinks .tab-content {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd; }
 
 text {
   font: 10px sans-serif;
@@ -60,3 +64,6 @@ text {
   top: 75px; }
   #graphSearch .dropdown-menu {
     width: 96%; }
+
+body input.ng-invalid.ng-dirty {
+  background: #fce2e2; }

@@ -104,6 +104,8 @@ var HolistServer = function() {
         // Configure the application.
         self.app.use(function(req, res, next) {
             res.setHeader("Access-Control-Allow-Origin", "*");
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With,x-token,access_token');
             return next();
         });
         self.app.use(bodyParser.json());
@@ -211,7 +213,10 @@ var HolistServer = function() {
         return function(req, res, next) {
             // Extract and validate the access token.
             var queryParameters = url.parse(req.url, true);
-            var accessToken = queryParameters.query.access_token;
+            // @simon fakir:
+            // added access token in header
+            //
+            var accessToken = queryParameters.query.access_token || req.headers.access_token;
 
             if ('' === Validation.validateString(accessToken)) {
                 return res.send(HTTPStatusCodes.HTTPStatusCode401Unauthorized);
