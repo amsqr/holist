@@ -84,23 +84,24 @@ class DBSCANClusterStrategy(object):
                 entityLSA = vector["vector"]
                 break
 
+        # retreive similar documents
         matches = self.lshManager.getSimilarDocuments(entityLSA)
 
+        # combine all lsa vectors of the similar documents into a matrix
         lsaMatrix = []
         for match in matches:
             lsaMatrix.append(np.array(match['lsa']))
         lsaNumpy = np.vstack(lsaMatrix)
 
-        ln.debug(lsaNumpy)
-
+        # put the lsa vector matrix into the dbscan clustering algorithm
         db = DBSCAN(eps=5.0, min_samples=1).fit(lsaNumpy)
 
-        core_samples = db.core_sample_indices_
+        # cluster labels for each lsa vector
+        # labels are numbered from 0 on, -1 is for no cluster / outlier
         labels = db.labels_
-        ln.debug("Core sample indices: %s", core_samples)
-        ln.debug("Labels: %s", labels)
-        n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
-        ln.debug('Estimated number of clusters: %d' % n_clusters_)
+        #ln.debug("Labels: %s", labels)
+        n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0) # number of clusters
+        #ln.debug('Estimated number of clusters: %d' % n_clusters_)
 
         clusters = defaultdict(list)
         for x in range(0, len(labels)):
