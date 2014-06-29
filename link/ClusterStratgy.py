@@ -101,7 +101,7 @@ class DBSCANClusterStrategy(object):
         labels = db.labels_
         #ln.debug("Labels: %s", labels)
         n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0) # number of clusters
-        #ln.debug('Estimated number of clusters: %d' % n_clusters_)
+        ln.debug('Estimated number of clusters: %d' % n_clusters_)
 
         clusters = defaultdict(list)
         for x in range(0, len(labels)):

@@ -11,7 +11,7 @@ class NamedEntityIndex(object):
     def __init__(self):
         """
         creates an inverted index:
-            {named_entity -> [document_id]}
+            {named_entity -> [(document_id, frequency)]}
         """
         self.index = defaultdict(list)
         try:
@@ -20,8 +20,27 @@ class NamedEntityIndex(object):
             ln.debug("Couldn't load index from file.")
 
     def addDocument(self, document):
-        for entityType, namedEntity in document.vectors["named_entities"]:
-            self.index[namedEntity].append(document._id)
+        counts = self.countEntities(document.vectors["named_entities"])
+        for namedEntity, count in counts.items():
+            self.index[namedEntity].append((document._id, count))
+
+    def countEntities(self, entities):
+        entityCounts = defaultdict(int)
+        for idx, (entityType, entity) in enumerate(entities):
+            # first, update the raw count of this entity
+            entityCounts[entity] += 1
+
+            # next, see if this entity might be equivalent to any of the previous entities
+            for otherEntityType, otherEntity in entities[:idx]:
+                parts = otherEntity.split(" ")
+                # if the entity is a true subset of another entity, increment the frequency for the other one as well
+                # This lets us better resolve situations where a person is mentioned (Firstname, Lastname),
+                # but subsequently only mentioned by last name.
+                # This also helps with organizations (Apple vs. Apple Computers).
+                if len(parts) != 1 and entity in parts:
+                    entityCounts[otherEntity] += 1
+
+        return entityCounts
 
     def query(self, namedEntity):
         return self.index[namedEntity]
