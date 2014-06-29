@@ -87,7 +87,8 @@ class DBSCANClusterStrategy(object):
 
         X = []
         for match in matches:
-            X.append(match['lsa'])
+            ln.debug(match)
+            #X.append(match['lsa'])
 
         centers = [[1, 1], [-1, -1], [1, -1]]
         Y, labels_true = make_blobs(n_samples=750, centers=centers, cluster_std=0.4,
