@@ -92,7 +92,14 @@ class DBSCANClusterStrategy(object):
         # combine all lsa vectors of the similar documents into a matrix
         lsaMatrix = []
         for match in matches:
-            lsaMatrix.append(np.array(match['lsa']))
+            lsa = {}
+            for x in range(200):
+                lsa[x] = 0
+
+            for dim, val in match["lsa"]:
+                lsa[dim] = val
+
+            lsaMatrix.append(np.array(lsa))
 
         distanceMatrix = []
         for match in lsaMatrix:
