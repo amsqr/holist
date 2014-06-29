@@ -1,28 +1,25 @@
 __author__ = 'raoulfriedrich'
 
 from core.util.util import *
-
 import logging
-
 logging.basicConfig(format=config.logFormat, level=logging.DEBUG if config.showDebugLogs else logging.INFO)
 ln = getModuleLogger(__name__)
 
 from twisted.internet import reactor
-
-
-from link.api.RESTfulApi import RESTfulApi
 from core.model.server.NodeCommunicator import NodeCommunicator
-
+from link.api.RESTfulApi import RESTfulApi
 from link.NamedEntityIndex import NamedEntityIndex
+from link.LshManager import LshManager
 from link.ClusterStratgy import SimpleClusterStrategy
 from link.ClusterStratgy import DBSCANClusterStrategy
-
 from collections import defaultdict
+
 
 CORE_IP = "localhost"
 REGISTER_PORT = config.holistcoreport
 LISTEN_PORT = config.link_node_port + 1
-
+TESTING = True
+REBUILD = False
 
 class Document:
     pass
@@ -38,29 +35,32 @@ def bsonToClientBson(bson):
     clientDoc["timestamp"] = bson["timestamp"]
     return clientDoc
 
-from link.LshManager import LshManager
-
-TESTING = True
-REBUILD = False
-
 
 class LinkController(object):
 
     def __init__(self):
+        # init and start node communicator (connection to core node)
         self.nodeCommunicator = NodeCommunicator(self, LISTEN_PORT, strategy=False)
         self.nodeCommunicator.registerWithNode(CORE_IP, REGISTER_PORT)
 
+        # init lsh index manager, indexes all documents for searching
         self.lshManager = LshManager()
+
+
         self.namedEntityIndex = NamedEntityIndex()
 
+        # init clustering strategy to cluster search results (combine them into nodes)
         #self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
         self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
 
+        # init rest apis
         self.frontend = RESTfulApi(self)
 
+        # if rebuild flag is true, rebuild the whole lsh index
         if REBUILD:
             self.rebuildIndex()
 
+        # start server
         ln.info("running reactor.")
         reactor.run()
 
