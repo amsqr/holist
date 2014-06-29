@@ -12,8 +12,8 @@ import urllib2
 
 import feedparser
 import socket
-socket.setdefaulttimeout(30.0)  # don't handle feeds that take longer than this -> this doesn't seem to work prefectly
-UPDATE_TIMEOUT_HARD = 60 * 3  # this is used to cancel the deferred that updates the feeds if it crashed (once a day)
+socket.setdefaulttimeout(30.0)  # don't handle feeds that take longer than this -> this doesn't seem to work perfectly
+UPDATE_TIMEOUT_HARD = 60 * 20  # this is used to cancel the deferred that updates the feeds if it crashed (once a day)
 
 
 from Queue import Queue
