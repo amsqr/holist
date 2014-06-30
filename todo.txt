@@ -1,0 +1,44 @@
+- General: create a bash startup script for all nodes
+- General: create an overview dashboard for the whole server
+
+- Core: don't send documents to link without both named entities and LSA vector
+
+- Link: add more clustering methods
+- Link: think about different "seeds" than just the search term in LSA space
+
+- Link: find a way to retrieve linked entities
+
+- NERStrategy: add TF-IDF vector *for entities only*
+- LSAStrategy: refactor such that one node handles conversion, and sends samples to a second node to update the model
+
+- Collect: create Twitter data source
+- Collect: Find more RSS feeds
+
+
+
+VISION, IDEAS AND OUTLOOK (ordered roughly by when we should implement each feature)
+    - use entity tf-idf to find important entities in a document
+        - use this to do awesome NE overlap queries (to discover more instances when important actors appear together)
+
+    - add more user interactivity:
+        - manually editing the graph
+            - means: right click to expand
+                - expand has options: NE overlap, similarity search, maybe things like specific sentence search
+            - everything should be deliberate
+            - don't just mess with the graph automatically when a node is clicked by accident!
+        - taking notes
+        - saving, loading the graph
+        - sharing and collaborating on a graph
+
+    - find a way to organize articles by broader topics (market sectors, if you will)
+
+    - add MORE VISUALIZATIONS
+       - graph is cool, but we need more
+       - timeline, map
+       - some sort of statistics about some articles or individual entities
+
+    - display stories that may interest a user on their landing page (think facebook wall but useful and organized)
+
+    - automatically discover insights and anomalies
+        - this is really the final goal: holist should highlight information that you don't even know is important
+

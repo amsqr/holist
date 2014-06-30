@@ -1,0 +1,30 @@
+<div class="container">
+<div class="page page-table">
+
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong><span class="fa fa-star"></span> Favories</strong></div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th></th>
+                <th>Created</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="doc in data">
+                <td>{{doc.title}}</td>
+                <td></td>
+                <td><span am-time-ago="doc.date"></span></td>
+                <td><button class="btn btn-primary btn-xs"><i class=""></i> Read now</button></td>
+
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</div>

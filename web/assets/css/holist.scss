@@ -1,0 +1,110 @@
+$primary-color: #006699;
+
+
+
+// =======
+// Layout
+// =======
+body {
+  background:#fff;
+}
+.top-header {
+  .logo a {
+    display: block;
+    width:220px;
+    height:50px;
+    cursor:pointer;
+
+    span { display:none; }
+    // background:url(img/holist-logo-220.png) no-repeat;
+    text-indent: -10000px;
+  }
+}
+
+.top-header .top-nav .nav-right > li > a {
+  width:auto;
+}
+#content {
+  left:0;
+  margin-top:50px;
+  top:0;
+  position: inherit;
+}
+
+//======
+//Graph
+//======
+
+#graph{
+
+  .link {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.5px;
+  }
+
+  .node {
+
+    circle {
+      cursor:pointer;
+      fill: $primary-color;
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+    #circle_center {
+      fill: darken($primary-color, 30%);
+    }
+    circle:hover {
+      fill:#ccc;
+    }
+
+  }
+  .nodetext { pointer-events: none; font: 14px sans-serif; }
+
+}
+#graphSearch {
+  .btn {
+    height:40px;
+  }
+}
+#recentLinks {
+  width:300px;
+  position: absolute;
+  right:15px;
+  .tab-content {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+// ============
+// Home page
+// ============
+#graphPopover {
+  position:absolute;
+  left: -10000px;
+}
+#graphSearch {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  top:75px;
+  .dropdown-menu {
+    width:96%;
+  }
+
+}
+
+
+body input.ng-invalid.ng-dirty {
+  // background:lighten(#EE5757, 80%);
+  background: lighten(#EE5757,30%);
+
+}
