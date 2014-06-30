@@ -10,6 +10,7 @@ import numpy as np
 from collections import defaultdict
 from sklearn.cluster import DBSCAN
 from sklearn.datasets.samples_generator import make_blobs
+from scipy.spatial.distance import cosine
 
 from dateutil import parser
 
@@ -71,7 +72,7 @@ class DBSCANClusterStrategy(object):
         self.namedEntityIndex = namedEntityIndex
 
     def cluster(self, entityName):
-           # retrieve the entity in LSA space
+        # retrieve the entity in LSA space
         response = requests.get("http://localhost:" + str(config.lsa_strategy_port) + "/small_task", params={"document": entityName})
         if response.status_code != 200:
             return {"result": "False", "reason": "Couldn't run entity search. This is an internal error."}, [], False
@@ -84,24 +85,34 @@ class DBSCANClusterStrategy(object):
                 entityLSA = vector["vector"]
                 break
 
+
         # retreive similar documents
         matches = self.lshManager.getSimilarDocuments(entityLSA)
 
         # combine all lsa vectors of the similar documents into a matrix
         lsaMatrix = []
         for match in matches:
-            lsaMatrix.append(np.array(match['lsa']))
-        lsaNumpy = np.vstack(lsaMatrix)
+            #ln.debug(len(match["lsa"]))
+            lsaMatrix.append(np.array(match["lsa"]))
+
+        distanceMatrix = []
+        for matchLSA in lsaMatrix:
+            row = []
+            for otherLSA in lsaMatrix:
+                row.append(cosine(matchLSA, otherLSA))
+            distanceMatrix.append(row)
+
+        distanceMatrix = np.vstack(distanceMatrix)
 
         # put the lsa vector matrix into the dbscan clustering algorithm
-        db = DBSCAN(eps=5.0, min_samples=1).fit(lsaNumpy)
+        db = DBSCAN(eps=5.0, metric="precomputed", min_samples=1).fit(distanceMatrix)
 
         # cluster labels for each lsa vector
         # labels are numbered from 0 on, -1 is for no cluster / outlier
         labels = db.labels_
         #ln.debug("Labels: %s", labels)
         n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0) # number of clusters
-        #ln.debug('Estimated number of clusters: %d' % n_clusters_)
+        ln.debug('Estimated number of clusters: %d' % n_clusters_)
 
         clusters = defaultdict(list)
         for x in range(0, len(labels)):

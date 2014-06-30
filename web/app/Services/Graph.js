@@ -273,7 +273,8 @@ function GraphFactory($http,AppSettings,$q,$log) {
             .attr("r", function(d) {
                 if (d.id == 'center') return 30;
 
-                return 30 * Math.random() + 3; // @todo: change to d.weight if it has sensible values
+                var subdocs = (d.documents?d.documents.length:1);
+                return 10 + subdocs * 3; // @todo: change to d.weight if it has sensible values
             })
             .attr("id", function(d) {
                 d.circle = this;
