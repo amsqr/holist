@@ -28,7 +28,7 @@ class RESTfulApi(object):
         favorite = Favorite(self.controller)
 
         holist = Holist()
-        holist.putChild("web", File("./web"))
+        holist.putChild("web", File("./holist-web"))
 
         root.putChild("holist", holist)
         root.putChild("favorites", favorite)
