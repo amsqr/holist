@@ -7,7 +7,7 @@ angular.
         $scope.message = null;
         $scope.user = {};
         $scope.formDisabled = false;
-
+        $scope.showForm = true;
 
         //
         // Registration Method
@@ -21,13 +21,17 @@ angular.
                 $scope.btnDesc = 'Register';
 
                 if (err) {
-                    $scope.message = err;
+                    console.log('signup error', err, user);
+                    if (err == 'Conflict') {
+                        $scope.message = 'This user exists already.';
+                    } else {
+                        $scope.message = err;
+                    }
                     return;
                 }
-                $scope.message = ('Your account has been created.');
-
+                $scope.message = ('Your account has been created. And you have been logged in successfully.');
                 if (user) // successful login
-                    $scope.showLoginForm = false;
+                    $scope.showForm = false;
 
             });
         }

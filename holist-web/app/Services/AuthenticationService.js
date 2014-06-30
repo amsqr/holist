@@ -70,7 +70,11 @@ angular.module('App')
                 url: AppSettings.nodeApi + 'users/' + this.userid
             })
                 .success(function(data) {
-                       this.user = data;
+
+                       if (data) {
+                           self.user = data;
+                           $rootScope.$broadcast('user_auth_status_changed');
+                       }
                         // console.log('[userdata]', data)
                 });
         }
@@ -112,7 +116,7 @@ angular.module('App')
                 url: AppSettings.nodeApi + 'user',
                 data: user} )
                 .success(function(data) {
-                    callback(data);
+                    callback(null, data);
                 })
                 .error(function(err){
                     callback(err,null);

@@ -4,9 +4,15 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="my-login-form">
-                <form nam="reqistrationForm">
+
+                <div class="alert alert-info" role="alert" ng-show="message">
+                    <p>{{message}}</p>
+                </div>
+                <form nam="reqistrationForm" ng-show="showForm">
                     <h4 class="heading-mini">Sign up</h4>
                     <hr>
+
+
                     <div class="row">
                         <div class="col-md-3">
                             <input type="text" required="" ng-minlength="3"  ng-disabled="formDisabled" class="form-control" ng-model="user.firstName" placeholder="Firstname">

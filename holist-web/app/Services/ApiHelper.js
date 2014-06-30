@@ -10,11 +10,13 @@
  * @returns {ApiHelper}
  * @constructor
  */
-function ApiHelper($http, $log, AppSettings, AuthenticationService){
+function ApiHelper($http, $log, AppSettings,$rootScope, AuthenticationService){
 
-    this.url =  null;
+    this.url =  null
+
     var self = this;
     self.accessToken = null;
+    self.userid  = null
     self.targetVariable = 'data';
 
     // refresh data on site method.
@@ -26,7 +28,7 @@ function ApiHelper($http, $log, AppSettings, AuthenticationService){
      * @param $scope
      * @param url
      */
-    self.setupOverviewPage = function($scope, url,targetVariable){
+    self.setupOverviewPage = function($scope, url, targetVariable){
         self.url = AppSettings.nodeApi + url;
         self.$scope = $scope;
         if (targetVariable){
@@ -40,9 +42,12 @@ function ApiHelper($http, $log, AppSettings, AuthenticationService){
     self.refresh = function() {
 
         var process = function(){
-             self.doHttpRequest(function(err,result){
-                if (err) return false;
+             self.doHttpRequest({},function(err,result){
+                 console.log('result favorits',err,  result);
+                 if (err) return false;
+
                 self.$scope[self.targetVariable] = result;
+                 console.log('favs', self.targetVariable, self.$scope[self.targetVariable]);
 
             })
         }
@@ -62,8 +67,14 @@ function ApiHelper($http, $log, AppSettings, AuthenticationService){
      */
     var updateToken = function(){
         self.accessToken = AuthenticationService.token;
+        self.userid= AuthenticationService.userid;
+        if (self.$scope){
+            self.$scope.userLoggedIn = AuthenticationService.isLoggedIn();
+            console.log('logged in ', self.$scope.userLoggedIn);
+        }
     };
-    AuthenticationService.registerAuthStatusObserver(updateToken);
+    // AuthenticationService.registerAuthStatusObserver(updateToken);
+    $rootScope.$on('user_auth_status_changed',updateToken);;
     updateToken();
 
     /**
@@ -79,8 +90,11 @@ function ApiHelper($http, $log, AppSettings, AuthenticationService){
         params = params || {};
 
         //default Values
+
         if (!params.method) params.method = 'GET';
         if (!params.url) params.url = self.url;
+        else params.url = AppSettings.nodeApi + params.url;
+
 
         if (!self.accessToken) {
             $log.error('[NO ACCESS TOKEN - is the user logged in?]');
@@ -88,14 +102,18 @@ function ApiHelper($http, $log, AppSettings, AuthenticationService){
         }
 
         params.url += (params.url.indexOf('?') !== -1?'&':'?') + 'access_token=' + self.accessToken;
-
+        if (self.userid) {
+            params.url = params.url.replace(/:me/, self.userid);
+        }
 
         return $http(params).success(function(data) {
                 // console.log('[userdata]', data)
 
             $log.log('[successful http request]',params.url, data);
+            cb(null,data);
         }).error(function(err) {
                 $log.error('Error on http request', params.url, err);
+                cb(err,null);
         });
 
 

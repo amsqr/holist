@@ -55,15 +55,17 @@ module('App')
         var getFavorites = function(){
 
             $http({method: 'GET', url: favoritesUrl}).then(function(results){
-                console.log('favorites result', results);
                 $scope.favorites = results.data.documents;
             });
 
         }
 
         $scope.isFavorite = function(id) {
-            for (i in $scope.favorites){
-                if ($scope.favorites[i]._id == id){
+            if (!$scope.favorites || $scope.favorites.favorites) return false;
+            for (var i in $scope.favorites.favorites){
+                console.log('compare', $scope.favorites.favorites[i]._id , id);
+                if ($scope.favorites.favorites[i]._id == id){
+
                     return true;
                 }
             }
@@ -79,12 +81,15 @@ module('App')
         favoritesApi.setupOverviewPage($scope, 'users/me/favorites','favorites');
 
 
-        $scope.addFavorite = function(documentId) {
+        $scope.addFavorite = function(row) {
+
             favoritesApi.doHttpRequest({
                 method:"POST",
-                data: {url: 'users/me/favorite', document_id: documentId}
+                url: 'users/me/favorite',
+                data: { favoriteID: row.id }
 
             },function() {
+                favoritesApi.refresh();
                 console.log('favorites added');
             })
         }
