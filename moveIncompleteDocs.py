@@ -1,8 +1,6 @@
 __author__ = 'dowling'
 
-import pymongo
-
-from core.util.util import *
+from backend.core.util.util import *
 
 count = 0
 client = getDatabaseConnection()

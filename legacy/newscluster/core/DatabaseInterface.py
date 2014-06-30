@@ -1,9 +1,8 @@
 from pymongo import MongoClient
+from backend.core.model import Document
 from legacy.newscluster.core import Cluster
 
-from core.model.Document import Document
-
-from core.util import config
+from backend.core.util import config
 
 LOCAL_DB_LOCATION = config.dblocation #"tmac.local"
 LOCAL_DB_PORT = config.dbport #27017

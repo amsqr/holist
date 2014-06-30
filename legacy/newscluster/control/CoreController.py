@@ -1,4 +1,5 @@
-from core.util.util import *
+from backend.core.util.util import *
+from backend.shared import Listener
 from legacy.newscluster.core import ClusterStrategy, DatabaseInterface
 from legacy.newscluster.view import RESTfulFrontend
 
@@ -8,9 +9,6 @@ from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 from twisted.internet.threads import deferToThread
 
-from core.model.server.Listener import Listener
-
-from core.util import config as holistConfig
 from legacy.newscluster import config
 
 import requests

@@ -1,5 +1,5 @@
-from core.util import util
-from collect.DataCollector import DataCollector
+from backend.collect.DataCollector import DataCollector
+from backend.core.util import util
 
 util.startLogging("collect")
 collect = DataCollector()

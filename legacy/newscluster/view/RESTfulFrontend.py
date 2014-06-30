@@ -1,4 +1,4 @@
-from core.util.util import *
+from backend.core.util.util import *
 ln = getModuleLogger(__name__)
 
 from legacy.newscluster import config

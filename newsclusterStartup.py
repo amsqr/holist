@@ -1,7 +1,8 @@
 import logging
 
-from core.util import config
+from backend.core.util import config
 from legacy.newscluster.control import CoreController
+
 
 logging.basicConfig(format=config.logFormat,level=logging.DEBUG if config.showDebugLogs else logging.INFO)
 #ln = util.getModuleLogger(__name__)
