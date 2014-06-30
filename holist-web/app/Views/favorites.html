@@ -20,9 +20,9 @@
                 <td><button class="btn btn-primary btn-xs"><i class=""></i> Read now</button></td>
 
             </tr>
-            <tr ng-if="data.length == 0">
+            <tr ng-show="!data || data.length == 0">
                 <td colspan="4">
-                    <p> There are not favorites yet, use the <button class="btn btn-default"><i class="fa fa-star"></i></button> to add some.</p>
+                    <p> There are not favorites yet, use the <button class="btn btn-default"><i class="fa fa-star"></i> star button</button> to add some.</p>
                 </td>
             </tr>
 
