@@ -1,0 +1,55 @@
+{
+	"entity_name":"Pinterest",
+	"summary":"Pinterest is a visual discovery tool that people use to collect ideas for their different projects and interests. People create and share collections (called “boards”) of visual bookmarks (called “Pins”) that they use to do things like plan trips and projects, organize events or save articles and recipes.",
+	"linked_entities":[
+		{
+			"entity_name":"Lyst",
+			"relevancy":"0.7"
+		},
+		{
+			"entity_name":"Twitter",
+			"relevancy":"0.85"
+
+		},
+		{
+			"entity_name":"Optini",
+			"relevancy":"0.6"
+		},
+		{
+			"entity_name":"Fashinating",
+			"relevancy":"0.7"
+		}
+	],
+	"linked_articles":[
+		{
+			"_id":"536494c71d1d57023ae792c2", 
+		 	"title":"Pinterest May Be The Perfect Answer For Marketing Your Apparel Business", 
+		 	"link":"http://smallbiztrends.com/2014/04/pinterest-business-marketing-apparel.html",
+		 	"relevancy":"0.9"
+		},
+		{
+			"docid":"536494c92d1d51026ae412r1",
+			"title":"The Future of Social Commerce: Shopping On Twitter, Pinterest and Beyond",
+			"link":"http://smallbusiness.foxbusiness.com/marketing-sales/2014/05/01/future-social-commerce-shopping-on-twitter-pinterest-and-beyond/",
+			"relevancy":"0.87"
+		},
+		{
+			"docid":"336494r31t0d11023ae656x2",
+			"title":"A tool to cut through the clamor",
+			"link":"http://www.timesunion.com/living/article/A-tool-to-cut-through-the-clamor-5448989.php",
+			"relevancy":"0.86"
+		}
+	],
+	"linked_tweets":[
+		{
+			"text":"Can B2B Businesses Really Succeed on Pinterest? Oh So Pinteresting OSP Episode 063 http://goo.gl/Jp7ybJ  via @OSPInteresting",
+			"author":"@jeffsieh",
+			"link":"https://twitter.com/jeffsieh/statuses/462549680048439297",
+			"posted":"2014-05-03",
+			"sentiment":"negative",
+			"relevancy":"0.82"}
+	],
+	"stock_symbol":"None",
+	"created":"2014-04-03 13:37:00",
+	"updated":"2014-05-03 03:13:37"
+}
