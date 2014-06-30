@@ -23,7 +23,7 @@ angular.module('App')
             if (token == 'null') {
                 token = null;
             }
-            this.updateToken(token);
+            this.updateToken(this.userid, token);
             this.fetchCurrentUser();
 
         };
@@ -31,7 +31,7 @@ angular.module('App')
         this.logout = function () {
             this.updateToken(null, null);
             this.userid = null;
-            $rootScope.$broadcast('user_auth_status_changed');
+
             notifyObservers();
 
         };
@@ -164,8 +164,8 @@ angular.module('App')
                 switch (statusCode) {
                     case 200:
                         self.updateToken(response.user._id,response.user.accessTokens[0]);
+                        notifyObservers();
                         self.user = response.user;
-                        $rootScope.$broadcast('user_auth_status_changed');
                         callback(null, response);
                         break;
                     case 404:
@@ -206,6 +206,8 @@ angular.module('App')
 
         //call this when you know 'foo' has been changed
         var notifyObservers = function(eventData){
+            $rootScope.$broadcast('user_auth_status_changed');
+
             angular.forEach(observerCallbacks, function(callback){
                 callback(self.user);
             });

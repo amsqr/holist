@@ -213,8 +213,7 @@ var HolistServer = function() {
         return function(req, res, next) {
             // Extract and validate the access token.
             var queryParameters = url.parse(req.url, true);
-            // @simon fakir:
-            // added access token in header
+            // @simon fakir: allow access token to be a header field
             //
             var accessToken = queryParameters.query.access_token || req.headers.access_token;
 
@@ -229,7 +228,7 @@ var HolistServer = function() {
                 }
 
                 if (user) {
-                    console.log(user);
+                    console.log('Request by user', user);
                     req.user = user;
                     next();
                 } else {

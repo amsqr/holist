@@ -1,6 +1,6 @@
 angular.
 module('App')
-    .controller('HomeController', function($scope, $stateParams,$log, $http,$state,AppSettings, GraphService) {
+    .controller('HomeController', function($scope,$controller, $stateParams,$log, $http,$state,AppSettings, GraphService) {
         if ($stateParams.query) {
             $scope.searchKeyword = $scope.currentSearch = $stateParams.query;
         } else {
@@ -49,6 +49,7 @@ module('App')
         //
         // FAvorites
         //
+        //local methods
         $scope.favorites = [];
         var favoritesUrl = AppSettings.apiUrl +  'favorites'
         var getFavorites = function(){
@@ -61,16 +62,32 @@ module('App')
         }
 
         $scope.isFavorite = function(id) {
-
+            for (i in $scope.favorites){
+                if ($scope.favorites[i]._id == id){
+                    return true;
+                }
+            }
+            return false;
         }
+
+        //
+        // Api Interface
+        //
+
+        // @todo: only if authenticated..
+        var favoritesApi = $controller(ApiHelper);
+        favoritesApi.setupOverviewPage($scope, 'users/me/favorites','favorites');
+
+
         $scope.addFavorite = function(documentId) {
+            favoritesApi.doHttpRequest({
+                method:"POST",
+                data: {url: 'users/me/favorite', document_id: documentId}
 
-            $http.post( favoritesUrl, {document_id: documentId}).then(function(results){
-                console.log('save favorite results', results);
-                getFavorites();
-                // $scope.favorites = results.documents;
-            });
-
+            },function() {
+                console.log('favorites added');
+            })
         }
-        getFavorites();
+        favoritesApi.refresh();
+        // getFavorites();
     });
