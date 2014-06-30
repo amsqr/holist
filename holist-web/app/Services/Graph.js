@@ -191,6 +191,9 @@ function GraphFactory($http,AppSettings,$q,$log) {
     //
     this.reduceNodes = function(currentNode){
         buildLinkStructure();
+
+        console.log('[reduce nodes skippen because of some errors for the presentation version]');
+        return;
         var reduceNodesRecursive = function(parentNode, node, level) {
             var nodes = self.findLinkedNodes(node);
             for (var i in nodes) {
