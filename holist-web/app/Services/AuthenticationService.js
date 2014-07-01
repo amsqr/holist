@@ -15,11 +15,12 @@ angular.module('App')
             $location.path('/login/');
             $rootScope.$apply();
         }
-
+        /**
+         * Initializes authentication
+         */
         this.init = function() {
             var token = localStorage.getItem('accessToken');
             this.userid = localStorage.getItem('userid');
-            console.log('stored token: ', token, this.userid);
             if (token == 'null') {
                 token = null;
             }
@@ -27,15 +28,21 @@ angular.module('App')
             this.fetchCurrentUser();
 
         };
-
+        /**
+         * Logout the urrent user;
+         */
         this.logout = function () {
             this.updateToken(null, null);
             this.userid = null;
-
             notifyObservers();
 
         };
 
+        /**
+         * Update and store current userid + accesstoken
+         * @param userid
+         * @param token
+         */
         this.updateToken = function(userid, token) {
             if (!token){
                 delete $http.defaults.headers.common['X-Token'];
@@ -46,7 +53,6 @@ angular.module('App')
                 return;
             }
             if (token != this.token) {
-                console.log('updating token',token);
                 self.token = token;
                 self.userid = userid;
                 self.fetchCurrentUser();
@@ -112,6 +118,11 @@ angular.module('App')
 
 
         }
+        /**
+         * 
+         * @param user
+         * @param callback
+         */
         this.signUp = function(user, callback) {
 
             $http({
@@ -169,7 +180,6 @@ angular.module('App')
          */
         this.signInCustom = function(params, callback) {
             var then = function(response, statusCode) {
-                console.log('[login response]', response.user.accessTokens[0]);
 
                 switch (statusCode) {
                     case 200:
