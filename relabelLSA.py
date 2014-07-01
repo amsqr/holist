@@ -1,7 +1,7 @@
 __author__ = 'dowling'
 import requests
 
-from backend.core.util import config
+from backend.core.utild import config
 
 
 print "requesting LSA relabel of all documents."
