@@ -56,7 +56,7 @@ class LshManager(object):
 
     # takes a document and returns database ids of similar documents
     # uses cosine function to determine similarity
-    def getSimilarDocuments(self, document):
+    def getSimilarDocuments(self, document, num_docs=7):
         if isinstance(document, Document):
             lsa_vector = document.vectors["LSA"]
         else:
@@ -69,7 +69,7 @@ class LshManager(object):
         resultSet = set()
         results = []
 
-        for result in self.lsh.query(dense_vector, num_results=25, distance_func="cosine"):
+        for result in self.lsh.query(dense_vector, num_results=num_docs, distance_func="cosine"):
             # example:
             # [
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),

@@ -77,7 +77,8 @@ class DBSCANClusterStrategy(object):
 
     def cluster(self, entityName):
         # retrieve the entity in LSA space
-        response = requests.get("http://localhost:" + str(config.lsa_strategy_port) + "/small_task", params={"document": entityName})
+        response = requests.get("http://localhost:" + str(config.lsa_strategy_port) + "/small_task",
+                                params={"document": entityName})
         if response.status_code != 200:
             return {"result": "False", "reason": "Couldn't run entity search. This is an internal error."}, [], False
 
@@ -91,7 +92,7 @@ class DBSCANClusterStrategy(object):
 
 
         # retreive similar documents
-        matches = self.lshManager.getSimilarDocuments(entityLSA)
+        matches = self.lshManager.getSimilarDocuments(entityLSA, num_docs=20)
 
         # combine all lsa vectors of the similar documents into a matrix
         lsaMatrix = []
