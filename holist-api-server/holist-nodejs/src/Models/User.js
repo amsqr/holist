@@ -142,7 +142,7 @@ UserSchema.statics.createUser = function(email, password, firstName, lastName, c
 							.findOne({
 								_id: user._id
 							})
-							.select('_id firstName lastName email createdDate')
+							.select('_id firstName lastName email accessTokens createdDate')
 							.exec(function(err, user) {
 								if (err) {
 									return callback(err, null, HTTPStatusCodes.HTTPStatusCode500InternalServerError);
