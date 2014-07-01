@@ -75,7 +75,9 @@ class LinkController(object):
         self.namedEntityIndex.index = defaultdict(list)
 
         client = getDatabaseConnection()
-        for articleBSON in client.holist.articles.find():
+        for idx, articleBSON in enumerate(client.holist.articles.find()):
+            if idx % 500 == 0:
+                ln.debug("Rebuild progress: handled %s/%s documents.", idx, client.holist.articles.find().count())
             doc = convertToDocument(articleBSON)
             try:
                 self.lshManager.addDocument(doc)
