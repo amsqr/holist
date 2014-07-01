@@ -6,7 +6,6 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-var async = require('async');
 
 var HTTPStatusCodes = require('../Helpers/HTTPStatusCodes.js');
 var Validation = require('../Helpers/Validation.js');
@@ -29,11 +28,10 @@ var FavoriteSchema = new Schema({
         index: true
     },
 
-    /* The favorite's id */
-    // [TODO] Replace favorite type string with the favorite object as soon the REST API is using the same database as the lexical and semantic algorithms.
-    favorite: {
-        type: String,
-        trim: true,
+    /* The favorite's article. */
+    article: {
+        type: Schema.Types.ObjectId,
+        ref: 'Article',
         required: true,
         index: true
     },
@@ -54,17 +52,17 @@ var FavoriteSchema = new Schema({
  *	Create a new favorite.
  *
  *	@param userID The favorite's user _id.
- *  [TODO] Replace favoriteID with the favorite object as soon the REST API is using the same database as the lexical and semantic algorithms.
- *	@param favoriteID The favorite's id.
+ *	@param articleID The favorite's article _id.
  *
  *	@return callback(error, favorite, status)
  */
-FavoriteSchema.statics.createFavorite = function(userID, favoriteID, callback) {
+FavoriteSchema.statics.createFavorite = function(userID, articleID, callback) {
     if ('' !== Validation.validateString(userID) &&
-        '' !== Validation.validateString(favoriteID)) {
+        '' !== Validation.validateString(articleID)) {
         mongoose.models["Favorite"]
             .findOne({
-                favorite: favoriteID
+                user: userID,
+                article: articleID
             })
             .exec(function(err, favorite) {
                 if (err) {
@@ -76,7 +74,7 @@ FavoriteSchema.statics.createFavorite = function(userID, favoriteID, callback) {
                     // Create the favorite.
                     var favorite = new Favorite({
                         user: userID,
-                        favorite: favoriteID,
+                        article: articleID,
                         creationDate: Date.now()
                     });
 
@@ -108,7 +106,8 @@ FavoriteSchema.statics.getFavoritesForUser = function(user, callback) {
             .find({
                 user: user._id
             })
-            .select('_id favorite createdDate')
+            .select('_id article createdDate')
+            .populate('article', '_id title description text link sourceType timestamp')
             .exec(function(err, favorites) {
                 if (err) {
                     return callback(err, null, HTTPStatusCodes.HTTPStatusCode500InternalServerError);

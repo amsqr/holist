@@ -20,6 +20,7 @@ var url = require('url');
 var Schema = mongoose.Schema;
 var User = require('./Models/User.js')
 var Favorite = require('./Models/Favorite.js')
+var Article = require('./Models/Article.js')
 
 /**
  *  Implementation of the HolistServer application.
@@ -364,7 +365,7 @@ var HolistServer = function() {
         self.postPrivateRoutes = {};
 
         self.postPrivateRoutes['/users/:userid/favorite'] = function(req, res) {
-            Favorite.createFavorite(req.user._id, req.body.favoriteID, function(err, favorite, status) {
+            Favorite.createFavorite(req.user._id, req.body.articleID, function(err, favorite, status) {
                 if (err) {
                     return self.handleError(res, err, status);
                 }

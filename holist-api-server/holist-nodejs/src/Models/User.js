@@ -6,7 +6,6 @@
 
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
-var async = require('async');
 
 var HTTPStatusCodes = require('../Helpers/HTTPStatusCodes.js');
 var Validation = require('../Helpers/Validation.js');
