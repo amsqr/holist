@@ -40,9 +40,10 @@ var HolistServer = function() {
         self.port = 8080;
 
         // MongoDB
-        var address = process.env.HOLISTMONGODB_PORT_27017_TCP_ADDR;
-        var port = process.env.HOLISTMONGODB_PORT_27017_TCP_PORT;
-        self.mongodbAddress = "mongodb://" + address + ":" + port + "/holist-nodejs";
+        var address = process.env.HOLISTMONGODB_PORT_27017_TCP_ADDR || "127.0.0.1";
+        var port = process.env.HOLISTMONGODB_PORT_27017_TCP_PORT || 27017;
+        var dbName = "holist-nodejs"
+        self.mongodbAddress = "mongodb://" + address + ":" + port + "/" + dbName;
     };
 
     /**
