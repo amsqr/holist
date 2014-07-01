@@ -306,7 +306,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
             .attr("class", "nodetext")
             .attr("dx", 30)
             .attr("dy", ".35em")
-            .attr("font-size", "12pt")
+            .attr("font-size", "7pt")
             .text(function(d) {
                 return (debug? d.id : d.title)
             });
