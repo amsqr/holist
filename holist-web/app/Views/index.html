@@ -16,7 +16,7 @@
 
 </form>
 
-<div id="recentLinks" ng-if=" (activitylog && activitylog.length > 0) || (favorites && favorites.length > 0)">
+<div id="recentLinks" ng-if=" (activitylog && activitylog.length > 0) || (favorites && favorites.length > 0) || userLoggedIn">
     <tabset>
         <tab>
             <tab-heading><i class='fa fa-align-justify'></i> Activity</tab-heading>
@@ -39,7 +39,7 @@
             </div>
         </tab>
 
-        <tab >
+        <tab ng-show="userLoggedIn">
             <tab-heading><i class='fa fa-star'></i>  Favorites</tab-heading>
             <div style="height: 400px;width:100%; overflow: auto">
                 <table class="table table-hover">

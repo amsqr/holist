@@ -47,8 +47,9 @@ angular.module('App')
             }
             if (token != this.token) {
                 console.log('updating token',token);
-                this.token = token;
-                this.userid = userid;
+                self.token = token;
+                self.userid = userid;
+                self.fetchCurrentUser();
             }
            // $http.defaults.headers.common['X-Token'] = token;
            // $http.defaults.headers.common['access_token'] = token;
@@ -62,17 +63,18 @@ angular.module('App')
          */
         this.fetchCurrentUser = function(){
             // '/users/' + user._id
-            if (!this.userid) {
+            if (!this.userid || this.userid == 'null') {
                 return false;
             }
+
             $http({
                 method: "GET",
-                url: AppSettings.nodeApi + 'users/' + this.userid
+                url: AppSettings.nodeApi + 'me/?access_token=' + this.token
             })
                 .success(function(data) {
 
-                       if (data) {
-                           self.user = data;
+                       if (data.user) {
+                           self.user = data.user;
                            $rootScope.$broadcast('user_auth_status_changed');
                        }
                         // console.log('[userdata]', data)
@@ -82,6 +84,7 @@ angular.module('App')
             return this.user;
         }
         this.isLoggedIn = function() {
+            console.log('this.token',this.token)
             return (this.token != null);
         };
         this.ensureAuthentication = function() {
@@ -116,6 +119,9 @@ angular.module('App')
                 url: AppSettings.nodeApi + 'user',
                 data: user} )
                 .success(function(data) {
+                    // console.log('signup data',data.user);
+                    var token = (data.user.accessTokens? data.user.accessTokens[0]:null);
+                    self.updateToken(data.user._id,token)
                     callback(null, data);
                 })
                 .error(function(err){

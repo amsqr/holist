@@ -34,6 +34,7 @@ function ApiHelper($http, $log, AppSettings,$rootScope, AuthenticationService){
         if (targetVariable){
             self.targetVariable = targetVariable;
         }
+        updateToken();
     }
 
     /***
@@ -74,7 +75,7 @@ function ApiHelper($http, $log, AppSettings,$rootScope, AuthenticationService){
         }
     };
     // AuthenticationService.registerAuthStatusObserver(updateToken);
-    $rootScope.$on('user_auth_status_changed',updateToken);;
+    $rootScope.$on('user_auth_status_changed',updateToken);
     updateToken();
 
     /**

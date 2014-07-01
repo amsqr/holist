@@ -90,7 +90,8 @@ module('App')
 
             },function() {
                 favoritesApi.refresh();
-                console.log('favorites added');
+
+                $.notify("Added to favorites", "success")
             })
         }
         favoritesApi.refresh();
