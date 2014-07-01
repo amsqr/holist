@@ -9,6 +9,8 @@ import requests
 import numpy as np
 from collections import defaultdict
 from sklearn.cluster import DBSCAN
+from sklearn.cluster import AffinityPropagation
+
 from scipy.spatial.distance import cosine
 
 from dateutil import parser
@@ -104,13 +106,18 @@ class DBSCANClusterStrategy(object):
         distanceMatrix = np.vstack(distanceMatrix)
 
         # put the lsa vector matrix into the dbscan clustering algorithm
-        db = DBSCAN(eps=5.0, metric="precomputed", min_samples=1).fit(distanceMatrix)
+        #db = DBSCAN(eps=5.0, metric="precomputed", min_samples=1).fit(distanceMatrix)
+        af = AffinityPropagation(affinity="precomputed").fit(distanceMatrix)
+        cluster_centers_indices = af.cluster_centers_indices_
+        labels = af.labels_
+
+        n_clusters_ = len(cluster_centers_indices)
 
         # cluster labels for each lsa vector
         # labels are numbered from 0 on, -1 is for no cluster / outlier
-        labels = db.labels_
+        #labels = db.labels_
         #ln.debug("Labels: %s", labels)
-        n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0) # number of clusters
+        #n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0) # number of clusters
         ln.debug('Estimated number of clusters: %d' % n_clusters_)
 
         clusters = defaultdict(list)

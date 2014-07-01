@@ -58,7 +58,7 @@ class LshManager(object):
         resultSet = set()
         results = []
 
-        for result in self.lsh.query(dense_vector, num_results=7, distance_func="cosine"):
+        for result in self.lsh.query(dense_vector, num_results=25, distance_func="cosine"):
             # example:
             # [
             #   (((1, 2, 3), "{'extra1':'data'}"), 0),

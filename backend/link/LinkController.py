@@ -53,8 +53,8 @@ class LinkController(object):
         self.namedEntityIndex = NamedEntityIndex()
 
         # init clustering strategy to cluster search results (combine them into nodes)
-        #self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
-        self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
+        self.clusterStrategy = DBSCANClusterStrategy(self.namedEntityIndex, self.lshManager)
+        #self.clusterStrategy = SimpleClusterStrategy(self.namedEntityIndex, self.lshManager)
 
         # init rest apis
         self.frontend = RESTfulApi(self)
