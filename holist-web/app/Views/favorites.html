@@ -8,17 +8,17 @@
             <thead>
             <tr>
                 <th>Title</th>
-                <th></th>
                 <th>Created</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="doc in data.favorites">
-                <td>{{doc._id}}</td>
-                <td>{{doc.title}}</td>
 
-                <td><a href="{{doc.link}}" class="btn btn-primary btn-xs"><i class=""></i> Read now</a></td>
+                <td>{{doc.article.title}}</td>
+                <td>{{doc.article.timestamp | date:'short'}}</td>
+
+                <td><a href="{{doc.article.link}}" target="_blank" class="btn btn-primary btn-xs"><i class=""></i> Read now</a></td>
 
             </tr>
             <tr ng-show="!data || data.length == 0">

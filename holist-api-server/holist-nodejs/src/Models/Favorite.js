@@ -6,6 +6,7 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+var async = require('async');
 
 var HTTPStatusCodes = require('../Helpers/HTTPStatusCodes.js');
 var Validation = require('../Helpers/Validation.js');
@@ -30,8 +31,8 @@ var FavoriteSchema = new Schema({
 
     /* The favorite's article. */
     article: {
-        type: Schema.Types.ObjectId,
-        ref: 'Article',
+        type: String,
+        trim: true,
         required: true,
         index: true
     },
@@ -107,13 +108,35 @@ FavoriteSchema.statics.getFavoritesForUser = function(user, callback) {
                 user: user._id
             })
             .select('_id article createdDate')
-            .populate('article', '_id title description text link sourceType timestamp')
             .exec(function(err, favorites) {
                 if (err) {
                     return callback(err, null, HTTPStatusCodes.HTTPStatusCode500InternalServerError);
                 }
                 if (favorites) {
-                    return callback(null, favorites, HTTPStatusCodes.HTTPStatusCode200OK);
+                    var populatedFavorites = [];
+                    async.forEach(favorites, function(favorite, done) {
+                            mongoose.models["Article"]
+                            .findOne({ _id: favorite.article })
+                            .select('_id title description text link sourceType timestamp')
+                            .exec(function (err, article) {
+                                if (err) { return done(err); }
+
+                                if (article) {
+                                    var populatedFavorite = {};
+                                    populatedFavorite["_id"] = favorite._id;
+                                    populatedFavorite["article"] = article;
+                                    populatedFavorite["createdDate"] = favorite.createdDate;
+                                    populatedFavorites.push(populatedFavorite);
+                                }
+                                return done(null);
+                            });
+                        },
+                        function(err) {
+                            if (err) {
+                                return callback(err, null, HTTPStatusCodes.HTTPStatusCode500InternalServerError);
+                            }
+                            return callback(null, populatedFavorites, HTTPStatusCodes.HTTPStatusCode200OK);
+                        });
                 } else {
                     return callback(null, null, HTTPStatusCodes.HTTPStatusCode404NotFound);
                 }

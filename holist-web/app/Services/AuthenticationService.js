@@ -119,7 +119,7 @@ angular.module('App')
 
         }
         /**
-         * 
+         *
          * @param user
          * @param callback
          */

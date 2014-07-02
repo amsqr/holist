@@ -164,14 +164,13 @@ function GraphFactory($http,AppSettings,$q,$log) {
             graphStructureCache[node.id].push(targetNode);
 
         }
-        console.log(links);
         for (var i in links) {
             //console.log(links[i]['target'].id + '<====>' + links[i]['source'].id);
             addLink(links[i]['target'], links[i]['source']);
             addLink(links[i]['source'], links[i]['target']);
         }
 
-        console.log('final graph structure: ',graphStructureCache );
+//        console.log('final graph structure: ',graphStructureCache );
     }
     /**
      * find all related links
@@ -191,22 +190,32 @@ function GraphFactory($http,AppSettings,$q,$log) {
     //
     this.reduceNodes = function(currentNode){
         buildLinkStructure();
+        var traversedNodes = []; // necessary to avoid cycles.
 
-        console.log('[reduce nodes skippen because of some errors for the presentation version]');
-        return;
+
+//        console.log('[reduce nodes skippen because of some errors for the presentation version]');
+//       return;
         var reduceNodesRecursive = function(parentNode, node, level) {
+
+            //cycle avoidance
+            if (traversedNodes.indexOf(node) !== -1) {
+                return;
+            }
+            traversedNodes.push(node);
+            //
+
             var nodes = self.findLinkedNodes(node);
             for (var i in nodes) {
                 if (parentNode && parentNode.id == nodes[i].id) continue;
                 reduceNodesRecursive(node, nodes[i], level + 1 );
             }
             console.log(node.id + ' = ' + level);
-            if (level > 2) {
+            if (level > 3) {
                 return self.removeNode(node);
             }
             if (level > 1) {
                 var opacity = 1 - (0.25 * level);
-
+                $(node.circle).fadeTo(opacity);
             }
 
 
@@ -220,7 +229,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
         return;
         for (var i in nodes) {
 
-            console.log('new opacity',i, nodes[i].opacity);
+            // console.log('new opacity',i, nodes[i].opacity);
             // skip single node, e.g. parent
             if (skip && skip === nodes[i].id) {
                 continue;
@@ -515,7 +524,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
     ///
     //
     self.tick = function() {
-        console.log('[GRAPH] tick')
+///        console.log('[GRAPH] tick')
 
     }
     self.render = function(data) {
