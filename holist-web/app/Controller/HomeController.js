@@ -86,7 +86,7 @@ module('App')
             favoritesApi.doHttpRequest({
                 method:"POST",
                 url: 'users/me/favorite',
-                data: { favoriteID: row.id }
+                data: { articleID: row.id }
 
             },function() {
                 favoritesApi.refresh();
