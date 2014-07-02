@@ -23,7 +23,7 @@ var ArticleSchema = new Schema({
         type: String,
         trim: true,
         required: true,
-    }
+    },
 
     /* This is the articles's title. */
     title: {
