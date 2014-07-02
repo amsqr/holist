@@ -43,14 +43,14 @@ class LshManager(object):
         extra = json.dumps(str(document._id))
 
         # detect duplicates
-        result = self.lsh.query(dense_vector, num_results=1, distance_func="cosine")
-        if result:
-            nearest = result[0]
-            if nearest[1] > DUPLICATE_SIMILARITY_THRESHOLD:
-                extra = ast.literal_eval(ast.literal_eval(nearest[0])[1])
-                doctitle = getDatabaseConnection().holist.articles.find({"_id": extra}).next()["title"]
-                ln.warn("Detected duplicate for %s (ID %s): %s.", document.title, document._id, extra)
-                return
+        #result = self.lsh.query(dense_vector, num_results=1, distance_func="cosine")
+        #if result:
+        #    nearest = result[0]
+        #    if nearest[1] > DUPLICATE_SIMILARITY_THRESHOLD:
+        #        extra = ast.literal_eval(ast.literal_eval(nearest[0])[1])
+        #        doctitle = getDatabaseConnection().holist.articles.find({"_id": extra}).next()["title"]
+        #        ln.warn("Detected duplicate for %s (ID %s): %s.", document.title, document._id, extra)
+        #        return
 
         self.lsh.index(dense_vector, extra_data=extra)  # extra MUST be hashable
 
