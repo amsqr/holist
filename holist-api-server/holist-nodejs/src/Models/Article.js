@@ -6,7 +6,7 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-    
+
 var HTTPStatusCodes = require('../Helpers/HTTPStatusCodes.js');
 var Validation = require('../Helpers/Validation.js');
 
@@ -19,6 +19,11 @@ var ArticleSchema = new Schema({
     //////////////////////////////////////////
 
     /* The parameter _id is given as default by MongoDB. */
+    _id: {
+        type: String,
+        trim: true,
+        required: true,
+    }
 
     /* This is the articles's title. */
     title: {
