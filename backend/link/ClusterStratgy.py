@@ -16,7 +16,7 @@ from scipy.spatial.distance import cosine
 from dateutil import parser
 
 def harmonic_mean(nums):
-    return float(len(nums)) / sum([1.0/num for num in nums])
+    return float(len(nums)) / float(sum([1.0/float(num) for num in nums]))
 
 
 class SimpleClusterStrategy(object):  # just cluster document by date
@@ -91,7 +91,7 @@ class DBSCANClusterStrategy(object):
                 break
 
 
-        # retreive similar documents
+        # retrieve similar documents
         matches = self.lshManager.getSimilarDocuments(entityLSA, num_docs=20)
 
         # combine all lsa vectors of the similar documents into a matrix
@@ -106,8 +106,8 @@ class DBSCANClusterStrategy(object):
             for otherLSA in lsaMatrix:
                 cos = cosine(matchLSA, otherLSA)
                 # todo: replace this by a metric that evaluates the time difference of two articles
-                time = cos
-                row.append(harmonic_mean((cos, time)))
+                #time = cos
+                row.append(cos)
             distanceMatrix.append(row)
 
         distanceMatrix = np.vstack(distanceMatrix)

@@ -25,6 +25,35 @@ from backend.core.util import config
 PERSISTENCE_FILENAME = "persist/last_etag_and_modified_%s.txt"
 
 
+def tryFillText(document):
+    # some articles fail to parse correctly.
+    # This tries to complete parts of a document, if only some information is missing.
+    available = [text for text in [document.text, document.title, document.description] if text.strip()]
+    if len(available) == 3:
+        pass
+    elif len(available) == 2:
+        if not document.title.strip():
+            document.title = document.description
+        if not document.description.strip():
+            document.description = document.text
+        if not document.text.strip():
+            document.text = document.description
+    elif len(available == 1):
+        if document.title.strip():
+            document.description = document.title
+            document.text = document.title
+        if document.description.strip():
+            document.title = document.description
+            document.text = document.description
+        if document.text.strip():
+            document.title = document.text
+            document.description = document.text
+    else:
+        return document, False
+
+    return document, True
+
+
 class LimitedSizeDict(OrderedDict):
     def __init__(self, *args, **kwds):
         self.size_limit = kwds.pop("size_limit", None)
@@ -177,12 +206,18 @@ class RSSFeed(object):
 
             document.timestamp = datetime.datetime.now().isoformat()
             document.sourceType = self.__class__.__name__
-            
+
+            try:
+                document = tryFillText(document)
+            except AssertionError:
+                ln.warn("Document had no text at all: %s. Not adding.", document.link)
+                continue
+
             listToAppendTo.append(document)
 
-            with open(str(PERSISTENCE_FILENAME % str(self.url.replace("/", ""))), "w") as f:
-                f.write(str(self.etag) + "\n" + str(self.modified))
-                f.write("\n".join(["%s <:> %s" % (id, mod) for id, mod in self.idUpdateMemory.items()]))
+        with open(str(PERSISTENCE_FILENAME % str(self.url.replace("/", ""))), "w") as f:
+                    f.write(str(self.etag) + "\n" + str(self.modified))
+                    f.write("\n".join(["%s <:> %s" % (id, mod) for id, mod in self.idUpdateMemory.items()]))
 
         ln.debug("Updating %s took %s seconds. Got: %s new, %s updated.", self.url, time.time() - started, len(newDocuments), len(updatedDocuments))
 
