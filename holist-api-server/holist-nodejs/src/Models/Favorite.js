@@ -115,10 +115,12 @@ FavoriteSchema.statics.getFavoritesForUser = function(user, callback) {
                 if (favorites) {
                     var populatedFavorites = [];
                     async.forEach(favorites, function(favorite, done) {
+                            console.log("Favorite: " + favorite);
                             mongoose.models["Article"]
                             .findOne({ _id: favorite.article })
                             .select('_id title description text link sourceType timestamp')
                             .exec(function (err, article) {
+                                console.log("Article: " + article);
                                 if (err) { return done(err); }
 
                                 if (article) {
