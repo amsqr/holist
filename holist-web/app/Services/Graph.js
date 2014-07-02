@@ -210,7 +210,7 @@ function GraphFactory($http,AppSettings,$q,$log) {
                 reduceNodesRecursive(node, nodes[i], level + 1 );
             }
             console.log(node.id + ' = ' + level);
-            if (level > 3) {
+            if (level > 2) {
                 return self.removeNode(node);
             }
             if (level > 1) {
