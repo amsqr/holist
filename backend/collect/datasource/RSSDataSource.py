@@ -207,9 +207,9 @@ class RSSFeed(object):
             document.timestamp = datetime.datetime.now().isoformat()
             document.sourceType = self.__class__.__name__
 
-            try:
-                document = tryFillText(document)
-            except AssertionError:
+
+            document, res = tryFillText(document)
+            if not res:
                 ln.warn("Document had no text at all: %s. Not adding.", document.link)
                 continue
 
