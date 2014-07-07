@@ -28,24 +28,24 @@ PERSISTENCE_FILENAME = "persist/last_etag_and_modified_%s.txt"
 def tryFillText(document):
     # some articles fail to parse correctly.
     # This tries to complete parts of a document, if only some information is missing.
-    available = [text for text in [document.text, document.title, document.description] if text.strip()]
+    available = [text for text in [document.text, document.title, document.description] if text]
     if len(available) == 3:
         pass
     elif len(available) == 2:
-        if not document.title.strip():
+        if not document.title:
             document.title = document.description
-        if not document.description.strip():
+        if not document.description:
             document.description = document.text
-        if not document.text.strip():
+        if not document.text:
             document.text = document.description
-    elif len(available == 1):
-        if document.title.strip():
+    elif len(available) == 1:
+        if document.title:
             document.description = document.title
             document.text = document.title
-        if document.description.strip():
+        if document.description:
             document.title = document.description
             document.text = document.description
-        if document.text.strip():
+        if document.text:
             document.title = document.text
             document.description = document.text
     else:
