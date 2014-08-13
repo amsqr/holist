@@ -1,3 +1,10 @@
+HOLIST
+====================
+
+Holist is a visual document exploration engine. Currently it features a simple graph view of news articles, and a demo can be seen at www.holist.pcdowling.com/holist/web/. Holist is a live system, and new data can be streamed into the system at any time, and be ready for anaylsis within minutes.
+
+In the future, different views will allow quick analysis or large collections of documents by automatically structuring the data in meaningful ways, reveal links between different entities, and detecting possible anomalies as they occur.
+
 USAGE
 ====================
 To start core and data collection, from top level folder execute:
