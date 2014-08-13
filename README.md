@@ -30,31 +30,9 @@ The code expects to be able to connect to a MongoDB on port 27017 (default), wit
 
 collectStartup.py starts the data collection node. This currently updates only RSS feeds, but later modules for Twitter, Blogs, etc. will be added in the collect package.
 
-coreStartup.py starts the core analysis node. This node currently performs Latent Semantic Analysis (LSA) and Named Entity Recognition (NER). New strategies (meaning models or algorithms like sentiment analysis) will be added here. The Core will periodically give new documents to these strategies, which then perform their analyses and return vectors (numbers, strings, tuples, whatever) for each document. The Core then adds these vectors to the corresponding document object (i.e. annotates them), and when a document went through all strategies, it is again added to the database, to the "articles" collection. 
+coreStartup.py starts the core annotation node. This node currently performs Latent Semantic Analysis (LSA) and Named Entity Recognition (NER), and saves this information. New strategies (models or algorithms like LDA, sentiment analysis, other classification) can be added here. The Core will periodically give new documents to these strategies, which then perform their analyses and return vectors (numbers, strings, tuples, whatever) for each document. The Core then adds these vectors to the corresponding document object (i.e. annotates them), and when a document went through all strategies, it is again added to the database, to the "articles" collection. 
 The core registers with the collect node, and the collect node sends a notification to the core whenever a new document has been found and added to the "new_documents" collection.
 
+The link package represents the layer the performs analysis and orgaization on the documents that have been annotated by the core. Currently, this means building an LSH index for all LSA annotated documents, and clustering similar articles. Later on, this is where different views and organizations such as timelines or map views, as well as advanced analytics such as relationships between entities can be implemented.
 
 
-
-TODO for the backend
-====================
-
-We will need to write a node to generate our graphs. This node will register with the core, and the core will notify the node when new documents have been analyzed (meaning annotated). We then retrieve those documents from the "articles" collection, and then, this is the tricky part, use them somehow to generate or update our graphs. 
-
-We might then store these graphs in a new collection ("graphs"). This has the following benefit: We can store this collection externally on a Heroku server. Those can handle more clients easily in comparison to my server, which has processing power but rather slow networking, especially upstream.
-
-
-
-
-
-DEPENDENCIES
-====================
-gensim (depends on numpy, scipy)
-NLTK (plus the NLTK addtional downloads)
-stemming (gonna be removed probably)
-twisted
-requests
-pymongo
-feedparser
-
-(This might be incomplete, but you can see pretty quickly if a dependency is missing.)
